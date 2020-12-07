@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginWindowController">
+   <children>
+      <Button fx:id="rButton" layoutX="383.0" layoutY="208.0" mnemonicParsing="false" onAction="#pushRegisterButton" prefHeight="79.0" prefWidth="189.0" text="Register" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="383.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="208.0">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Button>
+      <Button fx:id="lButton" layoutX="432.0" layoutY="41.0" mnemonicParsing="false" onAction="#pushlButton" prefHeight="65.0" prefWidth="126.0" text="Login" AnchorPane.bottomAnchor="294.0" AnchorPane.leftAnchor="432.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="41.0">
+         <font>
+            <Font size="30.0" />
+         </font></Button>
+      <PasswordField fx:id="lPassword" layoutX="225.0" layoutY="81.0" AnchorPane.bottomAnchor="293.4" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="226.2" AnchorPane.topAnchor="81.0" />
+      <Text layoutX="158.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login:" AnchorPane.bottomAnchor="338.0" AnchorPane.leftAnchor="158.0" AnchorPane.rightAnchor="409.955078125" AnchorPane.topAnchor="45.0" />
+      <Text layoutX="158.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
+      <Text fx:id="incorrect" fill="#da0000" layoutX="127.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="376.39703369140625" AnchorPane.bottomAnchor="234.0" AnchorPane.leftAnchor="127.0" AnchorPane.rightAnchor="96.60296630859375" AnchorPane.topAnchor="134.0">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
+      <PasswordField fx:id="rPassword1" layoutX="174.0" layoutY="248.0" AnchorPane.bottomAnchor="126.39999999999998" AnchorPane.leftAnchor="174.0" AnchorPane.rightAnchor="277.2" AnchorPane.topAnchor="248.0" />
+      <Text layoutX="116.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login:" />
+      <PasswordField fx:id="rPassword2" layoutX="174.0" layoutY="280.0" AnchorPane.bottomAnchor="94.39999999999998" AnchorPane.leftAnchor="174.0" AnchorPane.rightAnchor="277.2" AnchorPane.topAnchor="280.0" />
+      <Text layoutX="79.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address E-mail:" />
+      <Text layoutX="97.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" wrappingWidth="60.84490966796875" />
+      <Text layoutX="51.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Repeat password:" wrappingWidth="106.44488525390625" />
+      <Text fx:id="register" fill="#00d91e" layoutX="79.0" layoutY="339.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="453.9970703125">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="266.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="466.0" AnchorPane.topAnchor="14.0">
+         <image>
+            <Image url="file:/C:/Users/Dominik/Desktop/Maven/src/main/resources/LOGO.jpg" />
+         </image>
+      </ImageView>
+      <TextField fx:id="lLogin" layoutX="225.0" layoutY="41.0" />
+      <TextField fx:id="rMail" layoutX="174.0" layoutY="181.0" />
+      <TextField fx:id="rLogin" layoutX="174.0" layoutY="213.0" />
+      <Text fx:id="incorrectpasswordregister" fill="RED" layoutX="116.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Passwords aren't same." textAlignment="CENTER" visible="false">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
