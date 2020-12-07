@@ -179,8 +179,31 @@ public class CommunicationWindowController {
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK) {
                                 Message messageAccept = new Message();
-                                messageAccept.callAcceptMessage(finalArrayOfmessage[1],getMe());
-                                //wiadoomośc do serwera
+                                int []ports = new int[4];
+                                try {
+                                    int counter =0;
+                                    for(int i =4;i<finalArrayOfmessage.length;i++)
+                                    {
+                                        if(TransmissionManager.isPortAvailable(Integer.parseInt(finalArrayOfmessage[i])))
+                                        {
+                                            ports[i] =Integer.parseInt(finalArrayOfmessage[i]);
+                                            counter++;
+                                            if(counter == 4)
+                                            {break;}
+                                        }
+                                    }
+                                    String [] messegaeToStartTransmission= new String[5];
+                                    for(int i =0;i<4;i++)
+                                    {
+                                        messegaeToStartTransmission[i] = String.valueOf(ports[i]);
+                                    }
+                                    messegaeToStartTransmission[4] = finalArrayOfmessage[finalArrayOfmessage.length-1];
+                                    TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[1],getMe(),ports));
+                                    TransmissionManager.startTransmission(messegaeToStartTransmission,false);
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+
                             } else {
                                 try {
                                     TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), "N");

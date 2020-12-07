@@ -1,12 +1,10 @@
 <component name="libraryTable">
   <library name="libs">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../Praca Inżynierska/webcam-capture-master/libs" />
       <root url="file://$PROJECT_DIR$/webcam-capture-master/libs" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
     <jarDirectory url="file://$PROJECT_DIR$/webcam-capture-master/libs" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/../Praca Inżynierska/webcam-capture-master/libs" recursive="false" />
   </library>
 </component>

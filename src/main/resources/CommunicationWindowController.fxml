@@ -60,7 +60,7 @@
                                  <children>
                                     <ImageView fx:id="timg" fitHeight="150.0" fitWidth="200.0" layoutX="546.0" layoutY="341.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-0.6000000000000227" AnchorPane.leftAnchor="546.0" AnchorPane.rightAnchor="0.39999999999997726" AnchorPane.topAnchor="341.0" />
                                     <ImageView fx:id="rimg" fitHeight="498.0" fitWidth="746.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true" />
-                                    <Button fx:id="accept" layoutX="646.0" layoutY="14.0" mnemonicParsing="false" onAction="#acceptCall" text="Button" />
+                                    <Button fx:id="accept" layoutX="646.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
                                  </children>
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">

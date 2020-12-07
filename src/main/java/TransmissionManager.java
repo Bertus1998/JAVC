@@ -135,28 +135,13 @@ public class TransmissionManager {
         String receivedMessage = TransmissionManager.getMessageFromServer(TransmissionManager.getClient());
         String[] arrayOfReceivedMessage = receivedMessage.split(" ");
         if(arrayOfReceivedMessage[0].equals("CALLACCEPT")) {
-            int counter = 0;
-            ArrayList<Integer> listOfPorts = new ArrayList<>();
-            String messageOfPorts = "PORT";
-            for (int i = 3; i < arrayOfReceivedMessage.length-1; i++) {
-                if (counter == 4) {
-                    //PORT 1 2 3 4// 1 videoreceive/ 2 aidoreceive /3 audiotransmit /4 video transmit
-                    TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), messageOfPorts);
-                    String portsAndAddress = TransmissionManager.getMessageFromServer(TransmissionManager.getClient());
-                    String[] arrayOfPortsAndAddress = portsAndAddress.split(" ");
-
-                    //TRANSMISJA!
-                    TransmissionManager.startTransmission(arrayOfPortsAndAddress);
-
-                    break;
-                } else {
-                    if (isPortAvailable(Integer.parseInt(arrayOfReceivedMessage[i]))) {
-                        listOfPorts.add(Integer.parseInt(arrayOfReceivedMessage[i]));
-                        counter++;
-                        messageOfPorts = messageOfPorts + " " + arrayOfReceivedMessage[i];
-                    }
-                }
+            String[] portsAndHostName = new String [5];
+            for(int i = 3;i<arrayOfReceivedMessage.length;i++)
+            {
+                portsAndHostName[i-3] = arrayOfReceivedMessage[i];
             }
+            startTransmission(portsAndHostName,true);
+
         }
         else
         {
@@ -167,14 +152,25 @@ public class TransmissionManager {
             alert.showAndWait();
         }
     }
-    public static void startTransmission(String []message) throws SocketException, UnknownHostException {
-        //PORT 1 2 3 4// 1 videoreceive/ 2 aidoreceive /3 audiotransmit /4 video transmit
-        datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]),InetAddress.getByName(message[4]));
-        datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[4]),InetAddress.getByName(message[4]));
-        datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[2]));
-        datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[1]));
-        Video.sendVideo(datagramTransmitVideo);
-        Video.getVideo(datagamReceiceVideo);
+    public static void startTransmission(String []message,boolean caller) throws SocketException, UnknownHostException {
+      // 1 videoreceive/ 2 aidoreceive /3 audiotransmit /4 video transmit // 5 socket
+     if(caller) {
+         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]), InetAddress.getByName(message[4]));
+         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]), InetAddress.getByName(message[4]));
+         datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[1]));
+         datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[0]));
+         Video.sendVideo(datagramTransmitVideo);
+         Video.getVideo(datagamReceiceVideo);
+     }
+     else
+     {
+         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[1]), InetAddress.getByName(message[4]));
+         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[0]), InetAddress.getByName(message[4]));
+         datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[3]));
+         datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[2]));
+         Video.sendVideo(datagramTransmitVideo);
+         Video.getVideo(datagamReceiceVideo);
+     }
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
     {

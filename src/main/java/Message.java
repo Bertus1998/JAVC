@@ -35,17 +35,15 @@ public class Message {
             return message;
 
     }
-    String callAcceptMessage(String name, String myname)
+    String callAcceptMessage(String name, String myname, int ports[])
     {
         String messageToServer = "CALLACCEPT " +name  + " " + myname;
+     for(int i =0 ;i<4; i++)
+     {
+        messageToServer =messageToServer + " " + ports[i];
+      }
 
-        for(int i =5000; i<=6000;i++)
-        {
-            if(TransmissionManager.isPortAvailable(i))
-            {
-                messageToServer = messageToServer + " " +i;
-            }
-        }
+
 
 
         return messageToServer ;
@@ -64,7 +62,7 @@ public class Message {
     {
         String messageToServer = "CALL " +name  + " " + me;
 
-        for(int i =5000; i<=6000;i++)
+        for(int i =5100; i<=5200;i++)
         {
             if(TransmissionManager.isPortAvailable(i))
             {
