@@ -165,8 +165,8 @@ public class TransmissionManager {
         }
      if(caller) {
          System.out.println(message[4]);
-         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]), InetAddress.getByName(message[4]));
-         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]), InetAddress.getByName(message[4]));
+         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]), InetAddress.getByName("192.168.0.101"));
+         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]), InetAddress.getByName("192.168.0.101"));
          datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[1]));
          datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[0]));
          Video.sendVideo(datagramTransmitVideo);
