@@ -183,11 +183,12 @@ public class CommunicationWindowController {
                                 int []ports = new int[4];
                                 try {
                                     int counter =0;
-                                    for(int i =4;i<finalArrayOfmessage.length;i++)
+                                    for(int i =5;i<finalArrayOfmessage.length;i++)
                                     {
+                                        System.out.println(finalArrayOfmessage[i]);
                                         if(TransmissionManager.isPortAvailable(Integer.parseInt(finalArrayOfmessage[i])))
                                         {
-                                            ports[i] =Integer.parseInt(finalArrayOfmessage[i]);
+                                            ports[counter] =Integer.parseInt(finalArrayOfmessage[i]);
                                             counter++;
                                             if(counter == 3)
                                             {break;}

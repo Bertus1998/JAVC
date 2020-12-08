@@ -84,13 +84,16 @@ public class TransmissionManager {
 
     static DatagramSocket datagramSocket;//UDP z serwere
     public static boolean login(String message) throws IOException {
-        if (client.isConnected()) {
+        if (client.equals(null)) {
+            client = new Socket(severAddress,5003);
+        }
             TransmissionManager.sendMessageToServer(client,message);
             String receivedMessage = TransmissionManager.getMessageFromServer(client);
             if (receivedMessage.equals("Y")) {
                 return true;
             }
-        }
+
+
         return false;
     }
 
@@ -156,6 +159,10 @@ public class TransmissionManager {
     }
     public static void startTransmission(String []message,boolean caller) throws SocketException, UnknownHostException {
       // 1 videoreceive/ 2 aidoreceive /3 audiotransmit /4 video transmit // 5 socket
+        for(int i =0;i<message.length;i++)
+        {
+            System.out.println(message[i]);
+        }
      if(caller) {
          datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]), InetAddress.getByName(message[4]));
          datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]), InetAddress.getByName(message[4]));
