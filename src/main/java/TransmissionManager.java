@@ -119,7 +119,7 @@ public class TransmissionManager {
 
 
             if (isWaitForRespond()) {
-                client.setSoTimeout(20000);
+                client.setSoTimeout(0);
             } else {
                 client.setSoTimeout(10);
             }
@@ -129,10 +129,12 @@ public class TransmissionManager {
             return message;
 
     }
-    public  static void callToFriend(String friend, String me) throws IOException {
+    public  static void callToFriend(String friend, String me) throws IOException, InterruptedException {
         Message message = new Message();
         TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), message.callMessage(friend, me));
+        TransmissionManager.setWaitForRespond(true);
         String receivedMessage = TransmissionManager.getMessageFromServer(TransmissionManager.getClient());
+        TransmissionManager.setWaitForRespond(false);
         String[] arrayOfReceivedMessage = receivedMessage.split(" ");
         if(arrayOfReceivedMessage[0].equals("CALLACCEPT")) {
             String[] portsAndHostName = new String [5];

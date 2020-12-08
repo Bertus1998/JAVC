@@ -52,7 +52,7 @@ public class CommunicationWindowController {
         CommunicationWindowController.me = me;
     }
 
-    public void pushCallButton(ActionEvent event) throws IOException {
+    public void pushCallButton(ActionEvent event) throws IOException, InterruptedException {
         TransmissionManager.callToFriend(choosenFriend.getText(),getMe());
     }
 
@@ -192,10 +192,12 @@ public class CommunicationWindowController {
                                             {break;}
                                         }
                                     }
+                                    System.out.println(finalArrayOfmessage.toString());
                                     String [] messegaeToStartTransmission= new String[5];
                                     for(int i =0;i<4;i++)
                                     {
                                         messegaeToStartTransmission[i] = String.valueOf(ports[i]);
+                                        System.out.println(ports[i]);
                                     }
                                     messegaeToStartTransmission[4] = finalArrayOfmessage[finalArrayOfmessage.length-1];
                                     TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[1],getMe(),ports));
@@ -203,6 +205,7 @@ public class CommunicationWindowController {
                                 } catch (IOException ioException) {
                                     ioException.printStackTrace();
                                 }
+
 
                             } else {
                                 try {
