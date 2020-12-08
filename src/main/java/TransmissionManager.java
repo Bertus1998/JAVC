@@ -165,11 +165,11 @@ public class TransmissionManager {
         }
      if(caller) {
          System.out.println(message[4]);
-         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]), InetAddress.getByName("192.168.0.101"));
-         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]), InetAddress.getByName("192.168.0.101"));
+         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]));
+         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]));
          datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[1]));
          datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[0]));
-         Video.sendVideo(datagramTransmitVideo);
+         Video.sendVideo(datagramTransmitVideo,InetAddress.getByName(message[4]));
          Video.getVideo(datagamReceiceVideo);
      }
      else
@@ -178,9 +178,9 @@ public class TransmissionManager {
          System.out.println(message[4]);
          datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[3]));
          datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[2]));
-         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[1]), InetAddress.getByName(message[4]));
-         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[0]), InetAddress.getByName(message[4]));
-         Video.sendVideo(datagramTransmitVideo);
+         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[1]));
+         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[0]));
+         Video.sendVideo(datagramTransmitVideo,InetAddress.getByName(message[4]));
          Video.getVideo(datagamReceiceVideo);
      }
     }
@@ -203,7 +203,7 @@ public class TransmissionManager {
             return false;
         }
     }
-    public static void sendPacket(BufferedImage bufferedImage, DatagramSocket datagramSocket)
+    public static void sendPacket(BufferedImage bufferedImage, DatagramSocket datagramSocket, InetAddress adress)
     {
         final int sizeOfBiggestPacket = 50*1024;
         try {
@@ -212,7 +212,7 @@ public class TransmissionManager {
             byte[] sizeOfImage = Integer.toString(arrayOfBytes.length).getBytes();
             for(int i = 0;i<10;i++)
             {
-                datagramSocket.send(new DatagramPacket(sizeOfImage,4,0));
+                datagramSocket.send(new DatagramPacket(sizeOfImage,4,0,adress,datagramSocket.getPort()));
             }
             for(int i = 0;i<(arrayOfBytes.length/sizeOfBiggestPacket);i++) {
                 int lengthOfMessage;

@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -35,7 +36,7 @@ public class Video {
         Video.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromWebcam(DatagramSocket datagramSocket) {
+    public static void captureAndSendFromWebcam(DatagramSocket datagramSocket,InetAddress address) {
         if (getCommunicationWindowController() != null) {
             getWebcam().open();
 
@@ -44,7 +45,7 @@ public class Video {
 
                      BufferedImage bufferedImage = getWebcam().getImage();
                     Image image= SwingFXUtils.toFXImage(bufferedImage, null);
-                    TransmissionManager.sendPacket(bufferedImage,datagramSocket);
+                    TransmissionManager.sendPacket(bufferedImage,datagramSocket,address);
                     Platform.runLater(() -> {
                         communicationWindowController.timg.setImage(image);
                     });
@@ -117,9 +118,9 @@ public class Video {
     {
         receiveAndShowImageFromWebcam(datagramSocket);
     }
-    public static void sendVideo(DatagramSocket datagramSocket)
+    public static void sendVideo(DatagramSocket datagramSocket, InetAddress address)
     {
-        captureAndSendFromWebcam(datagramSocket);
+        captureAndSendFromWebcam(datagramSocket,address);
     }
 
 }
