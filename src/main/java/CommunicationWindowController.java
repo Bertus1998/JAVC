@@ -170,12 +170,13 @@ public class CommunicationWindowController {
                         System.out.println(message);
                         arrayOfmessage = message.split(" ");
                         if (arrayOfmessage[0].equals("RESPONDCALL")) {
+                            TransmissionManager.setWaitForRespond(true);
                             String[] finalArrayOfmessage = arrayOfmessage;
+
                             Platform.runLater(()->{ Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                             alert.setTitle("Call dialog");
                             alert.setHeaderText(finalArrayOfmessage[1] + " call!");
                             alert.setContentText("Do you want answer?");
-
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK) {
                                 Message messageAccept = new Message();
@@ -188,7 +189,7 @@ public class CommunicationWindowController {
                                         {
                                             ports[i] =Integer.parseInt(finalArrayOfmessage[i]);
                                             counter++;
-                                            if(counter == 4)
+                                            if(counter == 3)
                                             {break;}
                                         }
                                     }
@@ -202,6 +203,7 @@ public class CommunicationWindowController {
                                     messegaeToStartTransmission[4] = finalArrayOfmessage[finalArrayOfmessage.length-1];
                                     TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[1],getMe(),ports));
                                     TransmissionManager.startTransmission(messegaeToStartTransmission,false);
+                                    TransmissionManager.setWaitForRespond(false);
                                 } catch (IOException ioException) {
                                     ioException.printStackTrace();
                                 }
@@ -215,19 +217,17 @@ public class CommunicationWindowController {
                                 }
                             }
                         });
-
                         } else if (arrayOfmessage[0].equals("CHANGESTATUS")) {
                             loadFriends();
                             TransmissionManager.setWaitForRespond(false);
-                            System.out.println("1");
                         }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
-                        System.out.println("2");
+
                     }
-                    System.out.println("3");
+
                 }
-                System.out.println("4");
+
             }
         };
         Thread t = new Thread(runnable);
