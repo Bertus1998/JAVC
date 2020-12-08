@@ -153,8 +153,8 @@ public class CommunicationWindowController {
                 }
                 k++;
             }
-        });
 
+        });
     }
     public void serverListiner() {
 
@@ -218,11 +218,16 @@ public class CommunicationWindowController {
 
                         } else if (arrayOfmessage[0].equals("CHANGESTATUS")) {
                             loadFriends();
+                            TransmissionManager.setWaitForRespond(false);
+                            System.out.println("1");
                         }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
+                        System.out.println("2");
                     }
+                    System.out.println("3");
                 }
+                System.out.println("4");
             }
         };
         Thread t = new Thread(runnable);
