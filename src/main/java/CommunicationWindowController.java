@@ -190,7 +190,7 @@ public class CommunicationWindowController {
                                         {
                                             ports[counter] =Integer.parseInt(finalArrayOfmessage[i]);
                                             counter++;
-                                            if(counter == 3)
+                                            if(counter == 4)
                                             {break;}
                                         }
                                     }
@@ -202,13 +202,12 @@ public class CommunicationWindowController {
                                         System.out.println(ports[i]);
                                     }
                                     messegaeToStartTransmission[4] = finalArrayOfmessage[finalArrayOfmessage.length-1];
-                                    TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[1],getMe(),ports));
+                                    TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[2],getMe(),ports));
                                     TransmissionManager.startTransmission(messegaeToStartTransmission,false);
                                     TransmissionManager.setWaitForRespond(false);
                                 } catch (IOException ioException) {
                                     ioException.printStackTrace();
                                 }
-
 
                             } else {
                                 try {

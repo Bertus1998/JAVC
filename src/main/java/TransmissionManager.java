@@ -84,7 +84,7 @@ public class TransmissionManager {
 
     static DatagramSocket datagramSocket;//UDP z serwere
     public static boolean login(String message) throws IOException {
-        if (client.equals(null)) {
+        if (client==null) {
             client = new Socket(severAddress,5003);
         }
             TransmissionManager.sendMessageToServer(client,message);
@@ -164,6 +164,7 @@ public class TransmissionManager {
             System.out.println(message[i]);
         }
      if(caller) {
+         System.out.println(message[4]);
          datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]), InetAddress.getByName(message[4]));
          datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]), InetAddress.getByName(message[4]));
          datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[1]));
@@ -173,10 +174,12 @@ public class TransmissionManager {
      }
      else
      {
-         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[1]), InetAddress.getByName(message[4]));
-         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[0]), InetAddress.getByName(message[4]));
+
+         System.out.println(message[4]);
          datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[3]));
          datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[2]));
+         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[1]), InetAddress.getByName(message[4]));
+         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[0]), InetAddress.getByName(message[4]));
          Video.sendVideo(datagramTransmitVideo);
          Video.getVideo(datagamReceiceVideo);
      }
