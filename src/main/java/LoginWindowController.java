@@ -56,7 +56,6 @@ public class LoginWindowController {
             communicationWindowController.serverListiner();
             TransmissionManager.setWaitForRespond(false);
             Video.setCommunicationWindowController(communicationWindowController);
-            Video.configureWebcam();
         }
     }
 }

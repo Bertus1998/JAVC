@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Iterator;
@@ -52,7 +53,7 @@ public class CommunicationWindowController {
         CommunicationWindowController.me = me;
     }
 
-    public void pushCallButton(ActionEvent event) throws IOException, InterruptedException {
+    public void pushCallButton(ActionEvent event) throws IOException, InterruptedException, LineUnavailableException {
         TransmissionManager.callToFriend(choosenFriend.getText(),getMe());
     }
 
@@ -205,7 +206,7 @@ public class CommunicationWindowController {
                                     TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[2],getMe(),ports));
                                     TransmissionManager.startTransmission(messegaeToStartTransmission,false);
                                     TransmissionManager.setWaitForRespond(false);
-                                } catch (IOException ioException) {
+                                } catch (IOException | LineUnavailableException ioException) {
                                     ioException.printStackTrace();
                                 }
 

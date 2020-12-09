@@ -90,7 +90,7 @@ public class TransmissionManager {
             return message;
 
     }
-    public  static void callToFriend(String friend, String me) throws IOException, InterruptedException {
+    public  static void callToFriend(String friend, String me) throws IOException, InterruptedException, LineUnavailableException {
         Message message = new Message();
         TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), message.callMessage(friend, me));
         TransmissionManager.setWaitForRespond(true);
@@ -115,25 +115,30 @@ public class TransmissionManager {
             alert.showAndWait();
         }
     }
-    public static void startTransmission(String []message,boolean caller) throws IOException {
+    public static void startTransmission(String []message,boolean caller) throws IOException, LineUnavailableException {
       // 1 videoreceive/ 2 aidoreceive /3 audiotransmit /4 video transmit // 5 socket
 
+        ServerSocket serwerSocketVideoReceive;
+        Socket socketReceive;
+        Socket socketTransmit;
         if(caller)
         {
             ServerSocket serwerSocketReceive = new ServerSocket(Integer.parseInt(message[0]));
-            Socket socketReceive =  serwerSocketReceive.accept();
-            Socket socketTransmit = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[3]));
-            sendData(socketTransmit);
-            getData(socketReceive);
+            socketReceive =  serwerSocketReceive.accept();
+            socketTransmit = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[3]));
+
         }
         else
         {
-            Socket socketTransmit = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[0]));
-            ServerSocket serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[3]));
-            Socket socketReceive = serwerSocketVideoReceive.accept();
-            sendData(socketTransmit);
-            getData(socketReceive);
+            socketTransmit = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[0]));
+            serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[3]));
+            socketReceive = serwerSocketVideoReceive.accept();
+
         }
+        Video.configureWebcam();
+        Audio.configureAudio();
+        sendData(socketTransmit);
+        getData(socketReceive);
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
     {
@@ -219,8 +224,8 @@ public class TransmissionManager {
         }
 
         }
-    public static void getData(Socket socket)
-    {
+    public static void getData(Socket socket) throws LineUnavailableException {
+
 
         Runnable runnable = () -> {
             while(true) {
