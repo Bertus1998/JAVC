@@ -25,12 +25,12 @@ public class Audio {
         if (bytesRead > targetDataLine.getBufferSize() / 5) {
             datagramPacket = new DatagramPacket(transmitBufferedAudioBytes,targetDataLine.getBufferSize() / 5,inetAddress,port);
             datagramSocket.send(datagramPacket);
-
+            System.out.println("XD");
         }
 
     }
 
-    public static void receiveAndStreamToLouder(int port) throws LineUnavailableException, IOException {
+    public static void receiveAndStreamToLouder(int port) throws  IOException {
         byte[] transmitBufferedAudioBytes = new byte[targetDataLine.getBufferSize() / 5];
         DatagramPacket datagramPacket = new DatagramPacket(transmitBufferedAudioBytes,targetDataLine.getBufferSize() / 5);
         DatagramSocket datagramSocket = new DatagramSocket(port);

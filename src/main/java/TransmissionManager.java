@@ -141,7 +141,7 @@ public class TransmissionManager {
             socketReceive = serwerSocketVideoReceive.accept();
 
         }
-         Video.configureWebcam();
+        Video.configureWebcam();
         Audio.configureAudio();
         sendData(socketTransmit,inetAddress,portTransmit);
         getData(socketReceive,portReceive);
@@ -165,71 +165,6 @@ public class TransmissionManager {
             return false;
         }
     }
-    public static void sendPacket(BufferedImage bufferedImage, String port, InetAddress adress)
-    {
-        final int sizeOfBiggestPacket = 50*1024;
-        try {
-            DatagramSocket datagramSocket = new DatagramSocket();
-            DatagramPacket datagramPacket;
-            byte[] arrayOfBytes = DataConverter.convertImageToByte(bufferedImage,1);
-            byte[] sizeOfImage = Integer.toString(arrayOfBytes.length).getBytes();
-            for(int i = 0;i<10;i++)
-            {
-                datagramSocket.send(new DatagramPacket(sizeOfImage,4,0,adress,Integer.parseInt(port)));
-            }
-            for(int i = 0;i<(arrayOfBytes.length/sizeOfBiggestPacket);i++) {
-                int lengthOfMessage;
-                if((i+1)*sizeOfBiggestPacket<arrayOfBytes.length)
-                {
-                    lengthOfMessage = sizeOfBiggestPacket;
-                }
-                else
-                {
-                    lengthOfMessage = arrayOfBytes.length-i*sizeOfBiggestPacket;
-                }
-                datagramPacket = new DatagramPacket(arrayOfBytes, i*sizeOfBiggestPacket,lengthOfMessage);
-                datagramSocket.send(datagramPacket);
-            }
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-    }
-    public static byte[] getPacket(DatagramSocket datagramSocket,int size, boolean status) throws IOException {
-
-        if(status)
-        {
-            byte [] arrayOfBytes = new byte[size];
-        DatagramPacket datagramPacket= new DatagramPacket(arrayOfBytes,size);
-        datagramSocket.receive(datagramPacket);
-        return datagramPacket.getData();
-        }
-        else
-        {
-            byte [] arrayOfBytes = new byte[size];
-            final int sizeOfBiggestPacket = 50*1024;
-            byte [] partOfArray;
-            DatagramPacket datagramPacket;
-            for(int i = 0;i*sizeOfBiggestPacket<size ;i++)
-            {
-                int length;
-                if(i+1*sizeOfBiggestPacket>size)
-                {
-                    length = size - i*sizeOfBiggestPacket;
-                }
-                else
-                {
-                    length = sizeOfBiggestPacket;
-                }
-                partOfArray = new byte[length];
-                datagramPacket= new DatagramPacket(partOfArray,i*sizeOfBiggestPacket,length);
-                datagramSocket.receive(datagramPacket);
-                partOfArray = datagramPacket.getData();
-                System.arraycopy(partOfArray,0,arrayOfBytes,i*50*1024,length);
-            }
-            return arrayOfBytes;
-        }
-
-        }
     public static void getData(Socket socket, int port) throws LineUnavailableException {
 
 
@@ -246,18 +181,18 @@ public class TransmissionManager {
         Runnable runnableAudio = () -> {
             while(true) {
                 try {
+
                     Audio.receiveAndStreamToLouder(port);
-                } catch (LineUnavailableException e) {
-                    e.printStackTrace();
-                } catch (IOException ioException) {
+                }
+                catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
             }
         };
-        Thread t1 = new Thread(runnableAudio);
-        Thread t = new Thread(runnableVideo);
-        t.start();
-        t1.run();
+        Thread threadGetAudio = new Thread(runnableAudio);
+        Thread threadGetVideo = new Thread(runnableVideo);
+        threadGetAudio.start();
+        threadGetVideo.run();
 
     }
     public static void sendData(Socket socket,InetAddress inetAddress, int port)
@@ -285,10 +220,10 @@ public class TransmissionManager {
                 }
             }
         };
-        Thread t1 = new Thread(runnableAudio);
-        Thread t = new Thread(runnableVideo);
-        t.start();
-        t1.run();
+        Thread threadSendAudio= new Thread(runnableAudio);
+        Thread threadSendVideo = new Thread(runnableVideo);
+        threadSendAudio.start();
+        threadSendVideo.run();
 
     }
 
