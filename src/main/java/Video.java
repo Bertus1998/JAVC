@@ -72,7 +72,7 @@ public class Video {
     {
         if(getCommunicationWindowController()!=null)
         {
-
+            System.out.println("tada");
             Runnable runnableReceivingVideo = ()->
             {
                 while(receivingVideo)
