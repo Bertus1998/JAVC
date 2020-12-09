@@ -5,12 +5,11 @@ import javafx.scene.image.Image;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -36,19 +35,32 @@ public class Video {
         Video.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromWebcam(String port,InetAddress address) {
+    public static void captureAndSendFromWebcam(Socket socket) {
         if (getCommunicationWindowController() != null) {
             getWebcam().open();
 
             Runnable runnableTranssmitingVideo = () -> {
                 while (transmitingVideo) {
+                    try {
+                        BufferedImage bufferedImage =webcam.getImage();
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        ImageIO.write(bufferedImage, "jpg", bos );
+                        byte [] message = bos.toByteArray();
 
-                     BufferedImage bufferedImage = getWebcam().getImage();
-                    Image image= SwingFXUtils.toFXImage(bufferedImage, null);
-                    TransmissionManager.sendPacket(bufferedImage,port,address);
-                    Platform.runLater(() -> {
-                        communicationWindowController.timg.setImage(image);
-                    });
+                        DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+                        dOut.writeInt(message.length);
+                        dOut.write(message);
+
+                        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                        Platform.runLater(() -> {
+                            communicationWindowController.timg.setImage(image);
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
                 }
             };
             Thread thread = new Thread(runnableTranssmitingVideo);
@@ -56,46 +68,29 @@ public class Video {
 
         }
     }
-    public static void receiveAndShowImageFromWebcam(DatagramSocket datagramSocket)
+    public static void receiveAndShowImageFromWebcam(Socket socket)
     {
         if(getCommunicationWindowController()!=null)
         {
 
             Runnable runnableReceivingVideo = ()->
             {
-
-                byte[] message ;
-                byte [] arrayOfsize = new byte[4];
-                int size = 8;
                 while(receivingVideo)
                 {
+                    DataInputStream dIn = null;
                     try {
-
-                        message = TransmissionManager.getPacket(datagramSocket,size,true);
-                        for(int i =0 ;i<4; i ++)
-                        {
-                            arrayOfsize[i]  = message[i];
+                        dIn = new DataInputStream(socket.getInputStream());
+                        int length = dIn.readInt();
+                        if(length>0) {
+                            byte[] message = new byte[length];
+                            dIn.readFully(message, 0, message.length);
+                            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(message);
+                            BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
+                            Image image= SwingFXUtils.toFXImage(bufferedImage, null);
+                            Platform.runLater(() -> {
+                                communicationWindowController.rimg.setImage(image);
+                            });
                         }
-                        if(arrayOfsize.toString().equals("size"))
-                        {
-                            for(int i =4 ;i< message.length; i++)
-                            {
-                                arrayOfsize[i-4] = message[i];
-                            }
-                            size = ByteBuffer.wrap(arrayOfsize).getInt();
-                        }
-                        else
-                        {
-
-                         byte [] image = TransmissionManager.getPacket(datagramSocket,size,false);
-                            ByteArrayInputStream bis = new ByteArrayInputStream(image);
-                            BufferedImage finalImage  = ImageIO.read(bis);
-                          if(finalImage!=null) {
-                              getCommunicationWindowController().getRimg().setImage(SwingFXUtils.toFXImage(finalImage, null));
-                          }
-                            size =8;
-                        }
-
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
@@ -117,13 +112,13 @@ public class Video {
         }
     }
 
-    public static void getVideo(DatagramSocket datagramSocket)
+    public static void getVideo(Socket socket)
     {
-        receiveAndShowImageFromWebcam(datagramSocket);
+        receiveAndShowImageFromWebcam(socket);
     }
-    public static void sendVideo(String port, InetAddress address)
+    public static void sendVideo(Socket socket)
     {
-        captureAndSendFromWebcam(port,address);
+        captureAndSendFromWebcam(socket);
     }
 
 }

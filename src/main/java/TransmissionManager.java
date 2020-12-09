@@ -126,6 +126,8 @@ public class TransmissionManager {
             Socket socketTransmitAudio = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[2]));
             Socket socketTransmitVideo = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[3]));
             System.out.println("EXCELENT");
+            Video.sendVideo(socketTransmitVideo);
+            Video.getVideo(socketReceiveVideo);
         }
         else
         {
@@ -136,6 +138,8 @@ public class TransmissionManager {
             Socket socketReceiveVideo =  serwerSocketVideoReceive.accept();
             Socket socketReceiveAudio =  serwerSockeAudioReceive.accept();
             System.out.println("EXCELENT");
+            Video.sendVideo(socketTransmitVideo);
+            Video.getVideo(socketReceiveVideo);
         }
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
