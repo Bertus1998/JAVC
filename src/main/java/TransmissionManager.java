@@ -231,8 +231,8 @@ public class TransmissionManager {
             while(true) {
                 try {
                     Video.getWebcam().open();
-                    Audio.receiveAndStreamToLouder(socket);
                     Video.receiveAndShowImageFromWebcam(socket);
+                    Audio.receiveAndStreamToLouder(socket);
                 } catch (IOException | LineUnavailableException ioException) {
                     ioException.printStackTrace();
                 }
@@ -247,7 +247,6 @@ public class TransmissionManager {
 
             Runnable runnable = () -> {
                 while(true) {
-                    Video.getWebcam().open();
                     try {
                         Video.captureAndSendFromWebcam(socket);
                         Audio.captureAndSendFromMicro(socket);

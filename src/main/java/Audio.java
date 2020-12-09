@@ -29,11 +29,13 @@ public class Audio {
     public static void receiveAndStreamToLouder(Socket socket) throws LineUnavailableException, IOException {
         DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
         int length = dataInputStream.readInt();
+        System.out.println(length);
         byte[] message = new byte[length];
         dataInputStream.readFully(message,0,message.length);
         sourceDataLine.write(message, 0,message.length);
     }
     public static void configureAudio() throws LineUnavailableException {
+        audioFormat = new AudioFormat(10000.0f, 16, 1, true, true);
         DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
         sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
         sourceDataLine.open(audioFormat);
