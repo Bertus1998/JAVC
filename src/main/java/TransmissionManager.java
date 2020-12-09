@@ -164,23 +164,20 @@ public class TransmissionManager {
             System.out.println(message[i]);
         }
      if(caller) {
-         System.out.println(message[4]);
          datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]));
          datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]));
          datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[1]));
          datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[0]));
-         Video.sendVideo(datagramTransmitVideo,InetAddress.getByName(message[4]));
+         Video.sendVideo(message[2],InetAddress.getByName(message[4]));
          Video.getVideo(datagamReceiceVideo);
      }
      else
      {
-
-         System.out.println(message[4]);
          datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[3]));
          datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[2]));
          datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[1]));
          datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[0]));
-         Video.sendVideo(datagramTransmitVideo,InetAddress.getByName(message[4]));
+         Video.sendVideo(message[2],InetAddress.getByName(message[4]));
          Video.getVideo(datagamReceiceVideo);
      }
     }
@@ -203,10 +200,11 @@ public class TransmissionManager {
             return false;
         }
     }
-    public static void sendPacket(BufferedImage bufferedImage, DatagramSocket datagramSocket, InetAddress adress)
+    public static void sendPacket(BufferedImage bufferedImage, String port, InetAddress adress)
     {
         final int sizeOfBiggestPacket = 50*1024;
         try {
+            DatagramSocket datagramSocket = new DatagramSocket();
             DatagramPacket datagramPacket;
             byte[] arrayOfBytes = DataConverter.convertImageToByte(bufferedImage,1);
             byte[] sizeOfImage = Integer.toString(arrayOfBytes.length).getBytes();

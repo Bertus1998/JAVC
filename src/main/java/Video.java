@@ -36,7 +36,7 @@ public class Video {
         Video.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromWebcam(DatagramSocket datagramSocket,InetAddress address) {
+    public static void captureAndSendFromWebcam(String port,InetAddress address) {
         if (getCommunicationWindowController() != null) {
             getWebcam().open();
 
@@ -45,7 +45,7 @@ public class Video {
 
                      BufferedImage bufferedImage = getWebcam().getImage();
                     Image image= SwingFXUtils.toFXImage(bufferedImage, null);
-                    TransmissionManager.sendPacket(bufferedImage,datagramSocket,address);
+                    TransmissionManager.sendPacket(bufferedImage,port,address);
                     Platform.runLater(() -> {
                         communicationWindowController.timg.setImage(image);
                     });
@@ -118,9 +118,9 @@ public class Video {
     {
         receiveAndShowImageFromWebcam(datagramSocket);
     }
-    public static void sendVideo(DatagramSocket datagramSocket, InetAddress address)
+    public static void sendVideo(String port, InetAddress address)
     {
-        captureAndSendFromWebcam(datagramSocket,address);
+        captureAndSendFromWebcam(port,address);
     }
 
 }
