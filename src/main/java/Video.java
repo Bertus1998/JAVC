@@ -89,7 +89,10 @@ public class Video {
 
                          byte [] image = TransmissionManager.getPacket(datagramSocket,size,false);
                             ByteArrayInputStream bis = new ByteArrayInputStream(image);
-                            getCommunicationWindowController().getRimg().setImage(SwingFXUtils.toFXImage(ImageIO.read(bis),null));
+                            BufferedImage finalImage  = ImageIO.read(bis);
+                          if(finalImage!=null) {
+                              getCommunicationWindowController().getRimg().setImage(SwingFXUtils.toFXImage(finalImage, null));
+                          }
                             size =8;
                         }
 
