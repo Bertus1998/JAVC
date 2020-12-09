@@ -32,13 +32,9 @@ public class Video {
         Video.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromWebcam(Socket socket) {
+    public static void captureAndSendFromWebcam(Socket socket) throws IOException, InterruptedException {
         if (getCommunicationWindowController() != null) {
-            getWebcam().open();
 
-            Runnable runnableTranssmitingVideo = () -> {
-                while (transmitingVideo) {
-                    try {
                         BufferedImage bufferedImage =webcam.getImage();
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         ImageIO.write(bufferedImage, "jpg", bos );
@@ -51,30 +47,16 @@ public class Video {
                         Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                         Platform.runLater(() -> {
                             communicationWindowController.timg.setImage(image);
-                        });
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-
-                }
+                         });
             };
-            Thread thread = new Thread(runnableTranssmitingVideo);
-            thread.start();
+
 
         }
-    }
-    public static void receiveAndShowImageFromWebcam(Socket socket)
-    {
+
+    public static void receiveAndShowImageFromWebcam(Socket socket) throws IOException {
         if(getCommunicationWindowController()!=null)
         {
-            Runnable runnableReceivingVideo = ()->
-            {
-                while(receivingVideo)
-                {
                     DataInputStream dIn = null;
-                    try {
                         dIn = new DataInputStream(socket.getInputStream());
                         int length = dIn.readInt();
                         if(length>0) {
@@ -87,15 +69,7 @@ public class Video {
                                 communicationWindowController.rimg.setImage(image);
                             });
                         }
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                }
-            };
-            Thread thread = new Thread(runnableReceivingVideo);
-            thread.start();
         }
-
     }
     public static boolean configureWebcam() {
         setWebcam(Webcam.getDefault());
@@ -107,14 +81,4 @@ public class Video {
             return false;
         }
     }
-
-    public static void getVideo(Socket socket)
-    {
-        receiveAndShowImageFromWebcam(socket);
-    }
-    public static void sendVideo(Socket socket)
-    {
-        captureAndSendFromWebcam(socket);
-    }
-
 }

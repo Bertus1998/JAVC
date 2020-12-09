@@ -1,5 +1,6 @@
 import javafx.scene.control.Alert;
 
+import javax.sound.sampled.LineUnavailableException;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
@@ -119,27 +120,19 @@ public class TransmissionManager {
 
         if(caller)
         {
-            ServerSocket serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[0]));
-            ServerSocket serwerSockeAudioReceive = new ServerSocket(Integer.parseInt(message[1]));
-            Socket socketReceiveVideo =  serwerSocketVideoReceive.accept();
-            Socket socketReceiveAudio =  serwerSockeAudioReceive.accept();
-            Socket socketTransmitAudio = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[2]));
-            Socket socketTransmitVideo = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[3]));
-            System.out.println("EXCELENT");
-            Video.sendVideo(socketTransmitVideo);
-            Video.getVideo(socketReceiveVideo);
+            ServerSocket serwerSocketReceive = new ServerSocket(Integer.parseInt(message[0]));
+            Socket socketReceive =  serwerSocketReceive.accept();
+            Socket socketTransmit = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[3]));
+            sendData(socketTransmit);
+            getData(socketReceive);
         }
         else
         {
-            Socket socketTransmitVideo = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[0]));
-            Socket socketTransmitAudio = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[1]));
-            ServerSocket serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[2]));
-            ServerSocket serwerSockeAudioReceive = new ServerSocket(Integer.parseInt(message[3]));
-            Socket socketReceiveVideo =  serwerSocketVideoReceive.accept();
-            Socket socketReceiveAudio =  serwerSockeAudioReceive.accept();
-            System.out.println("EXCELENT");
-            Video.sendVideo(socketTransmitVideo);
-            Video.getVideo(socketReceiveVideo);
+            Socket socketTransmit = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[0]));
+            ServerSocket serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[3]));
+            Socket socketReceive = serwerSocketVideoReceive.accept();
+            sendData(socketTransmit);
+            getData(socketReceive);
         }
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
@@ -226,5 +219,43 @@ public class TransmissionManager {
         }
 
         }
+    public static void getData(Socket socket)
+    {
+
+        Runnable runnable = () -> {
+            while(true) {
+                try {
+                    Video.getWebcam().open();
+                    Audio.receiveAndStreamToLouder(socket);
+                    Video.receiveAndShowImageFromWebcam(socket);
+                } catch (IOException | LineUnavailableException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        };
+        Thread t = new Thread(runnable);
+        t.start();
+
+    }
+    public static void sendData(Socket socket)
+    {
+
+            Runnable runnable = () -> {
+                while(true) {
+                    Video.getWebcam().open();
+                    try {
+                        Video.captureAndSendFromWebcam(socket);
+                        Audio.captureAndSendFromMicro(socket);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    } catch (InterruptedException | LineUnavailableException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            Thread t = new Thread(runnable);
+            t.start();
+
+    }
 
 }
