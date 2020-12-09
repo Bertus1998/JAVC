@@ -210,7 +210,7 @@ public class TransmissionManager {
             byte[] sizeOfImage = Integer.toString(arrayOfBytes.length).getBytes();
             for(int i = 0;i<10;i++)
             {
-                datagramSocket.send(new DatagramPacket(sizeOfImage,4,0,adress,datagramSocket.getPort()));
+                datagramSocket.send(new DatagramPacket(sizeOfImage,4,0,adress,Integer.parseInt(port)));
             }
             for(int i = 0;i<(arrayOfBytes.length/sizeOfBiggestPacket);i++) {
                 int lengthOfMessage;
