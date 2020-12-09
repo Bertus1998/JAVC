@@ -36,22 +36,24 @@ public class Video {
         if (getCommunicationWindowController() != null) {
 
                         BufferedImage bufferedImage =webcam.getImage();
+                  if(bufferedImage!=null) {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        ImageIO.write(bufferedImage, "jpg", bos );
-                        byte [] message = bos.toByteArray();
+                            ImageIO.write(bufferedImage, "jpg", bos);
+                            byte[] message = bos.toByteArray();
 
-                        DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
-                        dOut.writeInt(message.length);
-                        dOut.write(message);
+                            DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+                            dOut.writeInt(message.length);
+                            dOut.write(message);
 
-                        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                        Platform.runLater(() -> {
-                            communicationWindowController.timg.setImage(image);
-                         });
+                            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                            Platform.runLater(() -> {
+                                communicationWindowController.timg.setImage(image);
+                            });
+                        }}
             };
 
 
-        }
+
 
     public static void receiveAndShowImageFromWebcam(Socket socket) throws IOException {
         if(getCommunicationWindowController()!=null)
