@@ -254,8 +254,10 @@ public class TransmissionManager {
                 }
             }
         };
+        Thread t1 = new Thread(runnableAudio);
         Thread t = new Thread(runnableVideo);
         t.start();
+        t1.run();
 
     }
     public static void sendData(Socket socket,InetAddress inetAddress, int port)
@@ -283,8 +285,10 @@ public class TransmissionManager {
                 }
             }
         };
-            Thread t = new Thread(runnableVideo);
-            t.start();
+        Thread t1 = new Thread(runnableAudio);
+        Thread t = new Thread(runnableVideo);
+        t.start();
+        t1.run();
 
     }
 
