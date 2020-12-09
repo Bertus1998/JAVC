@@ -135,8 +135,8 @@ public class TransmissionManager {
             socketReceive = serwerSocketVideoReceive.accept();
 
         }
-        Video.configureWebcam();
-        Audio.configureAudio();
+       // Video.configureWebcam();
+      //  Audio.configureAudio();
         sendData(socketTransmit);
         getData(socketReceive);
     }
@@ -232,7 +232,7 @@ public class TransmissionManager {
                 try {
                     Video.getWebcam().open();
                     Video.receiveAndShowImageFromWebcam(socket);
-                    Audio.receiveAndStreamToLouder(socket);
+                //    Audio.receiveAndStreamToLouder(socket);
                 } catch (IOException | LineUnavailableException ioException) {
                     ioException.printStackTrace();
                 }
@@ -249,7 +249,7 @@ public class TransmissionManager {
                 while(true) {
                     try {
                         Video.captureAndSendFromWebcam(socket);
-                        Audio.captureAndSendFromMicro(socket);
+                     //   Audio.captureAndSendFromMicro(socket);
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     } catch (InterruptedException | LineUnavailableException e) {
