@@ -121,24 +121,30 @@ public class TransmissionManager {
         ServerSocket serwerSocketVideoReceive;
         Socket socketReceive;
         Socket socketTransmit;
+        int portReceive,portTransmit;
+        InetAddress inetAddress =InetAddress.getByName(message[4]);
         if(caller)
         {
+            portReceive = Integer.parseInt(message[1]);
+            portTransmit = Integer.parseInt(message[2]);
             ServerSocket serwerSocketReceive = new ServerSocket(Integer.parseInt(message[0]));
             socketReceive =  serwerSocketReceive.accept();
-            socketTransmit = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[3]));
+            socketTransmit = new Socket(inetAddress,Integer.parseInt(message[3]));
 
         }
         else
         {
-            socketTransmit = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[0]));
+            portReceive = Integer.parseInt(message[2]);
+            portTransmit = Integer.parseInt(message[1]);
+            socketTransmit = new Socket(inetAddress,Integer.parseInt(message[0]));
             serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[3]));
             socketReceive = serwerSocketVideoReceive.accept();
 
         }
-       // Video.configureWebcam();
-      //  Audio.configureAudio();
-        sendData(socketTransmit);
-        getData(socketReceive);
+         Video.configureWebcam();
+        Audio.configureAudio();
+        sendData(socketTransmit,inetAddress,portTransmit);
+        getData(socketReceive,portReceive);
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
     {
@@ -224,40 +230,60 @@ public class TransmissionManager {
         }
 
         }
-    public static void getData(Socket socket) throws LineUnavailableException {
+    public static void getData(Socket socket, int port) throws LineUnavailableException {
 
 
-        Runnable runnable = () -> {
+        Runnable runnableVideo = () -> {
             while(true) {
                 try {
                     Video.getWebcam().open();
                     Video.receiveAndShowImageFromWebcam(socket);
-                //    Audio.receiveAndStreamToLouder(socket);
-                } catch (IOException | LineUnavailableException ioException) {
+                } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
             }
         };
-        Thread t = new Thread(runnable);
+        Runnable runnableAudio = () -> {
+            while(true) {
+                try {
+                    Audio.receiveAndStreamToLouder(port);
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        };
+        Thread t = new Thread(runnableVideo);
         t.start();
 
     }
-    public static void sendData(Socket socket)
+    public static void sendData(Socket socket,InetAddress inetAddress, int port)
     {
 
-            Runnable runnable = () -> {
+            Runnable runnableVideo = () -> {
                 while(true) {
                     try {
                         Video.captureAndSendFromWebcam(socket);
-                     //   Audio.captureAndSendFromMicro(socket);
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
-                    } catch (InterruptedException | LineUnavailableException e) {
+                    } catch (InterruptedException  e) {
                         e.printStackTrace();
                     }
                 }
             };
-            Thread t = new Thread(runnable);
+        Runnable runnableAudio = () -> {
+            while(true) {
+                try {
+                    Audio.captureAndSendFromMicro(inetAddress,port);
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        };
+            Thread t = new Thread(runnableVideo);
             t.start();
 
     }
