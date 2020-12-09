@@ -49,8 +49,9 @@ public class Audio {
         audioFormat = new AudioFormat(8000.0f, 16, 1, true, true);
         targetDataLine = AudioSystem.getTargetDataLine(audioFormat);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
+        DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
         targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
-        sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
+        sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
         sourceDataLine.open(audioFormat);
         targetDataLine.open(audioFormat);
 
