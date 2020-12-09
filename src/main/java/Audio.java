@@ -1,4 +1,5 @@
 import javax.sound.sampled.*;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,18 +15,20 @@ public class Audio {
 
 
     public static void captureAndSendFromMicro(InetAddress inetAddress, int port) throws LineUnavailableException, IOException {
-        byte[] transmitBufferedAudioBytes = new byte[targetDataLine.getBufferSize() / 5];
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int numBytesRead;
         DatagramSocket datagramSocket = new DatagramSocket();
-          int numBytesRead;
-        DatagramPacket datagramPacket;
+
         int CHUNK_SIZE = 1024;
+        byte[] data = new byte[targetDataLine.getBufferSize() / 5];
         int bytesRead = 0;
-        numBytesRead = targetDataLine.read(transmitBufferedAudioBytes, 0, CHUNK_SIZE);
-        bytesRead += numBytesRead;
-        if (bytesRead > targetDataLine.getBufferSize() / 5) {
-            datagramPacket = new DatagramPacket(transmitBufferedAudioBytes,targetDataLine.getBufferSize() / 5,inetAddress,port);
-            datagramSocket.send(datagramPacket);
-            System.out.println("XD");
+        targetDataLine.start();
+        while(true) {
+            numBytesRead = targetDataLine.read(data, 0, CHUNK_SIZE);
+            bytesRead += numBytesRead;
+            if (bytesRead > targetDataLine.getBufferSize() / 5) {
+                datagramSocket.send(new DatagramPacket(data,0,inetAddress,port));
+            }
         }
 
     }
@@ -34,20 +37,23 @@ public class Audio {
         byte[] transmitBufferedAudioBytes = new byte[targetDataLine.getBufferSize() / 5];
         DatagramPacket datagramPacket = new DatagramPacket(transmitBufferedAudioBytes,targetDataLine.getBufferSize() / 5);
         DatagramSocket datagramSocket = new DatagramSocket(port);
-        datagramSocket.receive(datagramPacket);
-        sourceDataLine.write(transmitBufferedAudioBytes, 0,targetDataLine.getBufferSize() / 5);
-    }
+        sourceDataLine.start();
+        while(true)
+        {
+            datagramSocket.receive(datagramPacket);
+            sourceDataLine.write(transmitBufferedAudioBytes,0,transmitBufferedAudioBytes.length);
+
+        }
+      }
     public static void configureAudio() throws LineUnavailableException {
-        audioFormat = new AudioFormat(10000.0f, 16, 1, true, true);
-        DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
-        sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+        audioFormat = new AudioFormat(8000.0f, 16, 1, true, true);
         targetDataLine = AudioSystem.getTargetDataLine(audioFormat);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
         targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
-        targetDataLine.open((audioFormat));
+        sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
         sourceDataLine.open(audioFormat);
-        sourceDataLine.start();
-        targetDataLine.start();
+        targetDataLine.open(audioFormat);
+
     }
 
 }
