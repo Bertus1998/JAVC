@@ -6,9 +6,6 @@ import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -72,7 +69,6 @@ public class Video {
     {
         if(getCommunicationWindowController()!=null)
         {
-            System.out.println("tada");
             Runnable runnableReceivingVideo = ()->
             {
                 while(receivingVideo)
