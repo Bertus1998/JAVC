@@ -1,8 +1,5 @@
-import com.sun.mail.iap.ByteArray;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 
-import javax.sound.sampled.Port;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
@@ -11,10 +8,7 @@ import java.util.ArrayList;
 public class TransmissionManager {
    static InetAddress severAddress;
    static boolean waitForRespond;
-   private static DatagramSocket datagramTransmitVideo;
-   private static DatagramSocket datagramTransmitAudio;
-   private static DatagramSocket datagamReceiceVideo;
-   private static DatagramSocket datagramReceiveAudio;
+
     public static boolean isWaitForRespond() {
         return waitForRespond;
     }
@@ -41,39 +35,6 @@ public class TransmissionManager {
             ioException.printStackTrace();
         }
     }
-
-    public static DatagramSocket getDatagramTransmitVideo() {
-        return datagramTransmitVideo;
-    }
-
-    public static void setDatagramTransmitVideo(DatagramSocket datagramTransmitVideo) {
-        TransmissionManager.datagramTransmitVideo = datagramTransmitVideo;
-    }
-
-    public static DatagramSocket getDatagramTransmitAudio() {
-        return datagramTransmitAudio;
-    }
-
-    public static void setDatagramTransmitAudio(DatagramSocket datagramTransmitAudio) {
-        TransmissionManager.datagramTransmitAudio = datagramTransmitAudio;
-    }
-
-    public static DatagramSocket getDatagamReceiceVideo() {
-        return datagamReceiceVideo;
-    }
-
-    public static void setDatagamReceiceVideo(DatagramSocket datagamReceiceVideo) {
-        TransmissionManager.datagamReceiceVideo = datagamReceiceVideo;
-    }
-
-    public static DatagramSocket getDatagramReceiveAudio() {
-        return datagramReceiveAudio;
-    }
-
-    public static void setDatagramReceiveAudio(DatagramSocket datagramReceiveAudio) {
-        TransmissionManager.datagramReceiveAudio = datagramReceiveAudio;
-    }
-
     public static Socket getClient() {
         return client;
     }
@@ -82,7 +43,6 @@ public class TransmissionManager {
         TransmissionManager.client = client;
     }
 
-    static DatagramSocket datagramSocket;//UDP z serwere
     public static boolean login(String message) throws IOException {
         if (client==null) {
             client = new Socket(severAddress,5003);
@@ -96,9 +56,6 @@ public class TransmissionManager {
 
         return false;
     }
-
-
-
 
     public static boolean register(String message) throws IOException {
         TransmissionManager.sendMessageToServer(client,message);
@@ -157,29 +114,29 @@ public class TransmissionManager {
             alert.showAndWait();
         }
     }
-    public static void startTransmission(String []message,boolean caller) throws SocketException, UnknownHostException {
+    public static void startTransmission(String []message,boolean caller) throws IOException {
       // 1 videoreceive/ 2 aidoreceive /3 audiotransmit /4 video transmit // 5 socket
-        for(int i =0;i<message.length;i++)
+
+        if(caller)
         {
-            System.out.println(message[i]);
+            ServerSocket serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[0]));
+            ServerSocket serwerSockeAudioReceive = new ServerSocket(Integer.parseInt(message[1]));
+            Socket socketReceiveVideo =  serwerSocketVideoReceive.accept();
+            Socket socketReceiveAudio =  serwerSockeAudioReceive.accept();
+            Socket socketTransmitAudio = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[2]));
+            Socket socketTransmitVideo = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[3]));
+            System.out.println("EXCELENT");
         }
-     if(caller) {
-         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[3]));
-         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[2]));
-         datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[1]));
-         datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[0]));
-         Video.sendVideo(message[2],InetAddress.getByName(message[4]));
-         Video.getVideo(datagamReceiceVideo);
-     }
-     else
-     {
-         datagramReceiveAudio = new DatagramSocket(Integer.parseInt(message[3]));
-         datagamReceiceVideo = new DatagramSocket(Integer.parseInt(message[2]));
-         datagramTransmitAudio = new DatagramSocket(Integer.parseInt(message[1]));
-         datagramTransmitVideo = new DatagramSocket(Integer.parseInt(message[0]));
-         Video.sendVideo(message[2],InetAddress.getByName(message[4]));
-         Video.getVideo(datagamReceiceVideo);
-     }
+        else
+        {
+            Socket socketTransmitVideo = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[0]));
+            Socket socketTransmitAudio = new Socket(InetAddress.getByName(message[4]),Integer.parseInt(message[1]));
+            ServerSocket serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[2]));
+            ServerSocket serwerSockeAudioReceive = new ServerSocket(Integer.parseInt(message[3]));
+            Socket socketReceiveVideo =  serwerSocketVideoReceive.accept();
+            Socket socketReceiveAudio =  serwerSockeAudioReceive.accept();
+            System.out.println("EXCELENT");
+        }
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
     {
