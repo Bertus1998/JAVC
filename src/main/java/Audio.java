@@ -16,7 +16,6 @@ public class Audio {
 
 
     public static void captureAndSendFromMicro(InetAddress inetAddress, int port) throws LineUnavailableException, IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         int numBytesRead;
         DatagramSocket datagramSocket = new DatagramSocket();
 
@@ -27,11 +26,10 @@ public class Audio {
         while(true) {
 
             numBytesRead = targetDataLine.read(data, 0, CHUNK_SIZE);
-            System.out.println("send" + Arrays.toString(data));
             bytesRead += numBytesRead;
             if (bytesRead > targetDataLine.getBufferSize() / 5) {
                 System.out.println(numBytesRead);
-                datagramSocket.send(new DatagramPacket(data,0,inetAddress,port));
+                datagramSocket.send(new DatagramPacket(data,targetDataLine.getBufferSize()/5,inetAddress,port));
             }
         }
 
@@ -47,7 +45,7 @@ public class Audio {
             System.out.println("receive " + Arrays.toString(transmitBufferedAudioBytes));
             datagramSocket.receive(datagramPacket);
             sourceDataLine.write(transmitBufferedAudioBytes,0,transmitBufferedAudioBytes.length);
-
+            System.out.println(Arrays.toString(transmitBufferedAudioBytes));
         }
       }
     public static void configureAudio() throws LineUnavailableException {
