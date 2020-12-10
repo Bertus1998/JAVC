@@ -26,9 +26,10 @@ public class Audio {
         while(true) {
 
             numBytesRead = targetDataLine.read(data, 0, CHUNK_SIZE);
-            System.out.println(numBytesRead);
+
             bytesRead += numBytesRead;
             if (bytesRead > targetDataLine.getBufferSize() / 5) {
+                System.out.println(numBytesRead);
                 datagramSocket.send(new DatagramPacket(data,0,inetAddress,port));
             }
         }

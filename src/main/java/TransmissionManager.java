@@ -177,7 +177,6 @@ public class TransmissionManager {
             }
         };
         Runnable runnableAudio = () -> {
-            while(true) {
                 try {
 
                     Audio.receiveAndStreamToLouder(port);
@@ -185,7 +184,7 @@ public class TransmissionManager {
                 catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
-            }
+
         };
         Thread threadGetAudio = new Thread(runnableAudio);
         Thread threadGetVideo = new Thread(runnableVideo);
@@ -202,13 +201,13 @@ public class TransmissionManager {
                         Video.captureAndSendFromWebcam(socket);
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
-                    } catch (InterruptedException  e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
+
             };
         Runnable runnableAudio = () -> {
-            while(true) {
                 try {
                     Audio.captureAndSendFromMicro(inetAddress,port);
                 } catch (LineUnavailableException e) {
@@ -216,7 +215,7 @@ public class TransmissionManager {
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
-            }
+
         };
         Thread threadSendAudio= new Thread(runnableAudio);
         Thread threadSendVideo = new Thread(runnableVideo);
