@@ -166,8 +166,6 @@ public class TransmissionManager {
         }
     }
     public static void getData(Socket socket, int port) throws LineUnavailableException {
-
-
         Runnable runnableVideo = () -> {
             while(true) {
                 try {
