@@ -189,7 +189,7 @@ public class TransmissionManager {
         Thread threadGetAudio = new Thread(runnableAudio);
         Thread threadGetVideo = new Thread(runnableVideo);
         threadGetAudio.start();
-        threadGetVideo.run();
+        threadGetVideo.start();
 
     }
     public static void sendData(Socket socket,InetAddress inetAddress, int port)
@@ -220,7 +220,7 @@ public class TransmissionManager {
         Thread threadSendAudio= new Thread(runnableAudio);
         Thread threadSendVideo = new Thread(runnableVideo);
         threadSendAudio.start();
-        threadSendVideo.run();
+        threadSendVideo.start();
 
     }
 

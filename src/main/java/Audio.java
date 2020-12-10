@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class Audio {
     private static AudioFormat audioFormat;
@@ -26,7 +27,7 @@ public class Audio {
         while(true) {
 
             numBytesRead = targetDataLine.read(data, 0, CHUNK_SIZE);
-
+            System.out.println("send" + Arrays.toString(data));
             bytesRead += numBytesRead;
             if (bytesRead > targetDataLine.getBufferSize() / 5) {
                 System.out.println(numBytesRead);
@@ -43,7 +44,7 @@ public class Audio {
         sourceDataLine.start();
         while(true)
         {
-            System.out.println(transmitBufferedAudioBytes);
+            System.out.println("receive " + Arrays.toString(transmitBufferedAudioBytes));
             datagramSocket.receive(datagramPacket);
             sourceDataLine.write(transmitBufferedAudioBytes,0,transmitBufferedAudioBytes.length);
 
