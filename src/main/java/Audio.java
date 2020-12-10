@@ -19,7 +19,7 @@ public class Audio {
         int numBytesRead;
         DatagramSocket datagramSocket = new DatagramSocket();
 
-        int CHUNK_SIZE = 512;
+        int CHUNK_SIZE = 1024;
         byte[] data = new byte[targetDataLine.getBufferSize() / 5];
         int bytesRead = 0;
         targetDataLine.start();
@@ -46,12 +46,7 @@ public class Audio {
         }
       }
     public static void configureAudio() throws LineUnavailableException {
-        AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
-        float rate = 44100.0f;
-        int channels = 2;
-        int sampleSize = 16;
-        boolean bigEndian = true;
-        audioFormat = new AudioFormat(encoding, rate, sampleSize, channels, (sampleSize / 8) * channels, rate, bigEndian);
+        audioFormat = new AudioFormat(44100.0f, 16, 1, true, true);
         targetDataLine = AudioSystem.getTargetDataLine(audioFormat);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
         DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
