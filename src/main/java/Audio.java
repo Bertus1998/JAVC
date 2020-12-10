@@ -19,7 +19,7 @@ public class Audio {
         int numBytesRead;
         DatagramSocket datagramSocket = new DatagramSocket();
 
-        int CHUNK_SIZE = 1024;
+        int CHUNK_SIZE = 512;
         byte[] data = new byte[targetDataLine.getBufferSize() / 5];
         int bytesRead = 0;
         targetDataLine.start();
