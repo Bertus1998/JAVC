@@ -46,7 +46,12 @@ public class Audio {
         }
       }
     public static void configureAudio() throws LineUnavailableException {
-        audioFormat = new AudioFormat(44100.0f, 16, 2, true, true);
+        AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
+        float rate = 44100.0f;
+        int channels = 2;
+        int sampleSize = 16;
+        boolean bigEndian = true;
+        audioFormat = new AudioFormat(encoding, rate, sampleSize, channels, (sampleSize / 8) * channels, rate, bigEndian);
         targetDataLine = AudioSystem.getTargetDataLine(audioFormat);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
         DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
