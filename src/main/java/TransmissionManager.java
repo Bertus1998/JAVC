@@ -166,7 +166,7 @@ public class TransmissionManager {
         }
     }
     public static void getData(Socket socket, int port) throws LineUnavailableException {
-        Runnable runnableVideo = () -> {
+      /*  Runnable runnableVideo = () -> {
             while(true) {
                 try {
                     Video.getWebcam().open();
@@ -176,6 +176,8 @@ public class TransmissionManager {
                 }
             }
         };
+
+       */
         Runnable runnableAudio = () -> {
                 try {
 
@@ -187,14 +189,14 @@ public class TransmissionManager {
 
         };
         Thread threadGetAudio = new Thread(runnableAudio);
-        Thread threadGetVideo = new Thread(runnableVideo);
+      //  Thread threadGetVideo = new Thread(runnableVideo);
         threadGetAudio.start();
-        threadGetVideo.start();
+        //threadGetVideo.start();
 
     }
     public static void sendData(Socket socket,InetAddress inetAddress, int port)
     {
-
+/*
             Runnable runnableVideo = () -> {
                 while(true) {
                     try {
@@ -207,6 +209,8 @@ public class TransmissionManager {
                 }
 
             };
+
+ */
         Runnable runnableAudio = () -> {
                 try {
                     Audio.captureAndSendFromMicro(inetAddress,port);
@@ -218,9 +222,9 @@ public class TransmissionManager {
 
         };
         Thread threadSendAudio= new Thread(runnableAudio);
-        Thread threadSendVideo = new Thread(runnableVideo);
+     //   Thread threadSendVideo = new Thread(runnableVideo);
         threadSendAudio.start();
-        threadSendVideo.start();
+      //  threadSendVideo.start();
 
     }
 

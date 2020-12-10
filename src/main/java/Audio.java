@@ -19,7 +19,7 @@ public class Audio {
         int numBytesRead;
         DatagramSocket datagramSocket = new DatagramSocket();
 
-        int CHUNK_SIZE = 1024;
+        int CHUNK_SIZE = 128;
         byte[] data = new byte[targetDataLine.getBufferSize() / 5];
         int bytesRead = 0;
         targetDataLine.start();
@@ -29,7 +29,7 @@ public class Audio {
             bytesRead += numBytesRead;
 
                 datagramSocket.send(new DatagramPacket(data,targetDataLine.getBufferSize()/5,inetAddress,port));
-                System.out.println("SEND : "+Arrays.toString(data));
+            //    System.out.println("SEND : "+Arrays.toString(data));
 
         }
 
@@ -43,12 +43,12 @@ public class Audio {
         while(true)
         {
             datagramSocket.receive(datagramPacket);
-            System.out.println("RECEIED : " + Arrays.toString(transmitBufferedAudioBytes));
+        //    System.out.println("RECEIED : " + Arrays.toString(transmitBufferedAudioBytes));
             sourceDataLine.write(datagramPacket.getData(),0,datagramPacket.getData().length);
         }
       }
     public static void configureAudio() throws LineUnavailableException {
-        audioFormat = new AudioFormat(44100.0f, 16, 1, true, true);
+        audioFormat = new AudioFormat(40000.0f, 16, 1, true, true);
         targetDataLine = AudioSystem.getTargetDataLine(audioFormat);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
         DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
