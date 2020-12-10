@@ -44,7 +44,7 @@ public class Audio {
         {
             datagramSocket.receive(datagramPacket);
             System.out.println("RECEIED : " + Arrays.toString(transmitBufferedAudioBytes));
-            sourceDataLine.write(transmitBufferedAudioBytes,0,transmitBufferedAudioBytes.length);
+            sourceDataLine.write(datagramPacket.getData(),0,datagramPacket.getData().length);
         }
       }
     public static void configureAudio() throws LineUnavailableException {
