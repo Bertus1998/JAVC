@@ -16,7 +16,7 @@ public class DataConverter {
     static Iterator<ImageWriter> writers;
     public static BufferedImage qualityOfImage(float percent, BufferedImage image) throws IOException {
         System.out.println(percent);
-        if(percent<1) {
+        if(percent<100) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageOutputStream ios = ImageIO.createImageOutputStream(byteArrayOutputStream);
             imageWriter.setOutput(ios);
