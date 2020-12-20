@@ -56,6 +56,7 @@ public class LoginWindowController {
             communicationWindowController.serverListiner();
             TransmissionManager.setWaitForRespond(false);
             Video.setCommunicationWindowController(communicationWindowController);
+            Audio.setCommunicationWindowController(communicationWindowController);
         }
     }
 }

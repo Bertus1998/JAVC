@@ -31,6 +31,11 @@ public class DataConverter {
             return image;
         }
     }
+    public static float qualityOfAudio(float percent)
+    {
+
+        return 8000+360*percent;
+    }
 
 
   public static void  configureDataConverter()

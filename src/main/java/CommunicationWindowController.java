@@ -30,13 +30,17 @@ public class CommunicationWindowController {
        uploadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
                 sliderUploadSpeedValue =(float)uploadSpeed.getValue();
+                try {
+                    Audio.configureAudioSend(8000+320*sliderUploadSpeedValue);
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
         downloadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
                 sliderDownloadSpeedValue =(float)downloadSpeed.getValue();
-
             }
         });
     }
@@ -105,6 +109,7 @@ public class CommunicationWindowController {
     }
 
     public void deleteFriend(ActionEvent event) {
+
     }
 
     public void respondForRequest(ActionEvent event) throws IOException {
