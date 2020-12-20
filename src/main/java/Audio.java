@@ -67,22 +67,22 @@ public class Audio {
 
         }
       }
-    public static void configureAudioSend(float sampleRate) throws LineUnavailableException {
+    public static void configureAudioSend(float sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
         System.out.println("SEND" + sampleRate);
         sizeToSend = (int)sampleRate/5;
         dataToSend = new byte[(int)sampleRate / 5];
-        datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length);
+        datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddress, port);
         audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
         targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
         targetDataLine.open(audioFormatToSend);
         targetDataLine.start();
     }
-    public static void configureAudioReceive(float sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
+    public static void configureAudioReceive(float sampleRate) throws LineUnavailableException {
         System.out.println("RECEIVE" + sampleRate);
         sizeToReceive = (int)sampleRate/5;
         dataToReceive = new byte[(int)sampleRate / 5];
-        datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length,inetAddress,port);
+        datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
         audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
         sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);

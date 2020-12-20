@@ -142,10 +142,10 @@ public class TransmissionManager {
 
         }
         Video.configureWebcam();
-        Audio.configureAudioSend(10000);
-        Audio.configureAudioReceive(10000,inetAddress,portTransmit);
+        Audio.configureAudioSend(10000,inetAddress, portTransmit);
+        Audio.configureAudioReceive(10000);
         sendData(socketTransmit);
-        getData(socketReceive,portReceive);
+        getData(socketReceive, portReceive);
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
     {
@@ -166,7 +166,7 @@ public class TransmissionManager {
             return false;
         }
     }
-    public static void getData(Socket socket, int port) throws LineUnavailableException {
+    public static void getData(Socket socket,int port) throws LineUnavailableException {
        Runnable runnableVideo = () -> {
             while(true) {
                 try {
