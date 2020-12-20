@@ -63,14 +63,12 @@ public class Audio {
         {
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive =datagramPacketToReceive.getData();
-
-
-               System.out.println(dataToReceive);
-                sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
+            System.out.println(dataToReceive.toString());
+            sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
 
         }
       }
-    public static void configureAudioSend(float sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
+    public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
         System.out.println("SEND" + sampleRate);
         sizeToSend = (int)sampleRate/5;
         dataToSend = new byte[(int)sampleRate / 5];
@@ -81,7 +79,7 @@ public class Audio {
         targetDataLine.open(audioFormatToSend);
         targetDataLine.start();
     }
-    public static void configureAudioReceive(float sampleRate) throws LineUnavailableException {
+    public static void configureAudioReceive(int sampleRate) throws LineUnavailableException {
         System.out.println("RECEIVE" + sampleRate);
         sizeToReceive = (int)sampleRate/5;
         dataToReceive = new byte[(int)sampleRate / 5];
@@ -93,14 +91,15 @@ public class Audio {
         sourceDataLine.start();
 
     }
-    public static void reconfigureAudioSend(float sampleRate) throws LineUnavailableException, IOException {
+    public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
         {
             DatagramSocket datagramSocket = new DatagramSocket();
-            datagramPacketToReceive.setData(ByteBuffer.allocate(sizeToSend).putFloat(sampleRate).array());
-            for(int i =0;i<1000;i++)
-            {
-                //datagramSocket.send(datagramPacketToReceive);
-                System.out.println(ByteBuffer.allocate(sizeToSend).putFloat(sampleRate).array());
+            String string = "Change " + String.valueOf(sampleRate);
+            dataToSend = string.getBytes();
+            datagramPacketToSend.setData(dataToSend);
+            for(int i =0;i<1000;i++) {
+                datagramSocket.send(datagramPacketToSend);
+                System.out.println(i);
             }
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];
