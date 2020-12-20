@@ -58,11 +58,25 @@ public class Audio {
     public static void receiveAndStreamToLouder(int port) throws IOException, LineUnavailableException {
 
         DatagramSocket datagramSocket = new DatagramSocket(port);
-
+        byte[] checkArray = new byte[8];
+        byte [] intArray = new byte[4];
         while(true)
         {
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive =datagramPacketToReceive.getData();
+            for(int i = 0 ;i<8; i++)
+            {
+                checkArray[i] = dataToReceive[i];
+            }
+            if(checkArray.toString().equals("Change")) {
+                for (int i = 0; i < 4; i++)
+                {
+                    intArray[i] = dataToReceive[i+8];
+                    for(int j =0 ; j<100000;j++) {
+                        System.out.println("WE DID IT!");
+                    }
+                }
+            }
             System.out.println(dataToReceive.toString());
             sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
 
@@ -70,6 +84,8 @@ public class Audio {
       }
     public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
         System.out.println("SEND" + sampleRate);
+        inetAddressTemp =inetAddress;
+        portTemp = port;
         sizeToSend = (int)sampleRate/5;
         dataToSend = new byte[(int)sampleRate / 5];
         datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddress, port);
@@ -96,6 +112,7 @@ public class Audio {
             DatagramSocket datagramSocket = new DatagramSocket();
             String string = "Change " + String.valueOf(sampleRate);
             byte [] array = new byte[dataToSend.length];
+            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTemp);
             for(int i =0;i< string.getBytes().length ; i++) {
                 array[i] = string.getBytes()[i];
             }
@@ -103,10 +120,10 @@ public class Audio {
             for(int i =0;i<100;i++) {
                 datagramSocket.send(datagramPacketToSend);
                 System.out.println(datagramPacketToSend.getData().length);
+                System.out.println(array.toString());
             }
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];
-            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTemp);
             audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
