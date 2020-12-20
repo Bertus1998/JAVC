@@ -63,14 +63,11 @@ public class Audio {
         {
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive =datagramPacketToReceive.getData();
-            System.out.println("Receive: " +dataToReceive);
-           // if(ByteBuffer.wrap(dataToReceive).order(ByteOrder.LITTLE_ENDIAN).getFloat()<44000)
-          //  {
-        //    configureAudioReceive(ByteBuffer.wrap(dataToReceive).order(ByteOrder.LITTLE_ENDIAN).getFloat());
-        //    }
-        //    else {
+
+
+               System.out.println(dataToReceive);
                 sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
-        //    }
+
         }
       }
     public static void configureAudioSend(float sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
@@ -100,9 +97,10 @@ public class Audio {
         {
             DatagramSocket datagramSocket = new DatagramSocket();
             datagramPacketToReceive.setData(ByteBuffer.allocate(sizeToSend).putFloat(sampleRate).array());
-            for(int i =0;i<10;i++)
+            for(int i =0;i<1000;i++)
             {
-                datagramSocket.send(datagramPacketToReceive);
+                //datagramSocket.send(datagramPacketToReceive);
+                System.out.println(ByteBuffer.allocate(sizeToSend).putFloat(sampleRate).array());
             }
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];
