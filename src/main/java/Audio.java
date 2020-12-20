@@ -44,6 +44,7 @@ public class Audio {
             bytesRead += numBytesRead;
             if (bytesRead > targetDataLine.getBufferSize() / 5) {
                 datagramSocket.send(datagramPacketToSend);
+                System.out.println("Send");
             }
 
         }
@@ -53,14 +54,16 @@ public class Audio {
     public static void receiveAndStreamToLouder(int port) throws  IOException {
 
         DatagramSocket datagramSocket = new DatagramSocket(port);
-        sourceDataLine.start();
+
         while(true)
         {
             datagramSocket.receive(datagramPacketToReceive);
             sourceDataLine.write(datagramPacketToReceive.getData(),0,datagramPacketToReceive.getData().length);
+            System.out.println("Receive");
         }
       }
     public static void configureAudioSend(float sampleRate) throws LineUnavailableException {
+       targetDataLine.stop();
         sizeToSend = (int)sampleRate/5;
         dataToSend = new byte[(int)sampleRate / 5];
         datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length);
@@ -69,8 +72,10 @@ public class Audio {
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
         targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
         targetDataLine.open(audioFormatToSend);
+        targetDataLine.start();
     }
     public static void configureAudioReceive(float sampleRate) throws LineUnavailableException {
+        sourceDataLine.stop();
         sizeToReceive = (int)sampleRate/5;
         dataToReceive = new byte[(int)sampleRate / 5];
         datagramPacketToReceive = new DatagramPacket(dataToReceive, dataToReceive.length);
@@ -79,5 +84,7 @@ public class Audio {
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
         sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
         sourceDataLine.open(audioFormatToReceive);
+        sourceDataLine.start();
+
     }
 }
