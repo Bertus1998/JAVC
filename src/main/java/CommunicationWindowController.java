@@ -25,7 +25,8 @@ public class CommunicationWindowController {
     public Text textMail, textLogin, choosenFriend;
     public TextField ipAdressText, portText;
     public GridPane gridPaneFriend;
-    public ScrollBar uploadSpeed;
+    @FXML
+    public Slider uploadSpeed, downloadSpeed;
 
     public GridPane getGridPaneFriend() {
         return gridPaneFriend;

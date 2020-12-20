@@ -46,7 +46,7 @@ public class TransmissionManager {
 
     public static boolean login(String message) throws IOException {
         if (client==null) {
-            client = new Socket(severAddress,5003);
+            client = new Socket(severAddress,5004);
         }
             TransmissionManager.sendMessageToServer(client,message);
             String receivedMessage = TransmissionManager.getMessageFromServer(client);
