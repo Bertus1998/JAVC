@@ -95,11 +95,14 @@ public class Audio {
         {
             DatagramSocket datagramSocket = new DatagramSocket();
             String string = "Change " + String.valueOf(sampleRate);
-            dataToSend = string.getBytes();
-            datagramPacketToSend.setData(dataToSend);
-            for(int i =0;i<1000;i++) {
+            byte [] array = new byte[dataToSend.length];
+            for(int i =0;i< string.getBytes().length ; i++) {
+                array[i] = string.getBytes()[i];
+            }
+            datagramPacketToSend.setData(array);
+            for(int i =0;i<100;i++) {
                 datagramSocket.send(datagramPacketToSend);
-                System.out.println(i);
+                System.out.println(datagramPacketToSend.getData().length);
             }
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];

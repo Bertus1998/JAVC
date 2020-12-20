@@ -31,7 +31,7 @@ public class CommunicationWindowController {
             if (!newVal) {
                 sliderUploadSpeedValue =(float)uploadSpeed.getValue();
                try {
-                    Audio.reconfigureAudioSend((int)(8000+320*sliderUploadSpeedValue));
+                    Audio.reconfigureAudioSend((8000+320*(int)sliderUploadSpeedValue));
                 } catch (LineUnavailableException | IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
