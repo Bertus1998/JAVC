@@ -143,8 +143,8 @@ public class TransmissionManager {
         }
         Video.configureWebcam();
         Audio.configureAudioSend(10000);
-        Audio.configureAudioReceive(10000);
-        sendData(socketTransmit,inetAddress,portTransmit);
+        Audio.configureAudioReceive(10000,inetAddress,portTransmit);
+        sendData(socketTransmit);
         getData(socketReceive,portReceive);
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
@@ -193,7 +193,7 @@ public class TransmissionManager {
         threadGetVideo.start();
 
     }
-    public static void sendData(Socket socket,InetAddress inetAddress, int port)
+    public static void sendData(Socket socket)
     {
             Runnable runnableVideo = () -> {
                 DataConverter.configureDataConverter();
@@ -210,7 +210,7 @@ public class TransmissionManager {
             };
         Runnable runnableAudio = () -> {
                 try {
-                    Audio.captureAndSendFromMicro(inetAddress,port);
+                    Audio.captureAndSendFromMicro();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }

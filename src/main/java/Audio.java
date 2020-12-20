@@ -24,8 +24,8 @@ public class Audio {
     public static  byte[] dataToReceive ;
     public static DatagramPacket datagramPacketToSend;
     public static DatagramPacket datagramPacketToReceive;
-    public static InetAddress inetAddress;
-    public static int port;
+    public static InetAddress inetAddressTemp;
+    public static int portTemp;
 
     public static CommunicationWindowController getCommunicationWindowController() {
         return communicationWindowController;
@@ -35,9 +35,8 @@ public class Audio {
         Audio.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromMicro(InetAddress inetAddress1, int port1) throws IOException {
-        port =port1;
-        inetAddress = inetAddress1;
+    public static void captureAndSendFromMicro() throws IOException {
+
         int numBytesRead;
 
         DatagramSocket datagramSocket = new DatagramSocket();
@@ -79,7 +78,7 @@ public class Audio {
         targetDataLine.open(audioFormatToSend);
         targetDataLine.start();
     }
-    public static void configureAudioReceive(float sampleRate) throws LineUnavailableException {
+    public static void configureAudioReceive(float sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
         System.out.println("RECEIVE" + sampleRate);
         sizeToReceive = (int)sampleRate/5;
         dataToReceive = new byte[(int)sampleRate / 5];
