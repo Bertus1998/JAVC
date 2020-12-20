@@ -1,4 +1,5 @@
 import javax.sound.sampled.*;
+import javax.xml.crypto.Data;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,21 +16,20 @@ public class Audio {
     private static SourceDataLine sourceDataLine;
 
 
-    public static void captureAndSendFromMicro(InetAddress inetAddress, int port) throws LineUnavailableException, IOException {
+    public static void captureAndSendFromMicro(InetAddress inetAddress, int port) throws IOException {
         int numBytesRead;
         DatagramSocket datagramSocket = new DatagramSocket();
-
-        int CHUNK_SIZE = 128;
+        int CHUNK_SIZE = 2000;
         byte[] data = new byte[targetDataLine.getBufferSize() / 5];
         int bytesRead = 0;
         targetDataLine.start();
+        DatagramPacket datagramPacket = new DatagramPacket(data,targetDataLine.getBufferSize()/5,inetAddress,port);
         while(true) {
-
             numBytesRead = targetDataLine.read(data, 0, CHUNK_SIZE);
             bytesRead += numBytesRead;
-
-                datagramSocket.send(new DatagramPacket(data,targetDataLine.getBufferSize()/5,inetAddress,port));
-            //    System.out.println("SEND : "+Arrays.toString(data));
+            if (bytesRead > targetDataLine.getBufferSize() / 5) {
+                datagramSocket.send(datagramPacket);
+            }
 
         }
 
@@ -43,12 +43,11 @@ public class Audio {
         while(true)
         {
             datagramSocket.receive(datagramPacket);
-        //    System.out.println("RECEIED : " + Arrays.toString(transmitBufferedAudioBytes));
             sourceDataLine.write(datagramPacket.getData(),0,datagramPacket.getData().length);
         }
       }
     public static void configureAudio() throws LineUnavailableException {
-        audioFormat = new AudioFormat(40000.0f, 16, 1, true, true);
+        audioFormat = new AudioFormat(10000.0f, 16, 1, true, true);
         targetDataLine = AudioSystem.getTargetDataLine(audioFormat);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
         DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);

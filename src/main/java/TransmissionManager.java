@@ -21,7 +21,7 @@ public class TransmissionManager {
 
     static {
         try {
-            severAddress = InetAddress.getByName("192.168.0.101");
+            severAddress = InetAddress.getByName("192.168.1.3");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -103,7 +103,7 @@ public class TransmissionManager {
             {
                 portsAndHostName[i-3] = arrayOfReceivedMessage[i];
             }
-            startTransmission(portsAndHostName,true);
+        startTransmission(portsAndHostName,true);
 
         }
         else
@@ -166,7 +166,7 @@ public class TransmissionManager {
         }
     }
     public static void getData(Socket socket, int port) throws LineUnavailableException {
-      /*  Runnable runnableVideo = () -> {
+       Runnable runnableVideo = () -> {
             while(true) {
                 try {
                     Video.getWebcam().open();
@@ -176,8 +176,6 @@ public class TransmissionManager {
                 }
             }
         };
-
-       */
         Runnable runnableAudio = () -> {
                 try {
 
@@ -189,14 +187,13 @@ public class TransmissionManager {
 
         };
         Thread threadGetAudio = new Thread(runnableAudio);
-      //  Thread threadGetVideo = new Thread(runnableVideo);
+        Thread threadGetVideo = new Thread(runnableVideo);
         threadGetAudio.start();
-        //threadGetVideo.start();
+        threadGetVideo.start();
 
     }
     public static void sendData(Socket socket,InetAddress inetAddress, int port)
     {
-/*
             Runnable runnableVideo = () -> {
                 while(true) {
                     try {
@@ -209,22 +206,18 @@ public class TransmissionManager {
                 }
 
             };
-
- */
         Runnable runnableAudio = () -> {
                 try {
                     Audio.captureAndSendFromMicro(inetAddress,port);
-                } catch (LineUnavailableException e) {
-                    e.printStackTrace();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
 
         };
         Thread threadSendAudio= new Thread(runnableAudio);
-     //   Thread threadSendVideo = new Thread(runnableVideo);
+        Thread threadSendVideo = new Thread(runnableVideo);
         threadSendAudio.start();
-      //  threadSendVideo.start();
+        threadSendVideo.start();
 
     }
 

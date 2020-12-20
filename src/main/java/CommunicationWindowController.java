@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -24,11 +25,12 @@ public class CommunicationWindowController {
     public Text textMail, textLogin, choosenFriend;
     public TextField ipAdressText, portText;
     public GridPane gridPaneFriend;
+    public ScrollBar uploadSpeed;
 
     public GridPane getGridPaneFriend() {
         return gridPaneFriend;
     }
-
+    public static float qualityOfImage;
     public void setGridPaneFriend(GridPane gridPaneFriend) {
         this.gridPaneFriend = gridPaneFriend;
     }
@@ -252,8 +254,12 @@ public class CommunicationWindowController {
                     }
 
                 }
-            }
+            };
 
         }
+    }
+
+    public void changeQualityOfImage(ScrollEvent scrollEvent) {
+        this.qualityOfImage= (float)uploadSpeed.getValue();
     }
 }

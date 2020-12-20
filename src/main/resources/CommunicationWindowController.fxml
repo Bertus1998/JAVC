@@ -58,15 +58,15 @@
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
+                                    <ImageView fx:id="rimg" fitHeight="500.0" fitWidth="746.0" layoutY="-8.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Button fx:id="accept" layoutX="680.0" layoutY="14.0" mnemonicParsing="false" text="Logout" />
                                     <ImageView fx:id="timg" fitHeight="150.0" fitWidth="200.0" layoutX="546.0" layoutY="341.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-0.6000000000000227" AnchorPane.leftAnchor="546.0" AnchorPane.rightAnchor="0.39999999999997726" AnchorPane.topAnchor="341.0" />
-                                    <ImageView fx:id="rimg" fitHeight="498.0" fitWidth="746.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true" />
-                                    <Button fx:id="accept" layoutX="646.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
                                  </children>
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
                                     <Slider fx:id="uploadSpeed" layoutX="87.0" layoutY="14.0" prefHeight="14.0" prefWidth="539.0" AnchorPane.bottomAnchor="14.399999999999997" />
-                                    <Slider fx:id="downloadSpeed" layoutX="87.0" layoutY="16.0" prefHeight="14.0" prefWidth="539.0" AnchorPane.bottomAnchor="38.4" AnchorPane.topAnchor="16.0" />
+                                    <Slider fx:id="downloadSpeed" layoutX="87.0" layoutY="16.0" onScrollFinished="#changeQualityOfImage" prefHeight="14.0" prefWidth="539.0" AnchorPane.bottomAnchor="38.4" AnchorPane.topAnchor="16.0" />
                                     <Text layoutX="24.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Download " AnchorPane.bottomAnchor="36.8" AnchorPane.leftAnchor="23.7046875" AnchorPane.rightAnchor="665.0953125" AnchorPane.topAnchor="15.0" />
                                     <Text layoutX="24.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload" AnchorPane.bottomAnchor="12.799999999999997" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="683.991796875" AnchorPane.topAnchor="39.0" />
                                     <Text layoutX="650.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DSpeed" AnchorPane.bottomAnchor="38.8" AnchorPane.rightAnchor="54.93906249999998" AnchorPane.topAnchor="13.0" />
