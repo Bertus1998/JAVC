@@ -182,7 +182,7 @@ public class TransmissionManager {
 
                     Audio.receiveAndStreamToLouder(port);
                 }
-                catch (IOException ioException) {
+                catch (IOException | LineUnavailableException ioException) {
                     ioException.printStackTrace();
                 }
 

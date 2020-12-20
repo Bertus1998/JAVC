@@ -63,13 +63,14 @@ public class Audio {
         {
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive =datagramPacketToReceive.getData();
-            if(ByteBuffer.wrap(dataToReceive).order(ByteOrder.LITTLE_ENDIAN).getFloat()<44000)
-            {
-            configureAudioReceive(ByteBuffer.wrap(dataToReceive).order(ByteOrder.LITTLE_ENDIAN).getFloat());
-            }
-            else {
+            System.out.println("Receive: " +dataToReceive);
+           // if(ByteBuffer.wrap(dataToReceive).order(ByteOrder.LITTLE_ENDIAN).getFloat()<44000)
+          //  {
+        //    configureAudioReceive(ByteBuffer.wrap(dataToReceive).order(ByteOrder.LITTLE_ENDIAN).getFloat());
+        //    }
+        //    else {
                 sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
-            }
+        //    }
         }
       }
     public static void configureAudioSend(float sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
