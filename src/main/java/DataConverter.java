@@ -19,6 +19,7 @@ public class DataConverter {
         if(percent<100) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageOutputStream ios = ImageIO.createImageOutputStream(byteArrayOutputStream);
+            imageWriteParam.setCompressionQuality(percent/100);
             imageWriter.setOutput(ios);
             imageWriter.write(null, new IIOImage(image, null, null), imageWriteParam);
             byte[] data = byteArrayOutputStream.toByteArray();
