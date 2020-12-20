@@ -7,10 +7,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 public class Audio {
@@ -56,15 +55,21 @@ public class Audio {
 
     }
 
-    public static void receiveAndStreamToLouder(int port) throws  IOException {
+    public static void receiveAndStreamToLouder(int port) throws IOException, LineUnavailableException {
 
         DatagramSocket datagramSocket = new DatagramSocket(port);
 
         while(true)
         {
             datagramSocket.receive(datagramPacketToReceive);
-            sourceDataLine.write(datagramPacketToReceive.getData(),0,datagramPacketToReceive.getData().length);
-
+            dataToReceive =datagramPacketToReceive.getData();
+            if(ByteBuffer.wrap(dataToReceive).order(ByteOrder.LITTLE_ENDIAN).getFloat()<44000)
+            {
+            configureAudioReceive(ByteBuffer.wrap(dataToReceive).order(ByteOrder.LITTLE_ENDIAN).getFloat());
+            }
+            else {
+                sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
+            }
         }
       }
     public static void configureAudioSend(float sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
@@ -90,4 +95,21 @@ public class Audio {
         sourceDataLine.start();
 
     }
-}
+    public static void reconfigureAudioSend(float sampleRate) throws LineUnavailableException, IOException {
+        {
+            DatagramSocket datagramSocket = new DatagramSocket();
+            datagramPacketToReceive.setData(ByteBuffer.allocate(sizeToSend).putFloat(sampleRate).array());
+            for(int i =0;i<10;i++)
+            {
+                datagramSocket.send(datagramPacketToReceive);
+            }
+            sizeToSend = (int)sampleRate/5;
+            dataToSend = new byte[(int)sampleRate / 5];
+            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTemp);
+            audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
+            targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
+            targetDataLine.open(audioFormatToSend);
+            targetDataLine.start();
+        }}
+    }

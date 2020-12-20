@@ -30,11 +30,11 @@ public class CommunicationWindowController {
        uploadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
                 sliderUploadSpeedValue =(float)uploadSpeed.getValue();
-                /* try {
-                    Audio.configureAudioSend(8000+320*sliderUploadSpeedValue);
+                 try {
+                    Audio.configureAudioSend(8000+320*sliderUploadSpeedValue,Audio.inetAddressTemp,Audio.portTemp);
                 } catch (LineUnavailableException e) {
                     e.printStackTrace();
-                }*/
+                }
 
             }
         });
