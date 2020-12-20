@@ -58,20 +58,20 @@ public class Audio {
     public static void receiveAndStreamToLouder(int port) throws IOException, LineUnavailableException {
 
         DatagramSocket datagramSocket = new DatagramSocket(port);
-        byte[] checkArray = new byte[8];
+        byte[] checkArray = new byte[6];
         byte [] intArray = new byte[4];
         while(true)
         {
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive =datagramPacketToReceive.getData();
-            for(int i = 0 ;i<8; i++)
+            for(int i = 0 ;i<6; i++)
             {
                 checkArray[i] = dataToReceive[i];
             }
             if(checkArray.toString().equals("Change")) {
                 for (int i = 0; i < 4; i++)
                 {
-                    intArray[i] = dataToReceive[i+8];
+                    intArray[i] = dataToReceive[i+6];
                     for(int j =0 ; j<100000;j++) {
                         System.out.println("WE DID IT!");
                     }
@@ -110,7 +110,7 @@ public class Audio {
     public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
         {
             DatagramSocket datagramSocket = new DatagramSocket();
-            String string = "Change " + String.valueOf(sampleRate);
+            String string = "Change" + String.valueOf(sampleRate);
             byte [] array = new byte[dataToSend.length];
             datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTemp);
             for(int i =0;i< string.getBytes().length ; i++) {
@@ -120,7 +120,6 @@ public class Audio {
             for(int i =0;i<100;i++) {
                 datagramSocket.send(datagramPacketToSend);
                 System.out.println(datagramPacketToSend.getData().length);
-                System.out.println(array.toString());
             }
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];
