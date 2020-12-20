@@ -46,7 +46,7 @@ public class TransmissionManager {
 
     public static boolean login(String message) throws IOException {
         if (client==null) {
-            client = new Socket(severAddress,5004);
+            client = new Socket(severAddress,5003);
         }
             TransmissionManager.sendMessageToServer(client,message);
             String receivedMessage = TransmissionManager.getMessageFromServer(client);
@@ -195,6 +195,7 @@ public class TransmissionManager {
     public static void sendData(Socket socket,InetAddress inetAddress, int port)
     {
             Runnable runnableVideo = () -> {
+                DataConverter.configureDataConverter();
                 while(true) {
                     try {
                         Video.captureAndSendFromWebcam(socket);

@@ -15,16 +15,18 @@ public class DataConverter {
     static ImageWriteParam imageWriteParam;
     static Iterator<ImageWriter> writers;
     public static BufferedImage qualityOfImage(float percent, BufferedImage image) throws IOException {
+        System.out.println(percent);
         if(percent<1) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            imageWriter.setOutput(byteArrayOutputStream);
+            ImageOutputStream ios = ImageIO.createImageOutputStream(byteArrayOutputStream);
+            imageWriter.setOutput(ios);
             imageWriter.write(null, new IIOImage(image, null, null), imageWriteParam);
             byte[] data = byteArrayOutputStream.toByteArray();
             ByteArrayInputStream bis = new ByteArrayInputStream(data);
-            BufferedImage bImage2 = ImageIO.read(bis);
-            return bImage2;
+            return ImageIO.read(bis);
         }
         else {
+
             return image;
         }
     }

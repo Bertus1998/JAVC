@@ -36,7 +36,7 @@ public class Video {
         if (getCommunicationWindowController() != null) {
 
                         BufferedImage bufferedImage =webcam.getImage();
-                        bufferedImage = DataConverter.qualityOfImage(CommunicationWindowController.qualityOfImage,bufferedImage);
+                        bufferedImage = DataConverter.qualityOfImage(communicationWindowController.sliderDownloadSpeedValue,bufferedImage);
                   if(bufferedImage!=null) {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                             ImageIO.write(bufferedImage, "jpg", bos);

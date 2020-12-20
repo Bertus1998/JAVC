@@ -1,21 +1,17 @@
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import javax.sound.sampled.LineUnavailableException;
-import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Optional;
 
 public class CommunicationWindowController {
@@ -25,8 +21,25 @@ public class CommunicationWindowController {
     public Text textMail, textLogin, choosenFriend;
     public TextField ipAdressText, portText;
     public GridPane gridPaneFriend;
+    public float sliderUploadSpeedValue;
+    public float sliderDownloadSpeedValue;
     @FXML
     public Slider uploadSpeed, downloadSpeed;
+    @FXML
+    private void initialize() {
+       uploadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                sliderUploadSpeedValue =(float)uploadSpeed.getValue();
+
+            }
+        });
+        downloadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                sliderDownloadSpeedValue =(float)downloadSpeed.getValue();
+
+            }
+        });
+    }
 
     public GridPane getGridPaneFriend() {
         return gridPaneFriend;
@@ -256,11 +269,6 @@ public class CommunicationWindowController {
 
                 }
             };
-
         }
-    }
-
-    public void changeQualityOfImage(ScrollEvent scrollEvent) {
-        this.qualityOfImage= (float)uploadSpeed.getValue();
     }
 }
