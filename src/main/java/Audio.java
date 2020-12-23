@@ -119,11 +119,9 @@ public class Audio {
         {
             targetDataLine.close();
             sizeToSend = (int)sampleRate/5;
-            dataToSend=null;
             dataToSend = new byte[(int)sampleRate / 5];
             datagramPacketToSend=null;
             datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTempToSend);
-            audioFormatToSend=null;
             audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
@@ -133,11 +131,9 @@ public class Audio {
     public static void reconfigureAudioReceive(int sampleRate) throws LineUnavailableException {
         sourceDataLine.close();
         sizeToReceive=(int)sampleRate/5;
-        dataToReceive=null;
        dataToReceive = new byte[(int)sampleRate / 5];
         datagramPacketToReceive = null;
         datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length,inetAddressTemp,portTempToReceive);
-        audioFormatToReceive=null;
         audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
         sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
