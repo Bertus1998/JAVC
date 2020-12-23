@@ -220,7 +220,6 @@ public class TransmissionManager {
 
                         if(Video.isTransmission())
                         {
-                            System.out.println(Video.isTransmission());
                             Video.captureAndSendFromWebcam(socket);
 
                         }
