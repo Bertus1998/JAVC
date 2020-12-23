@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.StageStyle;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,11 +53,15 @@ public class LoginWindowController {
             communicationWindowController.configurationCommunicationWindowController(lLogin.getText());
             Main.stage.show();
             CommunicationWindowController.setMe(lLogin.getText());
+            TransmissionManager.setCommunicationWindowController(communicationWindowController);
             communicationWindowController.loadFriends();
             communicationWindowController.serverListiner();
-            TransmissionManager.setWaitForRespond(false);
             Video.setCommunicationWindowController(communicationWindowController);
             Audio.setCommunicationWindowController(communicationWindowController);
         }
+    }
+
+    public void exit(ActionEvent event) {
+        System.exit(0);
     }
 }
