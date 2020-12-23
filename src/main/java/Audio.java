@@ -93,7 +93,6 @@ public class Audio {
         }
       }
     public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
-        System.out.println("SEND" + sampleRate);
         inetAddressTemp =inetAddress;
         portTemp = port;
         sizeToSend = (int)sampleRate/5;
@@ -107,7 +106,6 @@ public class Audio {
     }
     public static void configureAudioReceive(int sampleRate) throws LineUnavailableException {
         setTransmission(true);
-        System.out.println("RECEIVE" + sampleRate);
         sizeToReceive = (int)sampleRate/5;
         dataToReceive = new byte[(int)sampleRate / 5];
         datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
