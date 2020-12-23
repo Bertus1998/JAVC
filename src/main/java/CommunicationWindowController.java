@@ -81,7 +81,8 @@ public class CommunicationWindowController {
     }
 
     public void pushDisconnectButton(ActionEvent event) {
-
+        Video.setTransmission(false);
+        Audio.setTransmission(false);
     }
 
     public void addFriend(ActionEvent event) throws IOException {
@@ -124,7 +125,6 @@ public class CommunicationWindowController {
 
         Runnable runnable = () -> {
             String message;
-            String[] arrayOfmessage;
             while (true) {
                 try {
                     message = TransmissionManager.getMessageFromServer(TransmissionManager.getClient());
@@ -132,68 +132,7 @@ public class CommunicationWindowController {
                 } catch (IOException | LineUnavailableException ioException) {
                     ioException.printStackTrace();
                 }
-                 /*
-                    try {
 
-                        System.out.println(message);
-                        arrayOfmessage = message.split(" ");
-                        if (arrayOfmessage[0].equals("RESPONDCALL")) {
-                            TransmissionManager.setWaitForRespond(true);
-                            String[] finalArrayOfmessage = arrayOfmessage;
-
-                            Platform.runLater(()->{ Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                                alert.setTitle("Call dialog");
-                                alert.setHeaderText(finalArrayOfmessage[1] + " call!");
-                                alert.setContentText("Do you want answer?");
-                                Optional<ButtonType> result = alert.showAndWait();
-                                if (result.get() == ButtonType.OK) {
-                                    Message messageAccept = new Message();
-                                    int []ports = new int[4];
-                                    try {
-                                        int counter =0;
-                                        for(int i =5;i<finalArrayOfmessage.length;i++)
-                                        {
-                                            System.out.println(finalArrayOfmessage[i]);
-                                            if(TransmissionManager.isPortAvailable(Integer.parseInt(finalArrayOfmessage[i])))
-                                            {
-                                                ports[counter] =Integer.parseInt(finalArrayOfmessage[i]);
-                                                counter++;
-                                                if(counter == 4)
-                                                {break;}
-                                            }
-                                        }
-                                        System.out.println(finalArrayOfmessage.toString());
-                                        String [] messegaeToStartTransmission= new String[5];
-                                        for(int i =0;i<4;i++)
-                                        {
-                                            messegaeToStartTransmission[i] = String.valueOf(ports[i]);
-                                            System.out.println(ports[i]);
-                                        }
-                                        messegaeToStartTransmission[4] = finalArrayOfmessage[finalArrayOfmessage.length-1];
-                                        TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[2],getMe(),ports));
-                                        TransmissionManager.startTransmission(messegaeToStartTransmission,false);
-                                        TransmissionManager.setWaitForRespond(false);
-                                    } catch (IOException | LineUnavailableException ioException) {
-                                        ioException.printStackTrace();
-                                    }
-
-                                } else {
-                                    try {
-                                        TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), "N");
-                                    } catch (IOException ioException) {
-                                        ioException.printStackTrace();
-                                    }
-                                }
-                            });
-                        } else if (arrayOfmessage[0].equals("CHANGESTATUS")) {
-                            loadFriends();
-                            TransmissionManager.setWaitForRespond(false);
-                        }
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-
-                    }
-        */
             }
 
         };

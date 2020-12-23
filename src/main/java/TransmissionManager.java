@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import javax.sound.sampled.LineUnavailableException;
+import javax.transaction.Transactional;
 import javax.xml.crypto.Data;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -28,26 +29,6 @@ public class TransmissionManager {
     }
 
     static InetAddress severAddress;
-  // public static volatile boolean waitForRespond;
-/*
-    public  static boolean isWaitForRespond() {
-
-        return waitForRespond;
-    }
-
-   public static  void setWaitForRespond(boolean waitForRespond) throws SocketException {
-        if(waitForRespond)
-        {
-            client.setSoTimeout(15000);
-        }
-        else
-        {
-            client.setSoTimeout(10);
-        }
-        TransmissionManager.waitForRespond = waitForRespond;
-        System.out.println(waitForRespond);
-
-    }*/
 
     static {
         try {
@@ -122,8 +103,13 @@ public class TransmissionManager {
 
 
     }
+    public static void stopTransmission()
+    {
+
+        Video.setTransmission(false);
+    }
     public static void startTransmission(String []message,boolean caller) throws IOException, LineUnavailableException {
-      // 1 videoreceive/ 2 aidoreceive /3 audiotransmit /4 video transmit // 5 socket
+      // 1 videoreceive/ 2 audiooreceive /3 audiotransmit /4 video transmit // 5 socket
 
         ServerSocket serwerSocketVideoReceive;
         Socket socketReceive;
@@ -179,6 +165,12 @@ public class TransmissionManager {
                 try {
                     Video.getWebcam().open();
                     Video.receiveAndShowImageFromWebcam(socket);
+                    if(!Video.isTransmission())
+                    {
+                        Video.getWebcam().close();
+                        socket.close();
+                        break;
+                    }
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -207,10 +199,14 @@ public class TransmissionManager {
                 while(true) {
                     try {
                         Video.captureAndSendFromWebcam(socket);
+                        if(!Video.isTransmission())
+                        {
+                            Video.getWebcam().close();
+                            socket.close();
+                            break;
+                        }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
 
@@ -495,7 +491,8 @@ public class TransmissionManager {
     }
 
     private static void deleteFriendExecutor(String[] message) throws IOException {
-        Platform.runLater(()->{ if (message[1].equals("ACCEPT")) {
+        Platform.runLater(()->{
+            if (message[1].equals("ACCEPT")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Communicat");
             alert.setHeaderText("Communicat");

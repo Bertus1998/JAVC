@@ -25,6 +25,15 @@ public class Audio {
     public static DatagramPacket datagramPacketToReceive;
     public static InetAddress inetAddressTemp;
     public static int portTemp;
+    public static boolean transmission = false;
+
+    public static boolean isTransmission() {
+        return transmission;
+    }
+
+    public static void setTransmission(boolean transmission) {
+        Audio.transmission = transmission;
+    }
 
     public static CommunicationWindowController getCommunicationWindowController() {
         return communicationWindowController;
@@ -43,6 +52,7 @@ public class Audio {
 
 
         while(true) {
+            if(!transmission){break;}
             numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
             bytesRead += numBytesRead;
             System.out.println("Send1");
@@ -61,7 +71,7 @@ public class Audio {
         byte[] checkArray = new byte[6];
         byte [] intArray = new byte[4];
         while(true)
-        {
+        {   if(!transmission){break;}
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive =datagramPacketToReceive.getData();
             for(int i = 0 ;i<6; i++)
@@ -129,4 +139,5 @@ public class Audio {
             targetDataLine.open(audioFormatToSend);
             targetDataLine.start();
         }}
-    }
+
+}

@@ -4,6 +4,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
@@ -13,15 +14,20 @@ import java.util.Arrays;
 public class Video {
     private static Webcam webcam;
     private static CommunicationWindowController communicationWindowController;
-    private static boolean transmitingVideo = true;
-    private static boolean receivingVideo = true;
-
     public static Webcam getWebcam() {
         return webcam;
     }
-
+    private static boolean transmission = false;
     public static void setWebcam(Webcam webcam) {
         Video.webcam = webcam;
+    }
+
+    public static boolean isTransmission() {
+        return transmission;
+    }
+
+    public static void setTransmission(boolean transmission) {
+        Video.transmission = transmission;
     }
 
     public static CommunicationWindowController getCommunicationWindowController() {
@@ -32,8 +38,8 @@ public class Video {
         Video.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromWebcam(Socket socket) throws IOException, InterruptedException {
-        if (getCommunicationWindowController() != null) {
+    public static void captureAndSendFromWebcam(Socket socket) throws IOException {
+        if (getCommunicationWindowController() != null&&webcam!=null&&transmission) {
 
                         BufferedImage bufferedImage =webcam.getImage();
                         bufferedImage = DataConverter.qualityOfImage(communicationWindowController.sliderUploadSpeedValue,bufferedImage);
@@ -51,13 +57,14 @@ public class Video {
                                 communicationWindowController.timg.setImage(image);
                             });
                         }}
+
             };
 
 
 
 
     public static void receiveAndShowImageFromWebcam(Socket socket) throws IOException {
-        if(getCommunicationWindowController()!=null)
+        if(getCommunicationWindowController()!=null&&transmission)
         {
                     DataInputStream dIn = null;
                         dIn = new DataInputStream(socket.getInputStream());
@@ -75,6 +82,7 @@ public class Video {
         }
     }
     public static boolean configureWebcam() {
+        Video.setTransmission(true);
         setWebcam(Webcam.getDefault());
         if (getWebcam() != null) {
             System.out.println("Webcam: " + getWebcam().getName());
@@ -84,4 +92,5 @@ public class Video {
             return false;
         }
     }
+
 }
