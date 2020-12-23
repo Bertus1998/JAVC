@@ -74,24 +74,11 @@ public class Audio {
     public static void receiveAndStreamToLouder(int port) throws IOException{
 
         DatagramSocket datagramSocket = new DatagramSocket(port);
-        byte[] checkArray = new byte[6];
-        byte [] intArray = new byte[4];
+
         while(true)
         {   if(transmission) {
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive = datagramPacketToReceive.getData();
-            for (int i = 0; i < 6; i++) {
-                checkArray[i] = dataToReceive[i];
-            }
-            if (checkArray.toString().equals("Change")) {
-                for (int i = 0; i < 4; i++) {
-                    intArray[i] = dataToReceive[i + 6];
-                    for (int j = 0; j < 100000; j++) {
-                        System.out.println("WE DID IT!");
-                    }
-                }
-            }
-            System.out.println(dataToReceive.toString());
             sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
         }
         else

@@ -32,11 +32,14 @@ public class CommunicationWindowController {
     @FXML
     private void initialize() {
         uploadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
+            if(Video.isTransmission())
+            {
             if (!newVal) {
                 sliderUploadSpeedValue =(float)uploadSpeed.getValue();
                 try {
-
+                Message message = new Message();
                    int sample=(8000+320*(int)sliderUploadSpeedValue)-(8000+320*(int)sliderUploadSpeedValue)%2000;
+                   TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),message.changeUploadAudio(getMe(),choosenFriend.getText(),sample));
                     Audio.targetDataLine.close();
                     Audio.reconfigureAudioSend(sample);
                 } catch (LineUnavailableException | IOException | InterruptedException e) {
@@ -46,12 +49,13 @@ public class CommunicationWindowController {
 
 
             }
-        });
+        }});
         downloadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
+            if(Video.isTransmission()){
             if (!newVal) {
                 sliderDownloadSpeedValue =(float)downloadSpeed.getValue();
             }
-        });
+        }});
     }
 
     public GridPane getGridPaneFriend() {
@@ -168,22 +172,29 @@ public class CommunicationWindowController {
     }
 
     public void getFriendFromPanelOfFriend(MouseEvent mouseEvent) {
-        Node node = mouseEvent.getPickResult().getIntersectedNode();
-        Integer index = GridPane.getRowIndex(node);
-        Circle circle = new Circle(10, Color.RED);
-        Node result;
-        Label label;
-        if (index != null) {
-            for (Node object : getGridPaneFriend().getChildren()) {
-                if (GridPane.getRowIndex(object) == index && GridPane.getColumnIndex(object) == 0) {
-                    result = object;
-                    if (object instanceof Label) {
-                        label = (Label) object;
-                        choosenFriend.setText(label.getText());
-                    }
+        if(Audio.isTransmission())
+        {
+            choosenFriend.setDisable(true);
+        }
+        else {
+            Node node = mouseEvent.getPickResult().getIntersectedNode();
+            Integer index = GridPane.getRowIndex(node);
+            Circle circle = new Circle(10, Color.RED);
+            Node result;
+            Label label;
+            if (index != null) {
+                for (Node object : getGridPaneFriend().getChildren()) {
+                    if (GridPane.getRowIndex(object) == index && GridPane.getColumnIndex(object) == 0) {
+                        result = object;
+                        if (object instanceof Label) {
+                            label = (Label) object;
+                            choosenFriend.setText(label.getText());
+                        }
 
+                    }
                 }
-            };
+                ;
+            }
         }
     }
     public void logOut(ActionEvent event) throws IOException {

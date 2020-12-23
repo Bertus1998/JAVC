@@ -86,5 +86,9 @@ public class Message {
     }
     String logOutMessage(String name){return "LOGOUT "+name;}
     String deleteFriendMessage(String friend,String me){return "DELETEFRIEND "+friend+ " "+ me;}
+    String changeUploadAudio(String friend, String me, int sample)
+    {
+        return  "UPLOAD "+friend +" "+me+" "+sample;
+    }
     //RESPONDCALL + " " + name +[] + me
 }
