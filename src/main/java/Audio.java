@@ -57,10 +57,8 @@ public class Audio {
             if(transmission) {
                 numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
                 bytesRead += numBytesRead;
-                System.out.println("Send1");
                 if (bytesRead > targetDataLine.getBufferSize() / 5) {
                     datagramSocket.send(datagramPacketToSend);
-                    System.out.println("Send");
                 }
             }
             else

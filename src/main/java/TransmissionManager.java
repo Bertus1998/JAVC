@@ -297,9 +297,11 @@ public class TransmissionManager {
             }
             case "CHANGESTATUS":{
                 changeStatusExecutor(arrayOfPartsMessage);
+                break;
             }
             case "UPLOAD":{
                 uploadAudioExecutor(arrayOfPartsMessage);
+                break;
             }
         }
         }
@@ -308,6 +310,7 @@ public class TransmissionManager {
     private static void uploadAudioExecutor(String[] arrayOfPartsMessage) throws LineUnavailableException {
         if(communicationWindowController.choosenFriend.equals(arrayOfPartsMessage[1])) {
             Audio.sourceDataLine.close();
+            System.out.println(arrayOfPartsMessage[2]);
             Audio.reconfigureAudioReceive(Integer.getInteger(arrayOfPartsMessage[2]));
         }
     }
