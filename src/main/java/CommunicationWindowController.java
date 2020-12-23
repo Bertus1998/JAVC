@@ -33,11 +33,11 @@ public class CommunicationWindowController {
         uploadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
                 sliderUploadSpeedValue =(float)uploadSpeed.getValue();
-                try {
+               /* try {
                     Audio.reconfigureAudioSend((8000+320*(int)sliderUploadSpeedValue));
                 } catch (LineUnavailableException | IOException | InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
 
 
 
@@ -93,7 +93,7 @@ public class CommunicationWindowController {
     public void pushDisconnectButton(ActionEvent event) {
         Video.setTransmission(false);
         Audio.setTransmission(false);
-        Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+       /* Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
                 getRimg().fitWidthProperty().intValue(),
                 getRimg().fitWidthProperty().intValue(),
                 BufferedImage.TYPE_INT_RGB),null));
@@ -101,6 +101,8 @@ public class CommunicationWindowController {
                    getTimg().fitWidthProperty().intValue(),
                     getTimg().fitWidthProperty().intValue(),
                     BufferedImage.TYPE_INT_RGB),null));});
+
+        */
     }
 
     public void addFriend(ActionEvent event) throws IOException {
