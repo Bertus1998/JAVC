@@ -77,6 +77,7 @@ public class Audio {
         {   if(transmission) {
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive = datagramPacketToReceive.getData();
+            System.out.println("ODEBRANE : "+dataToReceive.toString());
             sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
         }
         else

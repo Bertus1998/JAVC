@@ -309,8 +309,8 @@ public class TransmissionManager {
     private static void uploadAudioExecutor(String[] arrayOfPartsMessage) throws LineUnavailableException {
         if(communicationWindowController.choosenFriend.getText().equals(arrayOfPartsMessage[1])) {
             Audio.sourceDataLine.close();
-
             int a = Integer.parseInt(arrayOfPartsMessage[2]);
+            System.out.println(a);
             Audio.reconfigureAudioReceive(a);
         }
     }
