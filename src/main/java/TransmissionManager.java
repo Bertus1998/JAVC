@@ -427,7 +427,7 @@ public class TransmissionManager {
         {
 
             TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), message.logOutMessage(CommunicationWindowController.getMe()));
-
+            System.out.println(1);
         }
         System.exit(0);
     }
