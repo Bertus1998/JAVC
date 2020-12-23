@@ -24,7 +24,8 @@ public class Audio {
     public static DatagramPacket datagramPacketToSend;
     public static DatagramPacket datagramPacketToReceive;
     public static InetAddress inetAddressTemp;
-    public static int portTemp;
+    public static int portTempToSend;
+    public static int portTempToReceive;
     public static boolean transmission = false;
 
     public static boolean isTransmission() {
@@ -90,7 +91,7 @@ public class Audio {
       }
     public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
         inetAddressTemp =inetAddress;
-        portTemp = port;
+        portTempToSend = port;
         sizeToSend = (int)sampleRate/5;
         dataToSend = new byte[(int)sampleRate / 5];
         datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddress, port);
@@ -100,7 +101,8 @@ public class Audio {
         targetDataLine.open(audioFormatToSend);
         targetDataLine.start();
     }
-    public static void configureAudioReceive(int sampleRate) throws LineUnavailableException {
+    public static void configureAudioReceive(int sampleRate, int port) throws LineUnavailableException {
+        portTempToReceive = port;
         setTransmission(true);
         sizeToReceive = (int)sampleRate/5;
         dataToReceive = new byte[(int)sampleRate / 5];
@@ -114,18 +116,7 @@ public class Audio {
     }
     public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
         {
-            DatagramSocket datagramSocket = new DatagramSocket();
-            String string = "Change" + String.valueOf(sampleRate);
-            byte [] array = new byte[dataToSend.length];
-            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTemp);
-            for(int i =0;i< string.getBytes().length ; i++) {
-                array[i] = string.getBytes()[i];
-            }
-            datagramPacketToSend.setData(array);
-            for(int i =0;i<100;i++) {
-                datagramSocket.send(datagramPacketToSend);
-                System.out.println(datagramPacketToSend.getData().length);
-            }
+            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTempToSend);
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];
             audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
@@ -134,6 +125,17 @@ public class Audio {
             targetDataLine.open(audioFormatToSend);
             targetDataLine.start();
         }}
+    public static void reconfigureAudioReceive(int sampleRate) throws LineUnavailableException {
+        sizeToReceive = (int)sampleRate/5;
+        dataToReceive = new byte[(int)sampleRate / 5];
+        datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
+        audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
+        sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
+        sourceDataLine.open(audioFormatToReceive);
+        sourceDataLine.start();
+
+    }
         public static void resetAudio()
         {
             targetDataLine.close();

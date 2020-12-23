@@ -148,7 +148,7 @@ public class TransmissionManager {
         }
         Video.configureWebcam();
         Audio.configureAudioSend(10000,inetAddress, portTransmit);
-        Audio.configureAudioReceive(10000);
+        Audio.configureAudioReceive(10000,portReceive);
 
         sendData(socketTransmit);
         getData(socketReceive, portReceive);
@@ -298,7 +298,17 @@ public class TransmissionManager {
             case "CHANGESTATUS":{
                 changeStatusExecutor(arrayOfPartsMessage);
             }
+            case "UPLOAD":{
+                uploadAudioExecutor(arrayOfPartsMessage);
+            }
         }
+        }
+    }
+
+    private static void uploadAudioExecutor(String[] arrayOfPartsMessage) throws LineUnavailableException {
+        if(communicationWindowController.choosenFriend.equals(arrayOfPartsMessage[1])) {
+            Audio.sourceDataLine.close();
+            Audio.reconfigureAudioReceive(Integer.getInteger(arrayOfPartsMessage[2]));
         }
     }
 
