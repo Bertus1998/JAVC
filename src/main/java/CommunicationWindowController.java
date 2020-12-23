@@ -177,6 +177,9 @@ public class CommunicationWindowController {
             choosenFriend.setDisable(true);
         }
         else {
+
+            choosenFriend.setDisable(false);
+
             Node node = mouseEvent.getPickResult().getIntersectedNode();
             Integer index = GridPane.getRowIndex(node);
             Circle circle = new Circle(10, Color.RED);

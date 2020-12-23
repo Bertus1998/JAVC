@@ -366,7 +366,6 @@ public class TransmissionManager {
                 ObservableList<Node> childrens = communicationWindowController.gridPaneFriend.getChildren();
                 communicationWindowController.gridPaneFriend.getChildren().removeAll(childrens);
                 for (int i = 0; i < groupOfFriends.length; i = i + 2) {
-                    communicationWindowController.gridPaneFriend.getChildren().remove(0, k);
                     communicationWindowController.gridPaneFriend.add(new Label(groupOfFriends[i]), 0, k);
                     if (groupOfFriends[i + 1].equals("false")) {
 
