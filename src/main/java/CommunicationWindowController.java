@@ -28,10 +28,10 @@ public class CommunicationWindowController {
     public Slider uploadSpeed, downloadSpeed;
     @FXML
     private void initialize() {
-       uploadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
+        uploadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
                 sliderUploadSpeedValue =(float)uploadSpeed.getValue();
-               try {
+                try {
                     Audio.reconfigureAudioSend((8000+320*(int)sliderUploadSpeedValue));
                 } catch (LineUnavailableException | IOException | InterruptedException e) {
                     e.printStackTrace();
@@ -101,7 +101,7 @@ public class CommunicationWindowController {
     public void deleteFriend(ActionEvent event) throws IOException {
         Message message = new Message();
         TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),message.listDeleteFriends(me));
-     }
+    }
 
 
     public void respondForRequest(ActionEvent event) throws IOException {
@@ -194,7 +194,7 @@ public class CommunicationWindowController {
 
                     }
         */
-                }
+            }
 
         };
         Thread t = new Thread(runnable);
