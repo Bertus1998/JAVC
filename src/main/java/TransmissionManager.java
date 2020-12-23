@@ -325,6 +325,7 @@ public class TransmissionManager {
             alert.setContentText("Do you want answer?");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                communicationWindowController.choosenFriend.setText(finalArrayOfmessage[2]);
                 Message messageAccept = new Message();
                 int []ports = new int[4];
                 try {
@@ -433,7 +434,6 @@ public class TransmissionManager {
                 portsAndHostName[i-4] = arrayOfReceivedMessage[i];
             }
             startTransmission(portsAndHostName,true);
-            communicationWindowController.choosenFriend.setText(arrayOfReceivedMessage[3]);
         }
         else
         {

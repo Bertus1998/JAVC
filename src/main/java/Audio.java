@@ -53,7 +53,6 @@ public class Audio {
 
 
         while(true) {
-            System.out.println(transmission);
             if(transmission) {
                 numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
                 bytesRead += numBytesRead;
