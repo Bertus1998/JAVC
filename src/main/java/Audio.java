@@ -123,15 +123,14 @@ public class Audio {
             targetDataLine.start();
         }}
     public static void reconfigureAudioReceive(int sampleRate) throws LineUnavailableException {
-        sizeToReceive = (int)sampleRate/5;
-        dataToReceive = new byte[(int)sampleRate / 5];
+/*        dataToReceive = new byte[(int)sampleRate / 5];
         datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
         audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
         sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
         sourceDataLine.open(audioFormatToReceive);
         sourceDataLine.start();
-
+*/
     }
         public static void resetAudio()
         {

@@ -307,10 +307,10 @@ public class TransmissionManager {
     }
 
     private static void uploadAudioExecutor(String[] arrayOfPartsMessage) throws LineUnavailableException {
-        System.out.println("TADAD");
         if(communicationWindowController.choosenFriend.getText().equals(arrayOfPartsMessage[1])) {
             Audio.sourceDataLine.close();
-            int a = Integer.getInteger(arrayOfPartsMessage[2]);
+
+            int a = Integer.parseInt(arrayOfPartsMessage[2]);
             Audio.reconfigureAudioReceive(a);
         }
     }
