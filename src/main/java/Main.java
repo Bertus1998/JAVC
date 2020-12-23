@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 /*
  BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String message = reader.readLine();
@@ -53,7 +55,7 @@ public class Main extends Application {
         Main.stage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/LoginWindowController.fxml"));
         Main.stage.setTitle("J-AVC");
-
+        Main.stage.initStyle(StageStyle.UNDECORATED);
         Main.stage.setScene(new Scene(root, 600, 400));
         Main.stage.setResizable(false);
         Main.stage.show();

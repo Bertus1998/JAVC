@@ -50,6 +50,7 @@
                         <Text layoutY="444.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click at circle to choose &#10;your interlocutor, currently&#10;choosen is :&#10;" textAlignment="CENTER" wrappingWidth="144.0" />
                         <Text layoutX="61.0" layoutY="516.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                         <Text fx:id="choosenFriend" layoutX="52.0" layoutY="508.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nobody" />
+                        <Button fx:id="logoutButton" layoutX="19.0" layoutY="66.0" mnemonicParsing="false" onAction="#logOut" text="Close application" />
                      </children>
                   </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="574.0" prefWidth="720.0">
@@ -59,7 +60,6 @@
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
                                     <ImageView fx:id="rimg" fitHeight="500.0" fitWidth="746.0" layoutY="-8.0" pickOnBounds="true" preserveRatio="true" />
-                                    <Button fx:id="accept" layoutX="680.0" layoutY="14.0" mnemonicParsing="false" text="Logout" />
                                     <ImageView fx:id="timg" fitHeight="150.0" fitWidth="200.0" layoutX="546.0" layoutY="341.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-0.6000000000000227" AnchorPane.leftAnchor="546.0" AnchorPane.rightAnchor="0.39999999999997726" AnchorPane.topAnchor="341.0" />
                                  </children>
                               </AnchorPane>

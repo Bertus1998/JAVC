@@ -1,23 +1,52 @@
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import javax.sound.sampled.LineUnavailableException;
+import javax.xml.crypto.Data;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class TransmissionManager {
-   static InetAddress severAddress;
-   static boolean waitForRespond;
+    static CommunicationWindowController communicationWindowController;
 
-    public static boolean isWaitForRespond() {
+    public static CommunicationWindowController getCommunicationWindowController() {
+        return communicationWindowController;
+    }
+
+    public static void setCommunicationWindowController(CommunicationWindowController communicationWindowController) {
+        TransmissionManager.communicationWindowController = communicationWindowController;
+    }
+
+    static InetAddress severAddress;
+  // public static volatile boolean waitForRespond;
+/*
+    public  static boolean isWaitForRespond() {
+
         return waitForRespond;
     }
 
-    public static void setWaitForRespond(boolean waitForRespond) {
-        System.out.println("RESPOND" + waitForRespond);
+   public static  void setWaitForRespond(boolean waitForRespond) throws SocketException {
+        if(waitForRespond)
+        {
+            client.setSoTimeout(15000);
+        }
+        else
+        {
+            client.setSoTimeout(10);
+        }
         TransmissionManager.waitForRespond = waitForRespond;
-    }
+        System.out.println(waitForRespond);
+
+    }*/
 
     static {
         try {
@@ -44,13 +73,13 @@ public class TransmissionManager {
         TransmissionManager.client = client;
     }
 
-    public static boolean login(String message) throws IOException {
+    public static boolean login(String message) throws IOException{
         if (client==null) {
             client = new Socket(severAddress,5003);
         }
             TransmissionManager.sendMessageToServer(client,message);
             String receivedMessage = TransmissionManager.getMessageFromServer(client);
-            if (receivedMessage.equals("Y")) {
+            if (receivedMessage.equals("LOGIN ACCEPT")) {
                 return true;
             }
 
@@ -63,14 +92,15 @@ public class TransmissionManager {
         System.out.println(message);
         String receivedMessage =  getMessageFromServer(client);
         System.out.println(receivedMessage);
-        if(receivedMessage.equals("Y"))
+        if(receivedMessage.equals("REGISTER ACCEPT"))
         {
            return  true;
         }
         return false;
     }
-    public static  void sendMessageToServer(Socket client, String message) throws IOException {
-        TransmissionManager.setWaitForRespond(true);
+    public static  void sendMessageToServer(Socket client, String message) throws IOException{
+
+        System.out.println("Wiadomość wysłana do serwera :"+message);
         OutputStream outputStream = client.getOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
         dataOutputStream.writeUTF(message);
@@ -78,42 +108,18 @@ public class TransmissionManager {
     }
     public static String getMessageFromServer(Socket client) throws IOException {
 
-
-            if (isWaitForRespond()) {
-                client.setSoTimeout(0);
-            } else {
-                client.setSoTimeout(10);
-            }
-            InputStream inputStream = client.getInputStream();
+        
+           InputStream inputStream = client.getInputStream();
             DataInputStream dataInputStream = new DataInputStream(inputStream);
             String message = dataInputStream.readUTF();
             return message;
 
     }
-    public  static void callToFriend(String friend, String me) throws IOException, InterruptedException, LineUnavailableException {
+    public  static void callToFriend(String friend, String me) throws IOException, LineUnavailableException {
         Message message = new Message();
         TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), message.callMessage(friend, me));
-        TransmissionManager.setWaitForRespond(true);
-        String receivedMessage = TransmissionManager.getMessageFromServer(TransmissionManager.getClient());
-        TransmissionManager.setWaitForRespond(false);
-        String[] arrayOfReceivedMessage = receivedMessage.split(" ");
-        if(arrayOfReceivedMessage[0].equals("CALLACCEPT")) {
-            String[] portsAndHostName = new String [5];
-            for(int i = 3;i<arrayOfReceivedMessage.length;i++)
-            {
-                portsAndHostName[i-3] = arrayOfReceivedMessage[i];
-            }
-        startTransmission(portsAndHostName,true);
 
-        }
-        else
-        {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Communicat");
-            alert.setHeaderText("Communicat");
-            alert.setContentText("On nie chce z tobą gadać!");
-            alert.showAndWait();
-        }
+
     }
     public static void startTransmission(String []message,boolean caller) throws IOException, LineUnavailableException {
       // 1 videoreceive/ 2 aidoreceive /3 audiotransmit /4 video transmit // 5 socket
@@ -222,5 +228,228 @@ public class TransmissionManager {
         threadSendVideo.start();
 
     }
+    public static void messageExecutor(String messega) throws IOException, LineUnavailableException {
+        System.out.println("Wiadomość odebrana od serwera :" +messega);
+        String[] arrayOfPartsMessage = messega.split(" ");
+        if(arrayOfPartsMessage.length>0)
+        {
+        switch (arrayOfPartsMessage[0]) {
+            case "CALLACCEPT": {
+                callAcceptExecutor(arrayOfPartsMessage);
+                break;
+            }
+            case "REQUESTFRIEND": {
+                requestFriendExecutor(arrayOfPartsMessage);
+                break;
+            }
+            case "ACCEPTFRIEND": {
+                acceptFriendExecutor(arrayOfPartsMessage);
+                break;
+            }
+            case "NOACTIVEFRIENDS": {
+                    noActiveFriendsExecutor(arrayOfPartsMessage);
+                break;
+            }
+            case "DELETEFRIEND": {
+                 deleteFriendExecutor(arrayOfPartsMessage);
+                break;
+            }
+            case "LOGOUT": {
+                logoutExecutor(arrayOfPartsMessage);
+                break;
+            }
+            case "LISTDELETEFRIENDS":
+            {
+                listDeleteFriendsExecutor(arrayOfPartsMessage);
+                break;
+            }
+            case "ACTIVEFRIENDS": {
+                loadFriendsExecutor(arrayOfPartsMessage);
+                break;
+            }
+        }
+        }
+    }
 
-}
+    private static void loadFriendsExecutor(String[] message) {
+        if (message.length> 1) {
+            String [] groupOfFriends = new String[message.length-1];
+            for(int i =1 ;i<message.length;i++) {
+                groupOfFriends[i-1] = message[i];
+                System.out.println(groupOfFriends[i-1]);
+            }
+            System.out.println(groupOfFriends.length);
+
+            Platform.runLater(() -> {
+                int k = 0;
+                ObservableList<Node> childrens = communicationWindowController.gridPaneFriend.getChildren();
+                communicationWindowController.gridPaneFriend.getChildren().removeAll(childrens);
+                for (int i = 0; i < groupOfFriends.length; i = i + 2) {
+                    communicationWindowController.gridPaneFriend.getChildren().remove(0, k);
+                    communicationWindowController.gridPaneFriend.add(new Label(groupOfFriends[i]), 0, k);
+                    if (groupOfFriends[i + 1].equals("false")) {
+
+                        communicationWindowController.gridPaneFriend.add(new Circle(10, Color.RED), 1, k);
+                    } else {
+                        communicationWindowController.gridPaneFriend.add(new Circle(10, Color.GREEN), 1, k);
+                    }
+                    k++;
+                }
+
+            });
+        }
+        else
+        {
+            Platform.runLater(()->{
+                ObservableList<Node> childrens = communicationWindowController.gridPaneFriend.getChildren();
+                    communicationWindowController.gridPaneFriend.getChildren().removeAll(childrens);
+
+            });
+        }
+    }
+
+    private static void listDeleteFriendsExecutor(String[] arrayOfFriendsAndStatus)  {
+
+        Message message = new Message();
+        String[] arrayOfFriends = new String[(arrayOfFriendsAndStatus.length - 1) / 2];
+        for (int i = 0; i < arrayOfFriends.length; i++) {
+            System.out.println(arrayOfFriendsAndStatus[i]);
+            arrayOfFriends[(i)] = arrayOfFriendsAndStatus[i * 2 + 1];
+        }
+        String defaultText = "List of your friends";
+        Platform.runLater(()->{ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(defaultText, arrayOfFriends);
+            {
+                Optional<String> result = choiceDialog.showAndWait();
+                if (result.isPresent() && !result.get().equals(defaultText)) {
+                    try {
+                        TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), message.deleteFriendMessage(result.get(), CommunicationWindowController.getMe()));
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+
+            }});
+
+    }
+
+
+    private static void callAcceptExecutor(String[] arrayOfReceivedMessage) throws IOException, LineUnavailableException {
+        if(arrayOfReceivedMessage[1].equals("ACCEPT")) {
+            String[] portsAndHostName = new String [5];
+            for(int i = 3;i<arrayOfReceivedMessage.length;i++)
+            {
+                portsAndHostName[i-3] = arrayOfReceivedMessage[i];
+            }
+            startTransmission(portsAndHostName,true);
+
+        }
+        else
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Communicat");
+            alert.setHeaderText("Communicat");
+            alert.setContentText("On nie chce z tobą gadać!");
+            alert.showAndWait();
+        }
+    }
+
+    private static void requestFriendExecutor(String[] friends) {
+        Platform.runLater(()->{if (friends[1].equals("ACCEPT")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Communicat");
+            alert.setHeaderText("Communicat");
+            alert.setContentText("Request was send to user or user was added ");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Communicat");
+            alert.setHeaderText("Communicat");
+            alert.setContentText("There is no user");
+            alert.showAndWait();
+        }});
+
+        }
+
+
+    private static void acceptFriendExecutor(String[] message) throws IOException {
+        Platform.runLater(()->
+        {
+            if (message[1].equals("ACCEPT")) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Communicat");
+                alert.setHeaderText("Communicat");
+                alert.setContentText(message[2]+ " was added!");
+                alert.showAndWait();
+
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Communicat");
+                alert.setHeaderText("Communicat");
+                alert.setContentText("ERROR");
+                alert.showAndWait();
+            }
+        });
+        communicationWindowController.loadFriends();
+
+
+    }
+
+    private static void noActiveFriendsExecutor(String[] friends) throws IOException {
+        Platform.runLater(()->{
+        if (friends.length >1) {
+            Message message = new Message();
+            String defaultText = "List of friend, choose one to add him to your friend list";
+
+         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(defaultText, friends);
+            Optional<String> result = choiceDialog.showAndWait();
+            if (result.isPresent() && !defaultText.equals(result.get())) {
+                try {
+                    TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), message.acceptFriendMessage(result.get(), CommunicationWindowController.getMe()));
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Communicat");
+            alert.setHeaderText("Communicat");
+            alert.setContentText("There is no request from other users");
+            alert.showAndWait();
+        }
+        });
+
+    }
+
+    private static void logoutExecutor(String[] tempString) throws IOException {
+        Message message = new Message();
+        if(tempString[1].equals("ACCEPT"))
+        {
+
+            TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), message.logOutMessage(CommunicationWindowController.getMe()));
+
+        }
+        System.exit(0);
+    }
+
+    private static void deleteFriendExecutor(String[] message) throws IOException {
+        Platform.runLater(()->{ if (message[1].equals("ACCEPT")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Communicat");
+            alert.setHeaderText("Communicat");
+            alert.setContentText(message[2] + " was deleted!");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Communicat");
+            alert.setHeaderText("Communicat");
+            alert.setContentText("ERROR");
+            alert.showAndWait();
+        }});
+        communicationWindowController.loadFriends();
+        }
+    }
+
+
+
+

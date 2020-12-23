@@ -80,5 +80,11 @@ public class Message {
     {
         return "LISTREQUEST " +name;
     }
+    String listDeleteFriends(String name)
+    {
+        return "LISTDELETEFRIENDS "+name;
+    }
+    String logOutMessage(String name){return "LOGOUT "+name;}
+    String deleteFriendMessage(String friend,String me){return "DELETEFRIEND "+friend+ " "+ me;}
     //RESPONDCALL + " " + name +[] + me
 }
