@@ -1,4 +1,6 @@
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
@@ -280,15 +282,15 @@ public class TransmissionManager {
 
             Platform.runLater(() -> {
                 int k = 0;
-                communicationWindowController.gridPaneFriend.getChildren().removeAll();
+                ObservableList<Node> childrens = communicationWindowController.gridPaneFriend.getChildren();
+                communicationWindowController.gridPaneFriend.getChildren().removeAll(childrens);
                 for (int i = 0; i < groupOfFriends.length; i = i + 2) {
-                    //gridPaneFriend.getChildren().remove(0, k);
+                    communicationWindowController.gridPaneFriend.getChildren().remove(0, k);
                     communicationWindowController.gridPaneFriend.add(new Label(groupOfFriends[i]), 0, k);
                     if (groupOfFriends[i + 1].equals("false")) {
-                        //gridPaneFriend.getChildren().remove(1, k);
+
                         communicationWindowController.gridPaneFriend.add(new Circle(10, Color.RED), 1, k);
                     } else {
-                        // gridPaneFriend.getChildren().remove(1, k);
                         communicationWindowController.gridPaneFriend.add(new Circle(10, Color.GREEN), 1, k);
                     }
                     k++;
@@ -299,7 +301,9 @@ public class TransmissionManager {
         else
         {
             Platform.runLater(()->{
-                communicationWindowController.gridPaneFriend.getChildren().removeAll();
+                ObservableList<Node> childrens = communicationWindowController.gridPaneFriend.getChildren();
+                    communicationWindowController.gridPaneFriend.getChildren().removeAll(childrens);
+
             });
         }
     }
@@ -308,8 +312,6 @@ public class TransmissionManager {
 
         Message message = new Message();
         String[] arrayOfFriends = new String[(arrayOfFriendsAndStatus.length - 1) / 2];
-        System.out.println(arrayOfFriends.length);
-        System.out.println(arrayOfFriendsAndStatus.length);
         for (int i = 0; i < arrayOfFriends.length; i++) {
             System.out.println(arrayOfFriendsAndStatus[i]);
             arrayOfFriends[(i)] = arrayOfFriendsAndStatus[i * 2 + 1];
@@ -352,7 +354,7 @@ public class TransmissionManager {
     }
 
     private static void requestFriendExecutor(String[] friends) {
-        if (friends[1].equals("ACCEPT")) {
+        Platform.runLater(()->{if (friends[1].equals("ACCEPT")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Communicat");
             alert.setHeaderText("Communicat");
@@ -364,26 +366,31 @@ public class TransmissionManager {
             alert.setHeaderText("Communicat");
             alert.setContentText("There is no user");
             alert.showAndWait();
-        }
+        }});
 
         }
 
 
-    private static void acceptFriendExecutor(String[] message) {
-        if (message[1].equals("ACCEPT")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Communicat");
-            alert.setHeaderText("Communicat");
-            alert.setContentText(message[2]+ " was added!");
-            alert.showAndWait();
+    private static void acceptFriendExecutor(String[] message) throws IOException {
+        Platform.runLater(()->
+        {
+            if (message[1].equals("ACCEPT")) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Communicat");
+                alert.setHeaderText("Communicat");
+                alert.setContentText(message[2]+ " was added!");
+                alert.showAndWait();
 
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Communicat");
-            alert.setHeaderText("Communicat");
-            alert.setContentText("ERROR");
-            alert.showAndWait();
-        }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Communicat");
+                alert.setHeaderText("Communicat");
+                alert.setContentText("ERROR");
+                alert.showAndWait();
+            }
+        });
+        communicationWindowController.loadFriends();
+
 
     }
 
@@ -425,21 +432,21 @@ public class TransmissionManager {
         System.exit(0);
     }
 
-    private static void deleteFriendExecutor(String[] message) {
-
-            if (message[1].equals("ACCEPT")) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Communicat");
-                alert.setHeaderText("Communicat");
-                alert.setContentText(message[2] + " was deleted!");
-                alert.showAndWait();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Communicat");
-                alert.setHeaderText("Communicat");
-                alert.setContentText("ERROR");
-                alert.showAndWait();
-            }
+    private static void deleteFriendExecutor(String[] message) throws IOException {
+        Platform.runLater(()->{ if (message[1].equals("ACCEPT")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Communicat");
+            alert.setHeaderText("Communicat");
+            alert.setContentText(message[2] + " was deleted!");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Communicat");
+            alert.setHeaderText("Communicat");
+            alert.setContentText("ERROR");
+            alert.showAndWait();
+        }});
+        communicationWindowController.loadFriends();
         }
     }
 
