@@ -434,7 +434,7 @@ public class TransmissionManager {
                 portsAndHostName[i-4] = arrayOfReceivedMessage[i];
             }
             startTransmission(portsAndHostName,true);
-            communicationWindowController.choosenFriend.setText(arrayOfReceivedMessage[2]);
+            communicationWindowController.choosenFriend.setText(arrayOfReceivedMessage[3]);
         }
         else
         {
