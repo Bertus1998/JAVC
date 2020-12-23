@@ -164,6 +164,7 @@ public class CommunicationWindowController {
     public void getFriendFromPanelOfFriend(MouseEvent mouseEvent) {
         Node node = mouseEvent.getPickResult().getIntersectedNode();
         Integer index = GridPane.getRowIndex(node);
+        Circle circle = new Circle(10, Color.RED);
         Node result;
         Label label;
         if (index != null) {

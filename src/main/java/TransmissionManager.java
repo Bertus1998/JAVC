@@ -415,11 +415,14 @@ public class TransmissionManager {
         }
         else
         {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Communicat");
-            alert.setHeaderText("Communicat");
-            alert.setContentText("On nie chce z tobą gadać!");
-            alert.showAndWait();
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Communicat");
+                alert.setHeaderText("Communicat");
+                alert.setContentText("On nie chce z tobą gadać!");
+                alert.showAndWait();
+            });
+
         }
     }
 
