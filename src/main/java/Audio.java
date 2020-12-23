@@ -65,7 +65,7 @@ public class Audio {
 
     }
 
-    public static void receiveAndStreamToLouder(int port) throws IOException, LineUnavailableException {
+    public static void receiveAndStreamToLouder(int port) throws IOException{
 
         DatagramSocket datagramSocket = new DatagramSocket(port);
         byte[] checkArray = new byte[6];
@@ -106,6 +106,7 @@ public class Audio {
         targetDataLine.start();
     }
     public static void configureAudioReceive(int sampleRate) throws LineUnavailableException {
+        setTransmission(true);
         System.out.println("RECEIVE" + sampleRate);
         sizeToReceive = (int)sampleRate/5;
         dataToReceive = new byte[(int)sampleRate / 5];

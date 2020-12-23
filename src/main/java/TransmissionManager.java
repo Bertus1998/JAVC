@@ -1,10 +1,12 @@
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -137,6 +139,7 @@ public class TransmissionManager {
         Video.configureWebcam();
         Audio.configureAudioSend(10000,inetAddress, portTransmit);
         Audio.configureAudioReceive(10000);
+
         sendData(socketTransmit);
         getData(socketReceive, portReceive);
     }
@@ -172,7 +175,17 @@ public class TransmissionManager {
                         break;
                     }
                 } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                    Video.setTransmission(false);
+                    Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+                            communicationWindowController.getRimg().fitWidthProperty().intValue(),
+                            communicationWindowController.getRimg().fitWidthProperty().intValue(),
+                            BufferedImage.TYPE_INT_RGB),null));
+                        TransmissionManager.communicationWindowController.getTimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+                                communicationWindowController.getTimg().fitWidthProperty().intValue(),
+                                communicationWindowController.getTimg().fitWidthProperty().intValue(),
+                                BufferedImage.TYPE_INT_RGB),null));});
+
+
                 }
             }
         };
@@ -181,8 +194,8 @@ public class TransmissionManager {
 
                     Audio.receiveAndStreamToLouder(port);
                 }
-                catch (IOException | LineUnavailableException ioException) {
-                    ioException.printStackTrace();
+                catch (IOException ioException) {
+                    Audio.setTransmission(false);
                 }
 
         };
@@ -206,7 +219,7 @@ public class TransmissionManager {
                             break;
                         }
                     } catch (IOException ioException) {
-                        ioException.printStackTrace();
+                        Video.setTransmission(false);
                     }
                 }
 
@@ -215,7 +228,7 @@ public class TransmissionManager {
                 try {
                     Audio.captureAndSendFromMicro();
                 } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                    Audio.setTransmission(false);
                 }
 
         };

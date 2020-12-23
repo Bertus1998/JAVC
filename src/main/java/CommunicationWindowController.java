@@ -60,6 +60,14 @@ public class CommunicationWindowController {
     private ScrollPane friendPanel;
     private Menu addF, deleteF;
 
+    public ImageView getTimg() {
+        return timg;
+    }
+
+    public void setTimg(ImageView timg) {
+        this.timg = timg;
+    }
+
     public ImageView getRimg() {
         return rimg;
     }
