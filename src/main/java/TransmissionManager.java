@@ -110,14 +110,14 @@ public class TransmissionManager {
         Audio.setTransmission(false);
         Video.setTransmission(false);
         Audio.resetAudio();
-      /*  Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+        Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
                 communicationWindowController.getRimg().fitWidthProperty().intValue(),
                 communicationWindowController.getRimg().fitWidthProperty().intValue(),
                 BufferedImage.TYPE_INT_RGB),null));
             TransmissionManager.communicationWindowController.getTimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
                     communicationWindowController.getTimg().fitWidthProperty().intValue(),
                     communicationWindowController.getTimg().fitWidthProperty().intValue(),
-                    BufferedImage.TYPE_INT_RGB),null));});*/
+                    BufferedImage.TYPE_INT_RGB),null));});
     }
     public static void startTransmission(String []message,boolean caller) throws IOException, LineUnavailableException {
       // 1 videoreceive/ 2 audiooreceive /3 audiotransmit /4 video transmit // 5 socket
