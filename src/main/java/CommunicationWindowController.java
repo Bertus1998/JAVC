@@ -40,7 +40,6 @@ public class CommunicationWindowController {
                 Message message = new Message();
                    int sample=(8000+320*(int)sliderUploadSpeedValue)-(8000+320*(int)sliderUploadSpeedValue)%2000;
                    TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),message.changeUploadAudio(getMe(),choosenFriend.getText(),sample));
-                    Audio.targetDataLine.close();
                     Audio.reconfigureAudioSend(sample);
                 } catch (LineUnavailableException | IOException | InterruptedException e) {
                     e.printStackTrace();
