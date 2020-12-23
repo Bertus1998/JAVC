@@ -107,8 +107,16 @@ public class TransmissionManager {
     }
     public static void stopTransmission()
     {
-
+        Audio.setTransmission(false);
         Video.setTransmission(false);
+        Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+                communicationWindowController.getRimg().fitWidthProperty().intValue(),
+                communicationWindowController.getRimg().fitWidthProperty().intValue(),
+                BufferedImage.TYPE_INT_RGB),null));
+            TransmissionManager.communicationWindowController.getTimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+                    communicationWindowController.getTimg().fitWidthProperty().intValue(),
+                    communicationWindowController.getTimg().fitWidthProperty().intValue(),
+                    BufferedImage.TYPE_INT_RGB),null));});
     }
     public static void startTransmission(String []message,boolean caller) throws IOException, LineUnavailableException {
       // 1 videoreceive/ 2 audiooreceive /3 audiotransmit /4 video transmit // 5 socket
@@ -175,17 +183,7 @@ public class TransmissionManager {
                         break;
                     }
                 } catch (IOException ioException) {
-                    Video.setTransmission(false);
-                    Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
-                            communicationWindowController.getRimg().fitWidthProperty().intValue(),
-                            communicationWindowController.getRimg().fitWidthProperty().intValue(),
-                            BufferedImage.TYPE_INT_RGB),null));
-                        TransmissionManager.communicationWindowController.getTimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
-                                communicationWindowController.getTimg().fitWidthProperty().intValue(),
-                                communicationWindowController.getTimg().fitWidthProperty().intValue(),
-                                BufferedImage.TYPE_INT_RGB),null));});
-
-
+                stopTransmission();
                 }
             }
         };
@@ -195,7 +193,7 @@ public class TransmissionManager {
                     Audio.receiveAndStreamToLouder(port);
                 }
                 catch (IOException ioException) {
-                    Audio.setTransmission(false);
+                   stopTransmission();
                 }
 
         };
@@ -219,7 +217,7 @@ public class TransmissionManager {
                             break;
                         }
                     } catch (IOException ioException) {
-                        Video.setTransmission(false);
+                        stopTransmission();
                     }
                 }
 
@@ -228,7 +226,7 @@ public class TransmissionManager {
                 try {
                     Audio.captureAndSendFromMicro();
                 } catch (IOException ioException) {
-                    Audio.setTransmission(false);
+                    stopTransmission();
                 }
 
         };
@@ -520,6 +518,7 @@ public class TransmissionManager {
         }});
         communicationWindowController.loadFriends();
         }
+
     }
 
 

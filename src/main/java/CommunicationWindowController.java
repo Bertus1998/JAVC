@@ -1,4 +1,5 @@
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,6 +13,7 @@ import javafx.scene.text.Text;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -91,6 +93,14 @@ public class CommunicationWindowController {
     public void pushDisconnectButton(ActionEvent event) {
         Video.setTransmission(false);
         Audio.setTransmission(false);
+        Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+                getRimg().fitWidthProperty().intValue(),
+                getRimg().fitWidthProperty().intValue(),
+                BufferedImage.TYPE_INT_RGB),null));
+                TransmissionManager.communicationWindowController.getTimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+                   getTimg().fitWidthProperty().intValue(),
+                    getTimg().fitWidthProperty().intValue(),
+                    BufferedImage.TYPE_INT_RGB),null));});
     }
 
     public void addFriend(ActionEvent event) throws IOException {
