@@ -53,13 +53,18 @@ public class Audio {
 
         while(true) {
             System.out.println(transmission);
-            if(!transmission){break;}
-            numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
-            bytesRead += numBytesRead;
-            System.out.println("Send1");
-            if (bytesRead > targetDataLine.getBufferSize() / 5) {
-                datagramSocket.send(datagramPacketToSend);
-                System.out.println("Send");
+            if(transmission) {
+                numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
+                bytesRead += numBytesRead;
+                System.out.println("Send1");
+                if (bytesRead > targetDataLine.getBufferSize() / 5) {
+                    datagramSocket.send(datagramPacketToSend);
+                    System.out.println("Send");
+                }
+            }
+            else
+            {
+                break;
             }
 
         }
@@ -72,24 +77,27 @@ public class Audio {
         byte[] checkArray = new byte[6];
         byte [] intArray = new byte[4];
         while(true)
-        {   if(!transmission){break;}
+        {   if(transmission) {
             datagramSocket.receive(datagramPacketToReceive);
-            dataToReceive =datagramPacketToReceive.getData();
-            for(int i = 0 ;i<6; i++)
-            {
+            dataToReceive = datagramPacketToReceive.getData();
+            for (int i = 0; i < 6; i++) {
                 checkArray[i] = dataToReceive[i];
             }
-            if(checkArray.toString().equals("Change")) {
-                for (int i = 0; i < 4; i++)
-                {
-                    intArray[i] = dataToReceive[i+6];
-                    for(int j =0 ; j<100000;j++) {
+            if (checkArray.toString().equals("Change")) {
+                for (int i = 0; i < 4; i++) {
+                    intArray[i] = dataToReceive[i + 6];
+                    for (int j = 0; j < 100000; j++) {
                         System.out.println("WE DID IT!");
                     }
                 }
             }
             System.out.println(dataToReceive.toString());
             sourceDataLine.write(dataToReceive, 0, datagramPacketToReceive.getData().length);
+        }
+        else
+        {
+            break;
+        }
 
         }
       }

@@ -174,9 +174,13 @@ public class TransmissionManager {
        Runnable runnableVideo = () -> {
             while(true) {
                 try {
-                    Video.getWebcam().open();
-                    Video.receiveAndShowImageFromWebcam(socket);
-                    if(!Video.isTransmission())
+
+                    if(Video.isTransmission())
+                    {
+                        Video.getWebcam().open();
+                        Video.receiveAndShowImageFromWebcam(socket);
+                    }
+                    else
                     {
                         Video.getWebcam().close();
                         socket.close();
@@ -211,9 +215,14 @@ public class TransmissionManager {
                 DataConverter.configureDataConverter();
                 while(true) {
                     try {
-                        System.out.println(Video.isTransmission());
-                        Video.captureAndSendFromWebcam(socket);
-                        if(!Video.isTransmission())
+
+                        if(Video.isTransmission())
+                        {
+                            System.out.println(Video.isTransmission());
+                            Video.captureAndSendFromWebcam(socket);
+
+                        }
+                        else
                         {
                             Video.getWebcam().close();
                             socket.close();
