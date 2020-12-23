@@ -109,6 +109,7 @@ public class TransmissionManager {
     {
         Audio.setTransmission(false);
         Video.setTransmission(false);
+        Audio.resetAudio();
       /*  Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
                 communicationWindowController.getRimg().fitWidthProperty().intValue(),
                 communicationWindowController.getRimg().fitWidthProperty().intValue(),

@@ -93,7 +93,8 @@ public class CommunicationWindowController {
     public void pushDisconnectButton(ActionEvent event) {
         Video.setTransmission(false);
         Audio.setTransmission(false);
-       /* Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+        Audio.resetAudio();
+        Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
                 getRimg().fitWidthProperty().intValue(),
                 getRimg().fitWidthProperty().intValue(),
                 BufferedImage.TYPE_INT_RGB),null));
@@ -102,7 +103,7 @@ public class CommunicationWindowController {
                     getTimg().fitWidthProperty().intValue(),
                     BufferedImage.TYPE_INT_RGB),null));});
 
-        */
+
     }
 
     public void addFriend(ActionEvent event) throws IOException {

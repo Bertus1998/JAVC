@@ -147,5 +147,13 @@ public class Audio {
             targetDataLine.open(audioFormatToSend);
             targetDataLine.start();
         }}
+        public static void resetAudio()
+        {
+            targetDataLine.stop();
+            sourceDataLine.stop();
+            datagramPacketToSend = null;
+            datagramPacketToReceive = null;
+        }
+
 
 }
