@@ -310,7 +310,7 @@ public class TransmissionManager {
         System.out.println("TADAD");
         if(communicationWindowController.choosenFriend.getText().equals(arrayOfPartsMessage[1])) {
             Audio.sourceDataLine.close();
-            int a = Integer.getInteger(arrayOfPartsMessage[2])
+            int a = Integer.getInteger(arrayOfPartsMessage[2]);
             Audio.reconfigureAudioReceive(a);
         }
     }
