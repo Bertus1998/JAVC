@@ -2,6 +2,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -267,8 +268,65 @@ public class TransmissionManager {
                 loadFriendsExecutor(arrayOfPartsMessage);
                 break;
             }
+            case "RESPONDCALL":{
+                respondCallExecutor(arrayOfPartsMessage);
+                break;
+            }
+            case "CHANGESTATUS":{
+                changeStatusExecutor(arrayOfPartsMessage);
+            }
         }
         }
+    }
+
+    private static void changeStatusExecutor(String[] arrayOfPartsMessage) throws IOException {
+        communicationWindowController.loadFriends();
+    }
+
+    private static void respondCallExecutor(String[] finalArrayOfmessage) {
+        Platform.runLater(()->{ Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Call dialog");
+            alert.setHeaderText(finalArrayOfmessage[1] + " call!");
+            alert.setContentText("Do you want answer?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Message messageAccept = new Message();
+                int []ports = new int[4];
+                try {
+                    int counter =0;
+                    for(int i =5;i<finalArrayOfmessage.length;i++)
+                    {
+                        System.out.println(finalArrayOfmessage[i]);
+                        if(TransmissionManager.isPortAvailable(Integer.parseInt(finalArrayOfmessage[i])))
+                        {
+                            ports[counter] =Integer.parseInt(finalArrayOfmessage[i]);
+                            counter++;
+                            if(counter == 4)
+                            {break;}
+                        }
+                    }
+                    System.out.println(finalArrayOfmessage.toString());
+                    String [] messegaeToStartTransmission= new String[5];
+                    for(int i =0;i<4;i++)
+                    {
+                        messegaeToStartTransmission[i] = String.valueOf(ports[i]);
+                        System.out.println(ports[i]);
+                    }
+                    messegaeToStartTransmission[4] = finalArrayOfmessage[finalArrayOfmessage.length-1];
+                    TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[2],CommunicationWindowController.getMe(),ports));
+                    TransmissionManager.startTransmission(messegaeToStartTransmission,false);
+                } catch (IOException | LineUnavailableException ioException) {
+                    ioException.printStackTrace();
+                }
+
+            } else {
+                try {
+                    TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), "RESPONDCALL NOPE");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
     }
 
     private static void loadFriendsExecutor(String[] message) {
@@ -336,9 +394,9 @@ public class TransmissionManager {
     private static void callAcceptExecutor(String[] arrayOfReceivedMessage) throws IOException, LineUnavailableException {
         if(arrayOfReceivedMessage[1].equals("ACCEPT")) {
             String[] portsAndHostName = new String [5];
-            for(int i = 3;i<arrayOfReceivedMessage.length;i++)
+            for(int i = 4;i<arrayOfReceivedMessage.length;i++)
             {
-                portsAndHostName[i-3] = arrayOfReceivedMessage[i];
+                portsAndHostName[i-4] = arrayOfReceivedMessage[i];
             }
             startTransmission(portsAndHostName,true);
 
@@ -385,7 +443,7 @@ public class TransmissionManager {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Communicat");
                 alert.setHeaderText("Communicat");
-                alert.setContentText("ERROR");
+                alert.setContentText(message[2]+ "was not added!");
                 alert.showAndWait();
             }
         });
@@ -400,7 +458,12 @@ public class TransmissionManager {
             Message message = new Message();
             String defaultText = "List of friend, choose one to add him to your friend list";
 
-         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(defaultText, friends);
+            String[] AllOfFriends = new String[friends.length-1];
+            for(int i =1;i<friends.length;i++)
+            {
+                AllOfFriends[i-1]= friends[i];
+            }
+         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(defaultText,AllOfFriends);
             Optional<String> result = choiceDialog.showAndWait();
             if (result.isPresent() && !defaultText.equals(result.get())) {
                 try {
