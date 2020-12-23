@@ -1,3 +1,4 @@
+import com.github.sarxos.webcam.Webcam;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -93,6 +94,7 @@ public class CommunicationWindowController {
     public void pushDisconnectButton(ActionEvent event) {
         Video.setTransmission(false);
         Audio.setTransmission(false);
+        Video.getWebcam().close();
         Audio.resetAudio();
         Platform.runLater(()->{ TransmissionManager.communicationWindowController.getRimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
                 getRimg().fitWidthProperty().intValue(),
