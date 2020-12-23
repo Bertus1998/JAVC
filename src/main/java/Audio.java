@@ -55,8 +55,10 @@ public class Audio {
         while(true) {
             if(transmission) {
                 numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
+                System.out.println(" NUMBYTESREAD " +numBytesRead);
                 bytesRead += numBytesRead;
-                if (bytesRead > targetDataLine.getBufferSize() / 5) {
+                System.out.println("BYTESREAD " + bytesRead);
+                if (bytesRead > targetDataLine.getBufferSize() ) {
                     datagramSocket.send(datagramPacketToSend);
                     System.out.println("WYSłane " +datagramPacketToSend.getData().length);
                 }
@@ -115,9 +117,10 @@ public class Audio {
     }
     public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
         {
-            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTempToSend);
+
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];
+            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTempToSend);
             audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
