@@ -11,6 +11,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
 
 public class Audio {
     public static AudioFormat audioFormatToSend;
@@ -27,6 +28,7 @@ public class Audio {
     public static int portTempToSend;
     public static int portTempToReceive;
     public static boolean transmission = false;
+    public static Object object;
 
     public static boolean isTransmission() {
         return transmission;
@@ -52,10 +54,12 @@ public class Audio {
         int bytesRead = 0;
         while(true) {
             if(transmission) {
-                numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
-                bytesRead += numBytesRead;
-                if (bytesRead > targetDataLine.getBufferSize() / 5) {
-                    datagramSocket.send(datagramPacketToSend);
+                if(datagramPacketToSend!=null) {
+                    numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
+                    bytesRead += numBytesRead;
+                    if (bytesRead > targetDataLine.getBufferSize() / 5) {
+                        datagramSocket.send(datagramPacketToSend);
+                    }
                 }
             }
             else
@@ -73,9 +77,10 @@ public class Audio {
 
         while(true)
         {   if(transmission) {
-            datagramSocket.receive(datagramPacketToReceive);
-            dataToReceive = datagramPacketToReceive.getData();
-            sourceDataLine.write(dataToReceive, 0, sizeToReceive);
+            if(datagramPacketToReceive!=null) {
+                datagramSocket.receive(datagramPacketToReceive);
+                sourceDataLine.write(datagramPacketToReceive.getData(), 0, sizeToReceive);
+            }
         }
         else
         {
@@ -111,6 +116,10 @@ public class Audio {
     }
     public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
         {
+            Lock l = (Lock)object;
+            l.lock();
+            try {
+
             targetDataLine.close();
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];
@@ -121,19 +130,28 @@ public class Audio {
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
             targetDataLine.open(audioFormatToSend);
             targetDataLine.start();
+            } finally {
+                l.unlock();
+            }
         }}
     public static void reconfigureAudioReceive(int sampleRate) throws LineUnavailableException {
-        sourceDataLine.close();
-        sizeToReceive=(int)sampleRate/5;
-       dataToReceive = new byte[(int)sampleRate / 5];
-        datagramPacketToReceive = null;
-        datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
-        audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
-        sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
-        sourceDataLine.open(audioFormatToReceive);
-        sourceDataLine.start();
-
+        Lock lock = (Lock)object;
+        lock.lock();
+        try {
+            sourceDataLine.close();
+            sizeToReceive = (int) sampleRate / 5;
+            dataToReceive = new byte[(int) sampleRate / 5];
+            datagramPacketToReceive = null;
+            datagramPacketToReceive = new DatagramPacket(dataToReceive, dataToReceive.length);
+            audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
+            sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
+            sourceDataLine.open(audioFormatToReceive);
+            sourceDataLine.start();
+        }
+        finally {
+            lock.unlock();
+        }
     }
         public static void resetAudio()
         {
