@@ -34,6 +34,7 @@ public class Audio {
     public static boolean isTransmission() {
         return transmission;
     }
+    public static boolean wait;
 
     public static void setTransmission(boolean transmission) {
         Audio.transmission = transmission;
@@ -47,13 +48,18 @@ public class Audio {
         Audio.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromMicro()  {
+    public static void captureAndSendFromMicro() throws InterruptedException {
 
         int numBytesRead;
 
         DatagramSocket datagramSocket = null ;
         int bytesRead = 0;
         while(true) {
+            if(wait)
+            {
+                Thread.sleep(2000);
+                wait =false;
+            }
             try {
                 if (datagramSocket == null) {
                     datagramSocket = new DatagramSocket();
@@ -137,7 +143,7 @@ public class Audio {
             Lock l = reentrantLock;
             l.lock();
             try {
-
+            wait = true;
             targetDataLine.close();
             sizeToSend = (int)sampleRate/5;
             dataToSend = new byte[(int)sampleRate / 5];
@@ -147,7 +153,6 @@ public class Audio {
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
             targetDataLine.open(audioFormatToSend);
-            Thread.sleep(1000);
             targetDataLine.start();
             } finally {
                 l.unlock();
