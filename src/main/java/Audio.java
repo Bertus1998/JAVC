@@ -52,6 +52,7 @@ public class Audio {
         int numBytesRead;
 
         DatagramSocket datagramSocket = new DatagramSocket();
+        datagramSocket.setSoTimeout(100);
         int bytesRead = 0;
         while(true) {
             if(transmission) {
@@ -75,7 +76,7 @@ public class Audio {
     public static void receiveAndStreamToLouder(int port) throws IOException{
 
         DatagramSocket datagramSocket = new DatagramSocket(port);
-
+        datagramSocket.setSoTimeout(100);
         while(true)
         {   if(transmission) {
             if(datagramPacketToReceive!=null) {
