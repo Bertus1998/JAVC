@@ -12,6 +12,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Audio {
     public static AudioFormat audioFormatToSend;
@@ -28,7 +29,7 @@ public class Audio {
     public static int portTempToSend;
     public static int portTempToReceive;
     public static boolean transmission = false;
-    public static Object object;
+    public static ReentrantLock reentrantLock;
 
     public static boolean isTransmission() {
         return transmission;
@@ -116,8 +117,8 @@ public class Audio {
     }
     public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
         {
-            object = new Object();
-            Lock l = (Lock)object;
+            reentrantLock = new ReentrantLock();
+            Lock l = reentrantLock;
             l.lock();
             try {
 
@@ -136,8 +137,8 @@ public class Audio {
             }
         }}
     public static void reconfigureAudioReceive(int sampleRate) throws LineUnavailableException {
-        object = new Object();
-        Lock lock = (Lock)object;
+        reentrantLock = new ReentrantLock();
+        Lock lock = reentrantLock;
         lock.lock();
         try {
             sourceDataLine.close();
