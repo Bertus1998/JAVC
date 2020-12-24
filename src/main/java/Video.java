@@ -38,7 +38,7 @@ public class Video {
         Video.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromWebcam(Socket socket) throws IOException {
+    public static void captureAndSendFromWebcam(Socket socket) throws Exception {
 
                         BufferedImage bufferedImage =webcam.getImage();
                         bufferedImage = DataConverter.qualityOfImage(communicationWindowController.sliderUploadSpeedValue,bufferedImage);
@@ -48,8 +48,8 @@ public class Video {
                             byte[] message = bos.toByteArray();
 
                             DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
-                            dOut.writeInt(message.length);
-                            dOut.write(message);
+                            dOut.writeInt(EncryptionManager.encrypt(message).length);
+                            dOut.write(EncryptionManager.encrypt(message));
 
                             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                             Platform.runLater(() -> {
@@ -62,13 +62,13 @@ public class Video {
 
 
 
-    public static void receiveAndShowImageFromWebcam(Socket socket) throws IOException {
+    public static void receiveAndShowImageFromWebcam(Socket socket) throws Exception {
                     DataInputStream dIn = null;
                         dIn = new DataInputStream(socket.getInputStream());
                         int length = dIn.readInt();
                         if(length>0) {
                             byte[] message = new byte[length];
-                            dIn.readFully(message, 0, message.length);
+                            dIn.readFully(EncryptionManager.decrypt(message), 0, EncryptionManager.decrypt(message).length);
                             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(message);
                             BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
                             Image image= SwingFXUtils.toFXImage(bufferedImage, null);

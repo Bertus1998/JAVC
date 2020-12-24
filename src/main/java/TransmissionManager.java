@@ -120,7 +120,7 @@ public class TransmissionManager {
                     communicationWindowController.getTimg().fitWidthProperty().intValue(),
                     BufferedImage.TYPE_INT_RGB),null));});
     }
-    public static void startTransmission(String []message,boolean caller) throws IOException, LineUnavailableException {
+    public static void startTransmission(String []message,boolean caller) throws Exception {
       // 1 videoreceive/ 2 audiooreceive /3 audiotransmit /4 video transmit // 5 socket
 
         ServerSocket serwerSocketVideoReceive;
@@ -188,7 +188,7 @@ public class TransmissionManager {
                         socket.close();
                         break;
                     }
-                } catch (IOException ioException) {
+                } catch (Exception ioException) {
                 stopTransmission();
                     ioException.printStackTrace();
                 }
@@ -221,7 +221,7 @@ public class TransmissionManager {
                             socket.close();
                             break;
                         }
-                    } catch (IOException ioException) {
+                    } catch (Exception ioException) {
                         stopTransmission();
                         ioException.printStackTrace();
                     }
@@ -229,7 +229,11 @@ public class TransmissionManager {
 
             };
         Runnable runnableAudio = () -> {
-                    Audio.captureAndSendFromMicro();
+            try {
+                Audio.captureAndSendFromMicro();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         };
         Thread threadSendAudio= new Thread(runnableAudio);
         Thread threadSendVideo = new Thread(runnableVideo);
@@ -237,7 +241,7 @@ public class TransmissionManager {
         threadSendVideo.start();
 
     }
-    public static void messageExecutor(String messega) throws IOException, LineUnavailableException {
+    public static void messageExecutor(String messega) throws Exception {
         System.out.println("Wiadomość odebrana od serwera :" +messega);
         String[] arrayOfPartsMessage = messega.split(" ");
         if(arrayOfPartsMessage.length>0)
@@ -337,7 +341,7 @@ public class TransmissionManager {
                     messegaeToStartTransmission[4] = finalArrayOfmessage[finalArrayOfmessage.length-1];
                     TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[2],CommunicationWindowController.getMe(),ports));
                     TransmissionManager.startTransmission(messegaeToStartTransmission,false);
-                } catch (IOException | LineUnavailableException ioException) {
+                } catch (Exception ioException) {
                     ioException.printStackTrace();
                 }
 
@@ -412,7 +416,7 @@ public class TransmissionManager {
     }
 
 
-    private static void callAcceptExecutor(String[] arrayOfReceivedMessage) throws IOException, LineUnavailableException {
+    private static void callAcceptExecutor(String[] arrayOfReceivedMessage) throws Exception {
         if(arrayOfReceivedMessage[1].equals("ACCEPT")) {
             String[] portsAndHostName = new String [5];
             for(int i = 4;i<arrayOfReceivedMessage.length;i++)

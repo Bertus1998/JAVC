@@ -158,7 +158,7 @@ public class CommunicationWindowController {
                 try {
                     message = TransmissionManager.getMessageFromServer(TransmissionManager.getClient());
                     TransmissionManager.messageExecutor(message);
-                } catch (IOException | LineUnavailableException ioException) {
+                } catch (Exception ioException) {
                     ioException.printStackTrace();
                 }
 

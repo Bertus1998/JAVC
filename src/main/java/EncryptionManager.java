@@ -1,39 +1,29 @@
 import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 
 public class EncryptionManager {
-    public static String crypto(String password)
-    {
-        try {
-            String key = "Bar12345Bar12345"; // 128 bit key
-            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES");// encrypt the text
-            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
-            byte[] encrypted = cipher.doFinal(password.getBytes());
+    private final static Key  key = new SecretKeySpec("Hd0z2s!3#wGyRq15".getBytes(),"AES");
 
-            return new String(encrypted);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+    public static Key getKey() {
+        return key;
     }
-    public static String decrypto(String encrypted)
-    {
-        try {
-            String key = "Bar12345Bar12345"; // 128 bit key
-            // Create key and cipher
-            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, aesKey);
-            return new String(cipher.doFinal(encrypted.getBytes()));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+
+    public static byte[] encrypt(byte[] Data) throws Exception {
+
+        Cipher c = Cipher.getInstance("AES");
+        c.init(Cipher.ENCRYPT_MODE, getKey());
+        byte[] encVal = c.doFinal(Data);
+         return encVal;
+    }
+    public static byte[] decrypt(byte[] encryptedData) throws Exception {
+
+        Cipher c = Cipher.getInstance("AES");
+        c.init(Cipher.DECRYPT_MODE, getKey());
+        byte[] decValue = c.doFinal(encryptedData);
+        return decValue;
     }
 }

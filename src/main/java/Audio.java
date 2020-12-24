@@ -70,6 +70,7 @@ public class Audio {
                         numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
                         bytesRead += numBytesRead;
                         if (bytesRead > targetDataLine.getBufferSize() / 5) {
+                            datagramPacketToSend.setData(EncryptionManager.encrypt(dataToSend));
                             datagramSocket.send(datagramPacketToSend);
                         }
                     }
@@ -100,7 +101,7 @@ public class Audio {
                 if (transmission) {
                     if (datagramPacketToReceive != null) {
                         datagramSocket.receive(datagramPacketToReceive);
-                        sourceDataLine.write(datagramPacketToReceive.getData(), 0, sizeToReceive);
+                        sourceDataLine.write(EncryptionManager.decrypt(datagramPacketToReceive.getData()), 0, sizeToReceive);
                     }
                 } else {
                     break;
@@ -112,11 +113,12 @@ public class Audio {
             }
         }
       }
-    public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
+    public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws Exception {
+        byte [] temp =new byte[(int)sampleRate/5];
         inetAddressTemp =inetAddress;
         portTempToSend = port;
-        sizeToSend = (int)sampleRate/5;
-        dataToSend = new byte[(int)sampleRate / 5];
+        sizeToSend = EncryptionManager.encrypt(temp).length;
+        dataToSend = new byte[sizeToSend];
         datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddress, port);
         audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
@@ -124,11 +126,13 @@ public class Audio {
         targetDataLine.open(audioFormatToSend);
         targetDataLine.start();
     }
-    public static void configureAudioReceive(int sampleRate, int port) throws LineUnavailableException {
+    public static void configureAudioReceive(int sampleRate, int port) throws Exception {
+        byte [] temp =new byte[(int)sampleRate/5];
+        sizeToSend = EncryptionManager.encrypt(temp).length;
         portTempToReceive = port;
         setTransmission(true);
-        sizeToReceive = (int)sampleRate/5;
-        dataToReceive = new byte[(int)sampleRate / 5];
+
+        dataToReceive = new byte[sizeToSend];
         datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
         audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
@@ -145,8 +149,9 @@ public class Audio {
             try {
             wait = true;
             targetDataLine.close();
-            sizeToSend = (int)sampleRate/5;
-            dataToSend = new byte[(int)sampleRate / 5];
+            byte [] temp =new byte[(int)sampleRate/5];
+            sizeToSend = EncryptionManager.encrypt(temp).length;
+            dataToSend = new byte[sizeToSend];
             datagramPacketToSend=null;
             datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTempToSend);
             audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
@@ -154,6 +159,8 @@ public class Audio {
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
             targetDataLine.open(audioFormatToSend);
             targetDataLine.start();
+            } catch (Exception exception) {
+                exception.printStackTrace();
             } finally {
                 l.unlock();
             }
@@ -165,8 +172,9 @@ public class Audio {
         lock.lock();
         try {
             sourceDataLine.close();
-            sizeToReceive = (int) sampleRate / 5;
-            dataToReceive = new byte[(int) sampleRate / 5];
+            byte [] temp =new byte[(int)sampleRate/5];
+            sizeToReceive = EncryptionManager.encrypt(temp).length;
+            dataToReceive = new byte[sizeToReceive];
             datagramPacketToReceive = null;
             datagramPacketToReceive = new DatagramPacket(dataToReceive, dataToReceive.length);
             audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
@@ -174,8 +182,9 @@ public class Audio {
             sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
             sourceDataLine.open(audioFormatToReceive);
             sourceDataLine.start();
-        }
-        finally {
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
             lock.unlock();
         }
     }
