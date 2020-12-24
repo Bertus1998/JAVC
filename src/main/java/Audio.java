@@ -63,7 +63,7 @@ public class Audio {
             try {
                 if (datagramSocket == null) {
                     datagramSocket = new DatagramSocket();
-                    datagramSocket.setSoTimeout(10);
+                    datagramSocket.setSoTimeout(1000);
                 }
                 if (transmission) {
                     if (datagramPacketToSend != null) {
@@ -96,7 +96,7 @@ public class Audio {
             try {
                 if (datagramSocket == null) {
                     datagramSocket = new DatagramSocket(port);
-                    datagramSocket.setSoTimeout(10);
+                    datagramSocket.setSoTimeout(1000);
                 }
                 if (transmission) {
                     if (datagramPacketToReceive != null) {
