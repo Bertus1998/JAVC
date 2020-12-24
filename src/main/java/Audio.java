@@ -50,17 +50,12 @@ public class Audio {
 
         DatagramSocket datagramSocket = new DatagramSocket();
         int bytesRead = 0;
-
-
         while(true) {
             if(transmission) {
                 numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
-                System.out.println(" NUMBYTESREAD " +numBytesRead);
                 bytesRead += numBytesRead;
-                System.out.println("BYTESREAD " + bytesRead);
                 if (bytesRead > targetDataLine.getBufferSize() / 5) {
                     datagramSocket.send(datagramPacketToSend);
-                    System.out.println("WYSłane " +datagramPacketToSend.getData().length);
                 }
             }
             else
@@ -80,7 +75,6 @@ public class Audio {
         {   if(transmission) {
             datagramSocket.receive(datagramPacketToReceive);
             dataToReceive = datagramPacketToReceive.getData();
-            System.out.println("ODEBRANE : "+dataToReceive.length);
             sourceDataLine.write(dataToReceive, 0, sizeToReceive);
         }
         else
@@ -133,7 +127,7 @@ public class Audio {
         sizeToReceive=(int)sampleRate/5;
        dataToReceive = new byte[(int)sampleRate / 5];
         datagramPacketToReceive = null;
-        datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length,inetAddressTemp,portTempToReceive);
+        datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
         audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
         sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
