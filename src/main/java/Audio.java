@@ -131,6 +131,7 @@ public class Audio {
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
             targetDataLine.open(audioFormatToSend);
+            targetDataLine.wait(2000);
             targetDataLine.start();
             } finally {
                 l.unlock();
