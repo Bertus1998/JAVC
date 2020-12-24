@@ -39,6 +39,7 @@ public class Video {
     }
 
     public static void captureAndSendFromWebcam(Socket socket) throws IOException {
+        if (getCommunicationWindowController() != null&&webcam!=null&&transmission) {
 
                         BufferedImage bufferedImage =webcam.getImage();
                         bufferedImage = DataConverter.qualityOfImage(communicationWindowController.sliderUploadSpeedValue,bufferedImage);
@@ -55,7 +56,7 @@ public class Video {
                             Platform.runLater(() -> {
                                 communicationWindowController.timg.setImage(image);
                             });
-                        }
+                        }}
 
             };
 
@@ -63,7 +64,8 @@ public class Video {
 
 
     public static void receiveAndShowImageFromWebcam(Socket socket) throws IOException {
-
+        if(getCommunicationWindowController()!=null&&transmission)
+        {
                     DataInputStream dIn = null;
                         dIn = new DataInputStream(socket.getInputStream());
                         int length = dIn.readInt();
@@ -76,7 +78,7 @@ public class Video {
                             Platform.runLater(() -> {
                                 communicationWindowController.rimg.setImage(image);
                             });
-
+                        }
         }
     }
     public static boolean configureWebcam() {
@@ -90,5 +92,6 @@ public class Video {
             return false;
         }
     }
+
 
 }
