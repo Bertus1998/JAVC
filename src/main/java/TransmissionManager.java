@@ -195,15 +195,7 @@ public class TransmissionManager {
             }
         };
         Runnable runnableAudio = () -> {
-                try {
-
                     Audio.receiveAndStreamToLouder(port);
-                }
-                catch (IOException ioException) {
-                   stopTransmission();
-                    ioException.printStackTrace();
-                }
-
         };
         Thread threadGetAudio = new Thread(runnableAudio);
         Thread threadGetVideo = new Thread(runnableVideo);
@@ -237,13 +229,7 @@ public class TransmissionManager {
 
             };
         Runnable runnableAudio = () -> {
-                try {
                     Audio.captureAndSendFromMicro();
-                } catch (IOException ioException) {
-                    stopTransmission();
-                    ioException.printStackTrace();
-                }
-
         };
         Thread threadSendAudio= new Thread(runnableAudio);
         Thread threadSendVideo = new Thread(runnableVideo);
