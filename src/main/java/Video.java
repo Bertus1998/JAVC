@@ -70,12 +70,14 @@ public class Video {
                             byte[] message = new byte[length];
                             dIn.readFully(message, 0, length);
                             byte [] decryptMessage = EncryptionManager.decrypt(message);
-                            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decryptMessage);
-                            BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
-                            Image image= SwingFXUtils.toFXImage(bufferedImage, null);
-                            Platform.runLater(() -> {
-                                communicationWindowController.rimg.setImage(image);
-                            });
+                            if(decryptMessage!=null) {
+                                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decryptMessage);
+                                BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
+                                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                                Platform.runLater(() -> {
+                                    communicationWindowController.rimg.setImage(image);
+                                });
+                            }
 
         }
     }
