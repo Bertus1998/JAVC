@@ -55,9 +55,9 @@ public class Audio {
         int bytesRead = 0;
         while(true) {
             try {
-                if (datagramSocket != null) {
+                if (datagramSocket == null) {
                     datagramSocket = new DatagramSocket();
-                    datagramSocket.setSoTimeout(100);
+                    datagramSocket.setSoTimeout(10);
                 }
                 if (transmission) {
                     if (datagramPacketToSend != null) {
@@ -87,9 +87,9 @@ public class Audio {
         while(true)
         {
             try {
-                if (datagramSocket != null) {
+                if (datagramSocket == null) {
                     datagramSocket = new DatagramSocket(port);
-                    datagramSocket.setSoTimeout(200);
+                    datagramSocket.setSoTimeout(10);
                 }
                 if (transmission) {
                     if (datagramPacketToReceive != null) {
@@ -147,10 +147,12 @@ public class Audio {
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
             targetDataLine.open(audioFormatToSend);
+            Thread.sleep(1000);
             targetDataLine.start();
             } finally {
                 l.unlock();
             }
+
         }}
     public static void reconfigureAudioReceive(int sampleRate) throws LineUnavailableException {
         reentrantLock = new ReentrantLock();
