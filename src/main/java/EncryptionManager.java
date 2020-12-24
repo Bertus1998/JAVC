@@ -6,24 +6,22 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 public class EncryptionManager {
-    private final static Key  key = new SecretKeySpec("Hd0z2s!3#wGyRq15".getBytes(),"AES");
-
-    public static Key getKey() {
-        return key;
-    }
-
-    public static byte[] encrypt(byte[] Data) throws Exception {
-
-        Cipher c = Cipher.getInstance("AES");
-        c.init(Cipher.ENCRYPT_MODE, getKey());
-        byte[] encVal = c.doFinal(Data);
-         return encVal;
-    }
+    private static final String ALGO = "AES";
+    private static final byte[] keyValue = "Ad0#2s!3oGyRq!5F".getBytes();
     public static byte[] decrypt(byte[] encryptedData) throws Exception {
+        Key key = new SecretKeySpec(keyValue, ALGO);
+        Cipher c = Cipher.getInstance(ALGO);
+        c.init(Cipher.DECRYPT_MODE, key);
 
-        Cipher c = Cipher.getInstance("AES");
-        c.init(Cipher.DECRYPT_MODE, getKey());
         byte[] decValue = c.doFinal(encryptedData);
         return decValue;
+    }
+    public static byte[] encrypt(byte[] Data) throws Exception {
+        Key key = new SecretKeySpec(keyValue, ALGO);
+        Cipher c = Cipher.getInstance(ALGO);
+        c.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encVal = c.doFinal(Data);
+        //String encryptedValue = new BASE64Encoder().encode(encVal);
+        return encVal;
     }
 }
