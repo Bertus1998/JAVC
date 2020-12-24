@@ -47,46 +47,63 @@ public class Audio {
         Audio.communicationWindowController = communicationWindowController;
     }
 
-    public static void captureAndSendFromMicro() throws IOException {
+    public static void captureAndSendFromMicro()  {
 
         int numBytesRead;
 
-        DatagramSocket datagramSocket = new DatagramSocket();
+        DatagramSocket datagramSocket = null ;
         int bytesRead = 0;
         while(true) {
-            if(transmission) {
-                if(datagramPacketToSend!=null) {
-                    numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
-                    bytesRead += numBytesRead;
-                    if (bytesRead > targetDataLine.getBufferSize() / 5) {
-                        datagramSocket.send(datagramPacketToSend);
-                    }
+            try {
+                if (datagramSocket != null) {
+                    datagramSocket = new DatagramSocket();
+                    datagramSocket.setSoTimeout(100);
                 }
-            }
-            else
-            {
-                break;
-            }
+                if (transmission) {
+                    if (datagramPacketToSend != null) {
+                        numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
+                        bytesRead += numBytesRead;
+                        if (bytesRead > targetDataLine.getBufferSize() / 5) {
+                            datagramSocket.send(datagramPacketToSend);
+                        }
+                    }
+                } else {
+                    break;
+                }
 
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
     }
 
-    public static void receiveAndStreamToLouder(int port) throws IOException{
+    public static void receiveAndStreamToLouder(int port) {
 
-        DatagramSocket datagramSocket = new DatagramSocket(port);
+        DatagramSocket datagramSocket = null;
+
         while(true)
-        {   if(transmission) {
-            if(datagramPacketToReceive!=null) {
-                datagramSocket.receive(datagramPacketToReceive);
-                sourceDataLine.write(datagramPacketToReceive.getData(), 0, sizeToReceive);
-            }
-        }
-        else
         {
-            break;
-        }
-
+            try {
+                if (datagramSocket != null) {
+                    datagramSocket = new DatagramSocket(port);
+                    datagramSocket.setSoTimeout(200);
+                }
+                if (transmission) {
+                    if (datagramPacketToReceive != null) {
+                        datagramSocket.receive(datagramPacketToReceive);
+                        sourceDataLine.write(datagramPacketToReceive.getData(), 0, sizeToReceive);
+                    }
+                } else {
+                    break;
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
       }
     public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws LineUnavailableException {
@@ -126,7 +143,6 @@ public class Audio {
             dataToSend = new byte[(int)sampleRate / 5];
             datagramPacketToSend=null;
             datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTempToSend);
-            datagramPacketToSend.wait(1000);
             audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
