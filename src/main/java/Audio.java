@@ -72,7 +72,7 @@ public class Audio {
                         if (bytesRead > targetDataLine.getBufferSize() / 5) {
                            byte[] encrypted = EncryptionManager.encrypt(dataToSend);
                             datagramPacketToSend.setData(encrypted);
-                            System.out.println("ODBIÓR, ROZMIAR :" +encrypted.length);
+                            System.out.println("ODBIÓR, ROZMIAR :" +dataToSend.length);
                             datagramSocket.send(datagramPacketToSend);
                         }
                     }
