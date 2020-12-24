@@ -70,7 +70,9 @@ public class Audio {
                         numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
                         bytesRead += numBytesRead;
                         if (bytesRead > targetDataLine.getBufferSize() / 5) {
-                            datagramPacketToSend.setData(EncryptionManager.encrypt(dataToSend));
+                           byte[] encrypted = EncryptionManager.encrypt(dataToSend);
+                            datagramPacketToSend.setData(encrypted);
+                            System.out.println("ODBIÓR, ROZMIAR :" +encrypted.length);
                             datagramSocket.send(datagramPacketToSend);
                         }
                     }
@@ -101,7 +103,9 @@ public class Audio {
                 if (transmission) {
                     if (datagramPacketToReceive != null) {
                         datagramSocket.receive(datagramPacketToReceive);
-                        sourceDataLine.write(EncryptionManager.decrypt(datagramPacketToReceive.getData()), 0, sizeToReceive);
+                       byte [] decrypted =  EncryptionManager.decrypt(datagramPacketToReceive.getData());
+                        System.out.println("ODBIÓR, ROZMIAR :" +decrypted.length);
+                        sourceDataLine.write(decrypted, 0, decrypted.length);
                     }
                 } else {
                     break;
