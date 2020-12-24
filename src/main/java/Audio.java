@@ -116,6 +116,7 @@ public class Audio {
     }
     public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
         {
+            object = new Object();
             Lock l = (Lock)object;
             l.lock();
             try {
@@ -135,6 +136,7 @@ public class Audio {
             }
         }}
     public static void reconfigureAudioReceive(int sampleRate) throws LineUnavailableException {
+        object = new Object();
         Lock lock = (Lock)object;
         lock.lock();
         try {
