@@ -73,9 +73,6 @@ public class EncryptionManager {
         int noonceSize = byteBuffer.getInt();
 
         //Make sure that the file was encrypted properly
-        if(noonceSize < 12 || noonceSize >= 16) {
-            throw new IllegalArgumentException("Nonce size is incorrect. Make sure that the incoming data is an AES encrypted file.");
-        }
         byte[] iv = new byte[noonceSize];
         byteBuffer.get(iv);
 
