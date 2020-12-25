@@ -1,70 +1,114 @@
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
+
+import javax.crypto.*;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Base64;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 
+/**
+ * Encryption / Decryption service using the AES algorithm
+ * example for nullbeans.com
+ */
 public class EncryptionManager {
-    private static SecretKeySpec secretKey;
-    private static byte[] key;
-    private static final String secret = "TADAELOWMISIEMUA";
-    public static void setKey(String myKey)
-    {
-        MessageDigest sha = null;
-        try {
-            key = myKey.getBytes("UTF-8");
-            sha = MessageDigest.getInstance("SHA-1");
-            key = sha.digest(key);
-            key = Arrays.copyOf(key, 16);
-            secretKey = new SecretKeySpec(key, "AES");
-        }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    /**
+     * This method will encrypt the given data
+     * @param key : the password that will be used to encrypt the data
+     * @param data : the data that will be encrypted
+     * @return Encrypted data in a byte array
+     */
+    public static String key = "Bar12345Bar12345";
+    public static byte [] encrypt( byte [] data) throws NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException,
+            InvalidKeyException,
+            BadPaddingException,
+            IllegalBlockSizeException, InvalidKeySpecException {
+
+        //Prepare the nonce
+        SecureRandom secureRandom = new SecureRandom();
+
+        //Noonce should be 12 bytes
+        byte[] iv = new byte[12];
+        secureRandom.nextBytes(iv);
+
+        //Prepare your key/password
+        SecretKey secretKey = generateSecretKey(key, iv);
+
+
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
+
+        //Encryption mode on!
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);
+
+        //Encrypt the data
+        byte [] encryptedData = cipher.doFinal(data);
+
+        //Concatenate everything and return the final data
+        ByteBuffer byteBuffer = ByteBuffer.allocate(4 + iv.length + encryptedData.length);
+        byteBuffer.putInt(iv.length);
+        byteBuffer.put(iv);
+        byteBuffer.put(encryptedData);
+        return byteBuffer.array();
     }
 
-    public static byte[] encrypt(byte[] strToEncrypt)
-    {
-        try
-        {
-            setKey(secret);
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            return cipher.doFinal(strToEncrypt);
+
+    public static byte [] decrypt( byte [] encryptedData)
+            throws NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException,
+            InvalidKeyException,
+            BadPaddingException,
+            IllegalBlockSizeException,
+            InvalidKeySpecException {
+
+
+        //Wrap the data into a byte buffer to ease the reading process
+        ByteBuffer byteBuffer = ByteBuffer.wrap(encryptedData);
+
+        int noonceSize = byteBuffer.getInt();
+
+        //Make sure that the file was encrypted properly
+        if(noonceSize < 12 || noonceSize >= 16) {
+            throw new IllegalArgumentException("Nonce size is incorrect. Make sure that the incoming data is an AES encrypted file.");
         }
-        catch (Exception e)
-        {
-            System.out.println("Error while encrypting: " + e.toString());
-        }
-        return null;
+        byte[] iv = new byte[noonceSize];
+        byteBuffer.get(iv);
+
+        //Prepare your key/password
+        SecretKey secretKey = generateSecretKey(key, iv);
+
+        //get the rest of encrypted data
+        byte[] cipherBytes = new byte[byteBuffer.remaining()];
+        byteBuffer.get(cipherBytes);
+
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
+
+        //Encryption mode on!
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec);
+
+        //Encrypt the data
+        return cipher.doFinal(cipherBytes);
+
     }
 
-    public static byte[] decrypt(byte[] strToDecrypt)
-    {
-        try
-        {
-            setKey(secret);
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            return cipher.doFinal(strToDecrypt);
-        }
-        catch (Exception e)
-        {
-            System.out.println("Error while decrypting: " + e.toString());
-        }
-        return null;
+
+    public static SecretKey generateSecretKey(String password, byte [] iv) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), iv, 65536, 128); // AES-128
+        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] key = secretKeyFactory.generateSecret(spec).getEncoded();
+        return new SecretKeySpec(key, "AES");
     }
-    public static int sizeOfEncrypted(int size)
-    {
-        byte [] temp = new byte[size];
-        return encrypt(temp).length;
-    }
+        public static int sizeOfEncrypted(int size) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+           return encrypt(new byte [size]).length;
+
+        }
+
 }

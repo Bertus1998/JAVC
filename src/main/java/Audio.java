@@ -72,7 +72,7 @@ public class Audio {
                         numBytesRead = targetDataLine.read(captureDataFromMicroData, 0, captureDataFromMicroData.length);
                         bytesRead += numBytesRead;
                         if (bytesRead > targetDataLine.getBufferSize() / 5) {
-                            System.out.println("Przed enkrypcją ROZMIAR :" +dataToSend.length);
+                            System.out.println("Przed enkrypcją ROZMIAR :" +captureDataFromMicroData.length);
                            dataToSend= EncryptionManager.encrypt(captureDataFromMicroData);
                             System.out.println("WYSYL, ROZMIAR :" +dataToSend.length);
                             datagramSocket.send(datagramPacketToSend);
@@ -108,7 +108,7 @@ public class Audio {
                         byte [] temp = datagramPacketToReceive.getData();
                         System.out.println("ODBIÓR, ROZMIAR :" + temp.length);
                        byte [] decrypted =  EncryptionManager.decrypt(temp);
-                        System.out.println("PO DEKRYPCJI ROZMIAR :" + temp.length);
+                        System.out.println("PO DEKRYPCJI ROZMIAR :" + decrypted.length);
                        if(decrypted!=null) {
                            sourceDataLine.write(decrypted, 0, decrypted.length);
                        }
