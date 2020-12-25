@@ -62,4 +62,9 @@ public class EncryptionManager {
         }
         return null;
     }
+    public static int sizeOfEncrypted(int size)
+    {
+        byte [] temp = new byte[size];
+        return encrypt(temp).length;
+    }
 }

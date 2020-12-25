@@ -120,10 +120,10 @@ public class Audio {
         }
       }
     public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws Exception {
-        byte [] temp =new byte[(int)sampleRate/5];
+
         inetAddressTemp =inetAddress;
         portTempToSend = port;
-        sizeToSend = EncryptionManager.encrypt(temp).length;
+        sizeToSend = EncryptionManager.sizeOfEncrypted(sampleRate/5);
         dataToSend = new byte[sizeToSend];
         datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddress, port);
         audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
@@ -133,8 +133,8 @@ public class Audio {
         targetDataLine.start();
     }
     public static void configureAudioReceive(int sampleRate, int port) throws Exception {
-        byte [] temp =new byte[(int)sampleRate/5];
-        sizeToReceive = EncryptionManager.encrypt(temp).length;
+
+        sizeToReceive = EncryptionManager.sizeOfEncrypted(sampleRate/5);
         portTempToReceive = port;
         setTransmission(true);
 
