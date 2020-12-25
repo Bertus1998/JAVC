@@ -62,12 +62,6 @@ public class Main extends Application {
     }
     public static void main(String[] args) {
         launch(args);
-//        byte[] temp = new byt
-       /* for(int i = 100; i <4000; i++)
-        {
-            for(int j = 0;j<100;j++) {
-                System.out.println(j+".Z " + i +" na " +EncryptionManager.sizeOfEncrypted(i));
-            }
-        }*/
+//
     }
 }
