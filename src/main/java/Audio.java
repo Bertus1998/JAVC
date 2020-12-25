@@ -134,11 +134,11 @@ public class Audio {
     }
     public static void configureAudioReceive(int sampleRate, int port) throws Exception {
         byte [] temp =new byte[(int)sampleRate/5];
-        sizeToSend = EncryptionManager.encrypt(temp).length;
+        sizeToReceive = EncryptionManager.encrypt(temp).length;
         portTempToReceive = port;
         setTransmission(true);
 
-        dataToReceive = new byte[sizeToSend];
+        dataToReceive = new byte[sizeToReceive];
         datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
         audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
