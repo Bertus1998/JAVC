@@ -22,7 +22,9 @@ public class Audio {
     public static int sizeToSend, sizeToReceive;
     public static  CommunicationWindowController communicationWindowController;
     public  static  byte[] dataToSend ;
+    public static byte[] throwToLouderData;
     public static  byte[] dataToReceive ;
+    public static byte []captureDataFromMicroData;
     public static DatagramPacket datagramPacketToSend;
     public static DatagramPacket datagramPacketToReceive;
     public static InetAddress inetAddressTemp;
@@ -67,12 +69,11 @@ public class Audio {
                 }
                 if (transmission) {
                     if (datagramPacketToSend != null) {
-                        numBytesRead = targetDataLine.read(dataToSend, 0, sizeToSend);
+                        numBytesRead = targetDataLine.read(captureDataFromMicroData, 0, captureDataFromMicroData.length);
                         bytesRead += numBytesRead;
                         if (bytesRead > targetDataLine.getBufferSize() / 5) {
                             System.out.println("Przed enkrypcją ROZMIAR :" +dataToSend.length);
-                           byte[] encrypted = EncryptionManager.encrypt(dataToSend);
-                            datagramPacketToSend.setData(encrypted);
+                           dataToSend= EncryptionManager.encrypt(captureDataFromMicroData);
                             System.out.println("WYSYL, ROZMIAR :" +dataToSend.length);
                             datagramSocket.send(datagramPacketToSend);
                         }
@@ -107,8 +108,8 @@ public class Audio {
                         byte [] temp = datagramPacketToReceive.getData();
                         System.out.println("ODBIÓR, ROZMIAR :" + temp.length);
                        byte [] decrypted =  EncryptionManager.decrypt(temp);
+                        System.out.println("PO DEKRYPCJI ROZMIAR :" + temp.length);
                        if(decrypted!=null) {
-                           System.out.println("PO DEKRYPCJI ROZMIAR :" + temp.length);
                            sourceDataLine.write(decrypted, 0, decrypted.length);
                        }
                     }
@@ -126,6 +127,7 @@ public class Audio {
 
         inetAddressTemp =inetAddress;
         portTempToSend = port;
+        captureDataFromMicroData = new byte[sampleRate/5];
         sizeToSend = EncryptionManager.sizeOfEncrypted(sampleRate/5);
         dataToSend = new byte[sizeToSend];
         datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddress, port);
