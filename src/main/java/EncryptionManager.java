@@ -111,9 +111,8 @@ public class EncryptionManager {
         byte[] key = secretKeyFactory.generateSecret(spec).getEncoded();
         return new SecretKeySpec(key, "AES");
     }
-    public static int sizeOfEncrypted(int i )
-    {
-        return 0;
+    public static int sizeOfEncrypted(int i ) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+        return encrypt(new byte [i]).length;
     }
 
 }
