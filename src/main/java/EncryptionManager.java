@@ -1,4 +1,3 @@
-
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
@@ -16,13 +15,12 @@ import java.security.spec.KeySpec;
  * example for nullbeans.com
  */
 public class EncryptionManager {
+
     /**
      * This method will encrypt the given data
-     * @param key : the password that will be used to encrypt the data
      * @param data : the data that will be encrypted
      * @return Encrypted data in a byte array
      */
-    public static String key = "Bar12345Bar12345";
     public static byte [] encrypt( byte [] data) throws NoSuchPaddingException,
             NoSuchAlgorithmException,
             InvalidAlgorithmParameterException,
@@ -32,7 +30,7 @@ public class EncryptionManager {
 
         //Prepare the nonce
         SecureRandom secureRandom = new SecureRandom();
-
+        String key = "ELO";
         //Noonce should be 12 bytes
         byte[] iv = new byte[12];
         secureRandom.nextBytes(iv);
@@ -59,7 +57,7 @@ public class EncryptionManager {
     }
 
 
-    public static byte [] decrypt( byte [] encryptedData)
+    public static byte [] decrypt(byte [] encryptedData)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException,
             InvalidAlgorithmParameterException,
@@ -71,7 +69,7 @@ public class EncryptionManager {
 
         //Wrap the data into a byte buffer to ease the reading process
         ByteBuffer byteBuffer = ByteBuffer.wrap(encryptedData);
-
+        String key = "ELO";
         int noonceSize = byteBuffer.getInt();
 
         //Make sure that the file was encrypted properly
@@ -99,16 +97,23 @@ public class EncryptionManager {
 
     }
 
-
+    /**
+     * Function to generate a 128 bit key from the given password and iv
+     * @param password
+     * @param iv
+     * @return Secret key
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     public static SecretKey generateSecretKey(String password, byte [] iv) throws NoSuchAlgorithmException, InvalidKeySpecException {
         KeySpec spec = new PBEKeySpec(password.toCharArray(), iv, 65536, 128); // AES-128
         SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] key = secretKeyFactory.generateSecret(spec).getEncoded();
         return new SecretKeySpec(key, "AES");
     }
-        public static int sizeOfEncrypted(int size) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
-           return encrypt(new byte [size]).length;
-
-        }
+    public static int sizeOfEncrypted(int i )
+    {
+        return 0;
+    }
 
 }
