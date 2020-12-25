@@ -103,7 +103,7 @@ public class EncryptionManager {
      * @throws InvalidKeySpecException
      */
     public static SecretKey generateSecretKey(String password, byte [] iv) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), iv, 65536, 128); // AES-128
+        KeySpec spec = new PBEKeySpec(password.toCharArray());// AES-128
         SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] key = secretKeyFactory.generateSecret(spec).getEncoded();
         return new SecretKeySpec(key, "AES");
