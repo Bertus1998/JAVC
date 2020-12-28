@@ -36,7 +36,7 @@ public class Main extends Application {
         Main.getStage().show();
     }
 
-    public static void main(String[] args) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+    public static void main(String[] args)  {
         launch(args);
       /*  byte [] test = new byte[]{1,2,3,4,5,6,7,8,9,10};
         byte[] encrypted =EncryptionManager.encrypt(test);
