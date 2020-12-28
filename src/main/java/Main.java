@@ -38,6 +38,22 @@ public class Main extends Application {
 
     public static void main(String[] args) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
         launch(args);
+      /*  byte [] test = new byte[]{1,2,3,4,5,6,7,8,9,10};
+        byte[] encrypted =EncryptionManager.encrypt(test);
+        byte[] decrypted = EncryptionManager.decrypt(encrypted);
+        for(int i =0; i<test.length;i++)
+        {
+            System.out.println("TEST : "+test[i]);
+        }
+        for(int i =0; i<encrypted.length;i++)
+        {
+            System.out.println("ENCRYPTED : "+encrypted +" " + i);
+        }
+        for(int i =0; i<decrypted.length;i++)
+        {
+            System.out.println("DECRYPTED " +decrypted[i]);
+        }
+        */
 
     }
 }
