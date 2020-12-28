@@ -71,14 +71,16 @@ public class TransmissionManager {
     public static boolean register(String message) throws IOException {
         TransmissionManager.sendMessageToServer(getClient(),message);
         System.out.println(message);
+        if(!message.equals("FALSE")){
         String receivedMessage =  getMessageFromServer(getClient());
         System.out.println(receivedMessage);
         if(receivedMessage.equals("REGISTER ACCEPT"))
         {
            return  true;
         }
-        return false;
+
     }
+        return false;}
     public static  void sendMessageToServer(Socket client, String message) throws IOException{
 
         System.out.println("Wiadomość wysłana do serwera :"+message);

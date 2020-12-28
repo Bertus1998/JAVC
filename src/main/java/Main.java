@@ -17,11 +17,11 @@ import java.security.spec.InvalidKeySpecException;
 public class Main extends Application {
     private static Stage stage;
 
-    private static Stage getStage() {
+    public static Stage getStage() {
         return stage;
     }
 
-    private static void setStage(Stage stage) {
+    public static void setStage(Stage stage) {
         Main.stage = stage;
     }
 
