@@ -30,7 +30,7 @@ public class EncryptionManager {
 
         //Prepare the nonce
         SecureRandom secureRandom = new SecureRandom();
-        String key = "Bar12345BARR12345";
+        String key = "Bar12345Bar12345";
         //Noonce should be 12 bytes
         byte[] iv = new byte[12];
         secureRandom.nextBytes(iv);
@@ -69,7 +69,7 @@ public class EncryptionManager {
 
         //Wrap the data into a byte buffer to ease the reading process
         ByteBuffer byteBuffer = ByteBuffer.wrap(encryptedData);
-        String key = "Bar12345BARR12345";
+        String key = "Bar12345Bar12345";
         int noonceSize = byteBuffer.getInt();
 
         //Make sure that the file was encrypted properly
