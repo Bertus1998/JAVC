@@ -1,4 +1,3 @@
-import com.github.sarxos.webcam.Webcam;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -13,7 +12,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import javax.sound.sampled.LineUnavailableException;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Optional;
@@ -28,7 +26,9 @@ public class CommunicationWindowController {
     public float sliderUploadSpeedValue;
     public float sliderDownloadSpeedValue;
     @FXML
-    public Slider uploadSpeed, downloadSpeed;
+    public Slider uploadSpeed;
+    @FXML
+    private Slider downloadSpeed;
     @FXML
     private void initialize() {
         uploadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
@@ -49,10 +49,10 @@ public class CommunicationWindowController {
 
             }
         }});
-        downloadSpeed.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
+        getDownloadSpeed().valueChangingProperty().addListener((obs, oldVal, newVal) -> {
             if(Video.isTransmission()){
             if (!newVal) {
-                sliderDownloadSpeedValue =(float)downloadSpeed.getValue();
+                sliderDownloadSpeedValue =(float) getDownloadSpeed().getValue();
             }
         }});
     }
@@ -202,5 +202,13 @@ public class CommunicationWindowController {
     public void logOut(ActionEvent event) throws IOException {
         Message message = new Message();
         TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),message.logOutMessage(me));
+    }
+
+    private Slider getDownloadSpeed() {
+        return downloadSpeed;
+    }
+
+    private void setDownloadSpeed(Slider downloadSpeed) {
+        this.downloadSpeed = downloadSpeed;
     }
 }

@@ -5,14 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import javafx.stage.StageStyle;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.Socket;
 
 public class LoginWindowController {
     public Button lbutton, rbutton;
@@ -48,10 +42,10 @@ public class LoginWindowController {
         if(succes)
         {
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/CommunicationWindowController.fxml")));
-            Main.stage.setScene(new Scene(loader.load(),900,600));
+            Main.getStage().setScene(new Scene(loader.load(),900,600));
             CommunicationWindowController communicationWindowController = loader.getController();
             communicationWindowController.configurationCommunicationWindowController(lLogin.getText());
-            Main.stage.show();
+            Main.getStage().show();
             CommunicationWindowController.setMe(lLogin.getText());
             TransmissionManager.setCommunicationWindowController(communicationWindowController);
             communicationWindowController.loadFriends();

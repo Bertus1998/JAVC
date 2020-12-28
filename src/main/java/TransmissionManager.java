@@ -6,13 +6,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import javax.sound.sampled.LineUnavailableException;
-import javax.transaction.Transactional;
-import javax.xml.crypto.Data;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
@@ -30,21 +27,21 @@ public class TransmissionManager {
         TransmissionManager.communicationWindowController = communicationWindowController;
     }
 
-    static InetAddress severAddress;
+    private static InetAddress severAddress;
 
     static {
         try {
-            severAddress = InetAddress.getByName("192.168.1.3");
+            setSeverAddress(InetAddress.getByName("192.168.1.3"));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }
 
-    static Socket client;
+    private static Socket client;
 
     static {
         try {
-            client = new Socket(severAddress,5003);
+            setClient(new Socket(getSeverAddress(),5003));
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
@@ -58,11 +55,11 @@ public class TransmissionManager {
     }
 
     public static boolean login(String message) throws IOException{
-        if (client==null) {
-            client = new Socket(severAddress,5003);
+        if (getClient() ==null) {
+            setClient(new Socket(getSeverAddress(),5003));
         }
-            TransmissionManager.sendMessageToServer(client,message);
-            String receivedMessage = TransmissionManager.getMessageFromServer(client);
+            TransmissionManager.sendMessageToServer(getClient(),message);
+            String receivedMessage = TransmissionManager.getMessageFromServer(getClient());
             if (receivedMessage.equals("LOGIN ACCEPT")) {
                 return true;
             }
@@ -72,9 +69,9 @@ public class TransmissionManager {
     }
 
     public static boolean register(String message) throws IOException {
-        TransmissionManager.sendMessageToServer(client,message);
+        TransmissionManager.sendMessageToServer(getClient(),message);
         System.out.println(message);
-        String receivedMessage =  getMessageFromServer(client);
+        String receivedMessage =  getMessageFromServer(getClient());
         System.out.println(receivedMessage);
         if(receivedMessage.equals("REGISTER ACCEPT"))
         {
@@ -539,7 +536,14 @@ public class TransmissionManager {
         communicationWindowController.loadFriends();
         }
 
+    private static InetAddress getSeverAddress() {
+        return severAddress;
     }
+
+    private static void setSeverAddress(InetAddress severAddress) {
+        TransmissionManager.severAddress = severAddress;
+    }
+}
 
 
 

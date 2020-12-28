@@ -1,33 +1,21 @@
-import org.apache.commons.io.output.ChunkedOutputStream;
-
 import javax.sound.sampled.*;
-import javax.xml.crypto.Data;
-import javax.xml.transform.Source;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Audio {
-    public static AudioFormat audioFormatToSend;
-    public static AudioFormat audioFormatToReceive;
-    public static TargetDataLine targetDataLine;
-    public static SourceDataLine sourceDataLine;
+    private static AudioFormat audioFormatToSend;
+    private static AudioFormat audioFormatToReceive;
+    private static TargetDataLine targetDataLine;
+    private static SourceDataLine sourceDataLine;
     public static int sizeToSend, sizeToReceive;
     public static  CommunicationWindowController communicationWindowController;
     public  static  byte[] dataToSend ;
-    public static byte[] throwToLouderData;
     public static  byte[] dataToReceive ;
-    public static byte []captureDataFromMicroData;
     public static DatagramPacket datagramPacketToSend;
     public static DatagramPacket datagramPacketToReceive;
-    public static InetAddress inetAddressTemp;
+    private static InetAddress inetAddressTemp;
     public static int portTempToSend;
     public static int portTempToReceive;
     public static boolean transmission = false;
@@ -36,7 +24,7 @@ public class Audio {
     public static boolean isTransmission() {
         return transmission;
     }
-    public static boolean wait;
+    private static boolean wait;
 
     public static void setTransmission(boolean transmission) {
         Audio.transmission = transmission;
@@ -57,10 +45,10 @@ public class Audio {
         DatagramSocket datagramSocket = null ;
         int bytesRead = 0;
         while(true) {
-            if(wait)
+            if(isWait())
             {
                 Thread.sleep(2000);
-                wait =false;
+                setWait(false);
             }
             try {
                 if (datagramSocket == null) {
@@ -69,12 +57,12 @@ public class Audio {
                 }
                 if (transmission) {
                     if (datagramPacketToSend != null) {
-                        numBytesRead = targetDataLine.read(captureDataFromMicroData, 0, captureDataFromMicroData.length);
+                        numBytesRead = getTargetDataLine().read(dataToSend, 0, sizeToSend);
                         bytesRead += numBytesRead;
-                        if (bytesRead > targetDataLine.getBufferSize() / 5) {
-                            System.out.println("Przed enkrypcją ROZMIAR :" +captureDataFromMicroData.length);
-                           dataToSend= EncryptionManager.encrypt(captureDataFromMicroData);
-                            System.out.println("WYSYL, ROZMIAR :" +dataToSend.length);
+                        if (bytesRead > getTargetDataLine().getBufferSize() / 5) {
+                           byte[] encrypted = EncryptionManager.encrypt(dataToSend);
+                            datagramPacketToSend.setData(encrypted);
+                            System.out.println("ODBIÓR, ROZMIAR :" +dataToSend.length);
                             datagramSocket.send(datagramPacketToSend);
                         }
                     }
@@ -105,12 +93,10 @@ public class Audio {
                 if (transmission) {
                     if (datagramPacketToReceive != null) {
                         datagramSocket.receive(datagramPacketToReceive);
-                        byte [] temp = datagramPacketToReceive.getData();
-                        System.out.println("ODBIÓR, ROZMIAR :" + temp.length);
-                       byte [] decrypted =  EncryptionManager.decrypt(temp);
-                        System.out.println("PO DEKRYPCJI ROZMIAR :" + decrypted.length);
+                       byte [] decrypted =  EncryptionManager.decrypt(datagramPacketToReceive.getData());
                        if(decrypted!=null) {
-                           sourceDataLine.write(decrypted, 0, decrypted.length);
+                           System.out.println("ODBIÓR, ROZMIAR :" + decrypted.length);
+                           getSourceDataLine().write(decrypted, 0, decrypted.length);
                        }
                     }
                 } else {
@@ -124,18 +110,17 @@ public class Audio {
         }
       }
     public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws Exception {
-
-        inetAddressTemp =inetAddress;
+        byte [] temp =new byte[(int)sampleRate/5];
+        setInetAddressTemp(inetAddress);
         portTempToSend = port;
-        captureDataFromMicroData = new byte[sampleRate/5];
-        sizeToSend = EncryptionManager.sizeOfEncrypted(sampleRate/5);
+        sizeToSend = EncryptionManager.encrypt(temp).length;
         dataToSend = new byte[sizeToSend];
         datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddress, port);
-        audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
-        targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
-        targetDataLine.open(audioFormatToSend);
-        targetDataLine.start();
+        setAudioFormatToSend(new AudioFormat(sampleRate, 16, 1, true, true));
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, getAudioFormatToSend());
+        setTargetDataLine((TargetDataLine) AudioSystem.getLine(info));
+        getTargetDataLine().open(getAudioFormatToSend());
+        getTargetDataLine().start();
     }
     public static void configureAudioReceive(int sampleRate, int port) throws Exception {
 
@@ -145,11 +130,11 @@ public class Audio {
 
         dataToReceive = new byte[sizeToReceive];
         datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
-        audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
-        sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
-        sourceDataLine.open(audioFormatToReceive);
-        sourceDataLine.start();
+        setAudioFormatToReceive(new AudioFormat(sampleRate, 16, 1, true, true));
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, getAudioFormatToReceive());
+        setSourceDataLine((SourceDataLine) AudioSystem.getLine(info));
+        getSourceDataLine().open(getAudioFormatToReceive());
+        getSourceDataLine().start();
 
     }
     public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
@@ -158,18 +143,18 @@ public class Audio {
             Lock l = reentrantLock;
             l.lock();
             try {
-            wait = true;
-            targetDataLine.close();
+            setWait(true);
+            getTargetDataLine().close();
             byte [] temp =new byte[(int)sampleRate/5];
             sizeToSend = EncryptionManager.encrypt(temp).length;
             dataToSend = new byte[sizeToSend];
             datagramPacketToSend=null;
-            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddressTemp, portTempToSend);
-            audioFormatToSend = new AudioFormat(sampleRate, 16, 1, true, true);
-            DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormatToSend);
-            targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
-            targetDataLine.open(audioFormatToSend);
-            targetDataLine.start();
+            datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length, getInetAddressTemp(), portTempToSend);
+            setAudioFormatToSend(new AudioFormat(sampleRate, 16, 1, true, true));
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, getAudioFormatToSend());
+            setTargetDataLine((TargetDataLine) AudioSystem.getLine(info));
+            getTargetDataLine().open(getAudioFormatToSend());
+            getTargetDataLine().start();
             } catch (Exception exception) {
                 exception.printStackTrace();
             } finally {
@@ -182,17 +167,17 @@ public class Audio {
         Lock lock = reentrantLock;
         lock.lock();
         try {
-            sourceDataLine.close();
+            getSourceDataLine().close();
             byte [] temp =new byte[(int)sampleRate/5];
             sizeToReceive = EncryptionManager.encrypt(temp).length;
             dataToReceive = new byte[sizeToReceive];
             datagramPacketToReceive = null;
             datagramPacketToReceive = new DatagramPacket(dataToReceive, dataToReceive.length);
-            audioFormatToReceive = new AudioFormat(sampleRate, 16, 1, true, true);
-            DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormatToReceive);
-            sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
-            sourceDataLine.open(audioFormatToReceive);
-            sourceDataLine.start();
+            setAudioFormatToReceive(new AudioFormat(sampleRate, 16, 1, true, true));
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, getAudioFormatToReceive());
+            setSourceDataLine((SourceDataLine) AudioSystem.getLine(info));
+            getSourceDataLine().open(getAudioFormatToReceive());
+            getSourceDataLine().start();
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
@@ -201,11 +186,58 @@ public class Audio {
     }
         public static void resetAudio()
         {
-            targetDataLine.close();
-            sourceDataLine.close();
+            getTargetDataLine().close();
+            getSourceDataLine().close();
             datagramPacketToSend = null;
             datagramPacketToReceive = null;
         }
 
 
+    private static AudioFormat getAudioFormatToSend() {
+        return audioFormatToSend;
+    }
+
+    private static void setAudioFormatToSend(AudioFormat audioFormatToSend) {
+        Audio.audioFormatToSend = audioFormatToSend;
+    }
+
+    private static AudioFormat getAudioFormatToReceive() {
+        return audioFormatToReceive;
+    }
+
+    private static void setAudioFormatToReceive(AudioFormat audioFormatToReceive) {
+        Audio.audioFormatToReceive = audioFormatToReceive;
+    }
+
+    private static TargetDataLine getTargetDataLine() {
+        return targetDataLine;
+    }
+
+    private static void setTargetDataLine(TargetDataLine targetDataLine) {
+        Audio.targetDataLine = targetDataLine;
+    }
+
+    private static SourceDataLine getSourceDataLine() {
+        return sourceDataLine;
+    }
+
+    private static void setSourceDataLine(SourceDataLine sourceDataLine) {
+        Audio.sourceDataLine = sourceDataLine;
+    }
+
+    private static InetAddress getInetAddressTemp() {
+        return inetAddressTemp;
+    }
+
+    private static void setInetAddressTemp(InetAddress inetAddressTemp) {
+        Audio.inetAddressTemp = inetAddressTemp;
+    }
+
+    private static boolean isWait() {
+        return wait;
+    }
+
+    private static void setWait(boolean wait) {
+        Audio.wait = wait;
+    }
 }

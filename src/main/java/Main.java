@@ -1,12 +1,10 @@
 
-import com.sun.mail.iap.ByteArray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.apache.commons.net.util.SSLSocketUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -17,17 +15,25 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 public class Main extends Application {
-    static Stage stage;
+    private static Stage stage;
+
+    private static Stage getStage() {
+        return stage;
+    }
+
+    private static void setStage(Stage stage) {
+        Main.stage = stage;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Main.stage = primaryStage;
+        Main.setStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("/LoginWindowController.fxml"));
-        Main.stage.setTitle("J-AVC");
-        Main.stage.initStyle(StageStyle.UNDECORATED);
-        Main.stage.setScene(new Scene(root, 600, 400));
-        Main.stage.setResizable(false);
-        Main.stage.show();
+        Main.getStage().setTitle("J-AVC");
+        Main.getStage().initStyle(StageStyle.UNDECORATED);
+        Main.getStage().setScene(new Scene(root, 600, 400));
+        Main.getStage().setResizable(false);
+        Main.getStage().show();
     }
 
     public static void main(String[] args) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {

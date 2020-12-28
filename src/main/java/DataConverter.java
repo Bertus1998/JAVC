@@ -1,7 +1,4 @@
-import javafx.scene.image.Image;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,15 +9,15 @@ import javax.imageio.stream.*;
 
 public class DataConverter {
     static ImageWriter imageWriter;
-    static ImageWriteParam imageWriteParam;
+    private static ImageWriteParam imageWriteParam;
     static Iterator<ImageWriter> writers;
     public static BufferedImage qualityOfImage(float percent, BufferedImage image) throws IOException {
         if(percent<100&&image!=null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageOutputStream ios = ImageIO.createImageOutputStream(byteArrayOutputStream);
-            imageWriteParam.setCompressionQuality(percent/100);
+            getImageWriteParam().setCompressionQuality(percent/100);
             imageWriter.setOutput(ios);
-            imageWriter.write(null, new IIOImage(image, null, null), imageWriteParam);
+            imageWriter.write(null, new IIOImage(image, null, null), getImageWriteParam());
             byte[] data = byteArrayOutputStream.toByteArray();
             ByteArrayInputStream bis = new ByteArrayInputStream(data);
             return ImageIO.read(bis);
@@ -40,10 +37,18 @@ public class DataConverter {
   public static void  configureDataConverter()
    {
        imageWriter = ImageIO.getImageWritersByFormatName("jpeg").next();
-       imageWriteParam = imageWriter.getDefaultWriteParam();
-       imageWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+       setImageWriteParam(imageWriter.getDefaultWriteParam());
+       getImageWriteParam().setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
        writers = ImageIO.getImageWritersByFormatName("jpg");
 
 
    }
+
+    private static ImageWriteParam getImageWriteParam() {
+        return imageWriteParam;
+    }
+
+    private static void setImageWriteParam(ImageWriteParam imageWriteParam) {
+        DataConverter.imageWriteParam = imageWriteParam;
+    }
 }
