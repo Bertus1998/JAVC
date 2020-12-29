@@ -95,6 +95,10 @@ public class Audio {
                         datagramSocket.receive(datagramPacketToReceive);
                         byte[] packet =datagramPacketToReceive.getData();
                         if(packet !=null){
+                            for(int i =0; i< packet.length;i++)
+                            {
+                                System.out.println(packet[i]);
+                            }
                        byte [] decrypted =  EncryptionManager.decrypt(packet);
                        if(decrypted!=null) {
                            System.out.println("ODBIÓR, ROZMIAR :" + decrypted.length);
