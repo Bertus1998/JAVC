@@ -11,7 +11,7 @@ public class Audio {
     private static SourceDataLine sourceDataLine;
     public static int sizeToSend, sizeToReceive;
     public static  CommunicationWindowController communicationWindowController;
-    public  static  byte[] dataToSend ;
+    public  static  byte[] dataToSend,dataBeforeEncryption ;
     public static  byte[] dataToReceive ;
     public static DatagramPacket datagramPacketToSend;
     public static DatagramPacket datagramPacketToReceive;
@@ -57,12 +57,10 @@ public class Audio {
                 }
                 if (transmission) {
                     if (datagramPacketToSend != null) {
-                        numBytesRead = getTargetDataLine().read(dataToSend, 0, sizeToSend);
+                        numBytesRead = getTargetDataLine().read(dataBeforeEncryption, 0, dataBeforeEncryption.length);
+                        dataToSend = dataBeforeEncryption;
                         bytesRead += numBytesRead;
                         if (bytesRead > getTargetDataLine().getBufferSize() / 5) {
-                           byte[] encrypted = EncryptionManager.encrypt(dataToSend);
-                            datagramPacketToSend.setData(encrypted);
-                            System.out.println("ODBIÓR, ROZMIAR :" +dataToSend.length);
                             datagramSocket.send(datagramPacketToSend);
                         }
                     }
@@ -98,7 +96,6 @@ public class Audio {
                             try {
                                 byte[] decrypted = EncryptionManager.decrypt(packet);
                                 if(decrypted!=null) {
-                                    System.out.println("ODBIÓR, ROZMIAR :" + decrypted.length);
                                     getSourceDataLine().write(decrypted, 0, decrypted.length);
                                 }
                             }
@@ -119,10 +116,10 @@ public class Audio {
         }
       }
     public static void configureAudioSend(int sampleRate,InetAddress inetAddress,int port) throws Exception {
-        byte [] temp =new byte[(int)sampleRate/5];
+        dataBeforeEncryption =new byte[(int)sampleRate/5];
         setInetAddressTemp(inetAddress);
         portTempToSend = port;
-        sizeToSend = EncryptionManager.encrypt(temp).length;
+        sizeToSend = EncryptionManager.encrypt(dataBeforeEncryption).length;
         dataToSend = new byte[sizeToSend];
         datagramPacketToSend = new DatagramPacket(dataToSend, dataToSend.length,inetAddress, port);
         setAudioFormatToSend(new AudioFormat(sampleRate, 16, 1, true, true));
