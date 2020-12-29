@@ -72,6 +72,7 @@ public class Video {
                             dIn.readFully(message, 0, length);
                             byte [] decryptMessage = EncryptionManager.decrypt(message);
                             if(decryptMessage!=null) {
+                                System.out.println("VIDEO RECEIVED " +message.length);
                                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decryptMessage);
                                 BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
                                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);

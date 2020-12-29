@@ -114,7 +114,7 @@ public class TransmissionManager {
                 communicationWindowController.getRimg().fitWidthProperty().intValue(),
                 communicationWindowController.getRimg().fitWidthProperty().intValue(),
                 BufferedImage.TYPE_INT_RGB),null));
-            TransmissionManager.communicationWindowController.getTimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
+                      TransmissionManager.communicationWindowController.getTimg().setImage(SwingFXUtils.toFXImage(new BufferedImage(
                     communicationWindowController.getTimg().fitWidthProperty().intValue(),
                     communicationWindowController.getTimg().fitWidthProperty().intValue(),
                     BufferedImage.TYPE_INT_RGB),null));});

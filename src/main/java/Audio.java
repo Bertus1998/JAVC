@@ -94,12 +94,13 @@ public class Audio {
                     if (datagramPacketToReceive != null) {
                         datagramSocket.receive(datagramPacketToReceive);
                         byte[] packet =datagramPacketToReceive.getData();
+                        if(packet !=null){
                        byte [] decrypted =  EncryptionManager.decrypt(packet);
                        if(decrypted!=null) {
                            System.out.println("ODBIÓR, ROZMIAR :" + decrypted.length);
                            getSourceDataLine().write(decrypted, 0, decrypted.length);
                        }
-                    }
+                    }}
                 } else {
                     break;
                 }
