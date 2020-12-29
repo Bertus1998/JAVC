@@ -36,9 +36,14 @@ public class Main extends Application {
         Main.getStage().show();
     }
 
-    public static void main(String[] args) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
-        launch(args);
-      /*  byte [] test = new byte[]{1,2,3,4,5,6,7,8,9,10};
+    public static void main(String[] args) throws Exception {
+       launch(args);
+     /*  byte [] test = new byte[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+               1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+               1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+               1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+               1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+               1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,};
         byte[] encrypted =EncryptionManager.encrypt(test);
         byte[] decrypted = EncryptionManager.decrypt(encrypted);
         for(int i =0; i<test.length;i++)
@@ -53,7 +58,7 @@ public class Main extends Application {
         {
             System.out.println("DECRYPTED " +decrypted[i]);
         }
-        */
+    */
 
     }
 }

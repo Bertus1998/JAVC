@@ -66,6 +66,7 @@ public class Video {
                     DataInputStream dIn = null;
                         dIn = new DataInputStream(socket.getInputStream());
                         int length = dIn.readInt();
+                        System.out.println("SIZE of image :" + length);
                         if(length>0) {
                             byte[] message = new byte[length];
                             dIn.readFully(message, 0, length);
