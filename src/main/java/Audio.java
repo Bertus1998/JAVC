@@ -65,7 +65,7 @@ public class Audio {
                             datagramPacketToSend.setData(dataToSend,0,dataToSend.length);
                             System.out.println("Wysłano: " + dataToSend.length);
                             datagramSocket.send(datagramPacketToSend);
-                            Thread.sleep(1000);
+                           // Thread.sleep(1000);
                         }
                     }
                 } else {
