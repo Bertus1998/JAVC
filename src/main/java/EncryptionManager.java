@@ -13,7 +13,7 @@ import java.security.spec.KeySpec;
  */
 public class EncryptionManager {
 
-    private static final String ALGO = "AES/CBC/NoPadding";
+    private static final String ALGO = "AES";
     private static final byte[] keyValue = "Ad0#2s!3oGyRq!5F".getBytes();
 
     public static byte[] encrypt(byte[] Data) throws Exception {
