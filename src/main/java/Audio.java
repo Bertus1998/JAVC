@@ -58,9 +58,10 @@ public class Audio {
                 if (transmission) {
                     if (datagramPacketToSend != null) {
                         numBytesRead = getTargetDataLine().read(dataBeforeEncryption, 0, dataBeforeEncryption.length);
-                        dataToSend = dataBeforeEncryption;
+
                         bytesRead += numBytesRead;
                         if (bytesRead > getTargetDataLine().getBufferSize() / 5) {
+                            dataToSend = dataBeforeEncryption;
                             datagramSocket.send(datagramPacketToSend);
                         }
                     }
@@ -129,8 +130,8 @@ public class Audio {
         getTargetDataLine().start();
     }
     public static void configureAudioReceive(int sampleRate, int port) throws Exception {
-        byte [] temp =new byte[(int)sampleRate/5];
-        sizeToReceive = EncryptionManager.encrypt(temp).length;
+        byte [] dataAfterDecryption = new byte[(int)sampleRate/5];
+        sizeToReceive = EncryptionManager.encrypt(dataAfterDecryption).length;
         portTempToReceive = port;
         setTransmission(true);
         dataToReceive = new byte[sizeToReceive];
