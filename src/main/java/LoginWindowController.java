@@ -53,6 +53,11 @@ public class LoginWindowController {
             Video.setCommunicationWindowController(communicationWindowController);
             Audio.setCommunicationWindowController(communicationWindowController);
         }
+        else
+        {
+            incorrect.setVisible(true);
+            incorrect.setText("Incorect login or password!");
+        }
     }
 
     public void exit(ActionEvent event) {

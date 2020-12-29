@@ -147,13 +147,16 @@ public class Audio {
     }
     public static void reconfigureAudioSend(int sampleRate) throws LineUnavailableException, IOException, InterruptedException {
         {
+
             reentrantLock = new ReentrantLock();
             Lock l = reentrantLock;
             l.lock();
             try {
             setWait(true);
+            dataBeforeEncryption =new byte[(int)sampleRate/5];
             getTargetDataLine().close();
             byte [] temp =new byte[(int)sampleRate/5];
+
             sizeToSend = EncryptionManager.encrypt(temp).length;
             dataToSend = new byte[sizeToSend];
             datagramPacketToSend=null;
