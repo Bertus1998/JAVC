@@ -123,11 +123,10 @@ public class Audio {
         getTargetDataLine().start();
     }
     public static void configureAudioReceive(int sampleRate, int port) throws Exception {
-
-        sizeToReceive = EncryptionManager.sizeOfEncrypted(sampleRate/5);
+        byte [] temp =new byte[(int)sampleRate/5];
+        sizeToReceive = EncryptionManager.encrypt(temp).length;
         portTempToReceive = port;
         setTransmission(true);
-
         dataToReceive = new byte[sizeToReceive];
         datagramPacketToReceive = new DatagramPacket(dataToReceive,dataToReceive.length);
         setAudioFormatToReceive(new AudioFormat(sampleRate, 16, 1, true, true));

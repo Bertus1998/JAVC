@@ -146,8 +146,9 @@ public class TransmissionManager {
 
         }
         Video.configureWebcam();
-        Audio.configureAudioSend(44000,inetAddress, portTransmit);
         Audio.configureAudioReceive(44000,portReceive);
+        Audio.configureAudioSend(44000,inetAddress, portTransmit);
+
 
         sendData(socketTransmit);
         getData(socketReceive, portReceive);
