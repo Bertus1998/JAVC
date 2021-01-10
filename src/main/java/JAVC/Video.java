@@ -129,7 +129,7 @@ public class Video {
 
             socket.receive(datagramPacket);
             partOfmessage =datagramPacket.getData();
-        System.out.println(Arrays.copyOfRange(partOfmessage,0,5).toString());
+        System.out.println(" OLA BOGA" +  Arrays.copyOfRange(partOfmessage,0,5).toString());
             if(status.equals(Arrays.copyOfRange(partOfmessage,0,5).toString()))
             {
                 buffer.put(buffor);
@@ -139,7 +139,7 @@ public class Video {
             else if(buffer.array().length!=0)
             {
                 System.out.println("TUDUDUDU" + buffer.array().length);
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(imageArray);
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(EncryptionManager.decrypt(imageArray));
 
                 BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
