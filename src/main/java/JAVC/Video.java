@@ -118,7 +118,6 @@ public class Video {
 
     public static byte[] receiveAndShowImageFromWebcam(DatagramSocket socket, byte[] buffor) throws Exception {
         byte[] partOfmessage = new byte[505];
-        System.out.println(buffor.length);
         byte[] imageArray = new byte[buffor.length +500];
 
 
@@ -136,21 +135,20 @@ public class Video {
                 buffer.put(Arrays.copyOfRange(partOfmessage,5,partOfmessage.length));
                 return buffer.array();
             }
-            else if(buffer.array().length!=0)
+            else if(partOfmessage.length!=0)
             {
-                System.out.println("TUDUDUDU" + buffer.array().length);
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(EncryptionManager.decrypt(imageArray));
+                System.out.println("TUDUDUDU" + partOfmessage.length);
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(EncryptionManager.decrypt(buffor));
 
                 BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                 Platform.runLater(() -> {
                     communicationWindowController.rimg.setImage(image);
                 });
-                buffer.clear();
                 status = Arrays.copyOfRange(partOfmessage,0,5).toString();
-
+                return Arrays.copyOfRange(partOfmessage,5,partOfmessage.length);
             }
-          return new byte[0];
+
     }
 
     public static boolean configureWebcam() {
