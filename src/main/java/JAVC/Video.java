@@ -148,6 +148,7 @@ public class Video {
                 status = Arrays.copyOfRange(partOfmessage,0,5).toString();
                 return Arrays.copyOfRange(partOfmessage,5,partOfmessage.length);
             }
+            return null;
 
     }
 
