@@ -125,35 +125,38 @@ public class TransmissionManager {
       // 1 videoreceive/ 2 audiooreceive /3 audiotransmit /4 video transmit // 5 socket
 
         ServerSocket serwerSocketVideoReceive;
-        Socket socketReceive;
-        Socket socketTransmit;
-        int portReceive,portTransmit;
+        DatagramSocket socketReceive;
+        DatagramSocket socketTransmit;
+        int portReceiveAudio,portTransmitAudio;
+        int portTransmitVideo;
         InetAddress inetAddress =InetAddress.getByName(message[4]);
         if(caller)
         {
-            portReceive = Integer.parseInt(message[1]);
-            portTransmit = Integer.parseInt(message[2]);
-            ServerSocket serwerSocketReceive = new ServerSocket(Integer.parseInt(message[0]));
-            socketReceive =  serwerSocketReceive.accept();
-            socketTransmit = new Socket(inetAddress,Integer.parseInt(message[3]));
-
+            portReceiveAudio = Integer.parseInt(message[1]);
+            portTransmitAudio = Integer.parseInt(message[2]);
+         //   ServerSocket serwerSocketReceive = new ServerSocket(Integer.parseInt(message[0]));
+            socketReceive = new DatagramSocket(Integer.parseInt(message[0]));
+            socketTransmit = new DatagramSocket();
+           // socketTransmit = DatagramSocket(inetAddress,Integer.parseInt(message[3]));
+            portTransmitVideo = Integer.parseInt(message[3]);
         }
         else
         {
-            portReceive = Integer.parseInt(message[2]);
-            portTransmit = Integer.parseInt(message[1]);
-            socketTransmit = new Socket(inetAddress,Integer.parseInt(message[0]));
-            serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[3]));
-            socketReceive = serwerSocketVideoReceive.accept();
-
+            portReceiveAudio = Integer.parseInt(message[2]);
+            portTransmitAudio = Integer.parseInt(message[1]);
+          //  socketTransmit = new Socket(inetAddress,Integer.parseInt(message[0]));
+         //   serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[3]));
+            socketReceive = new DatagramSocket(Integer.parseInt(message[3]));
+            socketTransmit = new DatagramSocket();
+            portTransmitVideo = Integer.parseInt(message[0]);
         }
         Video.configureWebcam();
-        Audio.configureAudioReceive(44000,portReceive);
-        Audio.configureAudioSend(44000,inetAddress, portTransmit);
+        Audio.configureAudioReceive(44000,portReceiveAudio);
+        Audio.configureAudioSend(44000,inetAddress, portTransmitAudio);
 
 
-        sendData(socketTransmit);
-        getData(socketReceive, portReceive);
+        sendData(socketTransmit , inetAddress, portTransmitVideo);
+        getData(socketReceive, portReceiveAudio);
     }
     public static ArrayList<Integer> checkPorts(int [] ports)
     {
@@ -174,15 +177,16 @@ public class TransmissionManager {
             return false;
         }
     }
-    public static void getData(Socket socket,int port) throws LineUnavailableException {
+    public static void getData(DatagramSocket socket,int port) throws LineUnavailableException {
        Runnable runnableVideo = () -> {
+           String status = "ANNA0";
             while(true) {
                 try {
 
                     if(Video.isTransmission())
                     {
                         Video.getWebcam().open();
-                        Video.receiveAndShowImageFromWebcam(socket);
+                        status = Video.receiveAndShowImageFromWebcam(socket, status);
                     }
                     else
                     {
@@ -205,7 +209,7 @@ public class TransmissionManager {
         threadGetVideo.start();
 
     }
-    public static void sendData(Socket socket)
+    public static void sendData(DatagramSocket socket, InetAddress address, int port)
     {
             Runnable runnableVideo = () -> {
                 DataConverter.configureDataConverter();
@@ -214,7 +218,7 @@ public class TransmissionManager {
 
                         if(Video.isTransmission())
                         {
-                            Video.captureAndSendFromWebcam(socket);
+                            Video.captureAndSendFromWebcam(socket, address, port);
 
                         }
                         else
