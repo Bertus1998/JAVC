@@ -129,14 +129,16 @@ public class Video {
 
             socket.receive(datagramPacket);
             partOfmessage =datagramPacket.getData();
+        System.out.println(Arrays.copyOfRange(partOfmessage,0,5).toString());
             if(status.equals(Arrays.copyOfRange(partOfmessage,0,5).toString()))
             {
                 buffer.put(Arrays.copyOfRange(partOfmessage,5,partOfmessage.length));
                 return buffer.array();
             }
-            else
+            else if(buffer.array().length!=0)
             {
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.array());
+
                 BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                 Platform.runLater(() -> {
@@ -144,8 +146,9 @@ public class Video {
                 });
                 buffer.clear();
                 status = Arrays.copyOfRange(partOfmessage,0,5).toString();
-                return new byte[0];
+
             }
+          return new byte[0];
     }
 
     public static boolean configureWebcam() {
