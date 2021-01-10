@@ -137,7 +137,8 @@ public class Video {
             }
             else if(buffer.array().length!=0)
             {
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.array());
+                System.out.println("TUDUDUDU" + buffer.array().length);
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(imageArray);
 
                 BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
