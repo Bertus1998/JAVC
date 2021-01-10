@@ -30,6 +30,7 @@ public class Video {
     //    Webcam.setDriver(new RaspividYUVDriver());   //
           }      */                                     //
     private static Webcam webcam;
+    private static String status = "ANNA0";
     private static int counter = 0;
     private static CommunicationWindowController communicationWindowController;
     public static Webcam getWebcam() {
@@ -66,8 +67,8 @@ public class Video {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                             ImageIO.write(bufferedImage, "jpg", bos);
                             byte[] message = EncryptionManager.encrypt(bos.toByteArray());
-                            int amountOfMessage = message.length/64000;
-                            byte[] sendIt = new byte[64005];
+                            int amountOfMessage = message.length/500;
+                            byte[] sendIt = new byte[505];
 
                             String key = "ANNA" + counter;
                             ByteBuffer buff = ByteBuffer.wrap(sendIt);
@@ -87,7 +88,7 @@ public class Video {
                             {
 
                                 buff.put(key.getBytes());
-                                buff.put(Arrays.copyOfRange(message,(i+1)*64000,(i+2)*64000));
+                                buff.put(Arrays.copyOfRange(message,(i+1)*500,(i+2)*500));
                                 System.out.println(buff.array());
                                 DatagramPacket datagramPacket = new DatagramPacket(buff.array(), 0 , sendIt.length, address,port);
                                 socket.send(datagramPacket);
@@ -115,37 +116,36 @@ public class Video {
 
 
 
-    public static String receiveAndShowImageFromWebcam(DatagramSocket socket, String status) throws Exception {
-        byte[] partOfmessage = new byte[64005];
-        byte[] imageArray = new byte[64000 * 20];
-        String state = status; //ANNAWCZESNIEJSZA
+    public static byte[] receiveAndShowImageFromWebcam(DatagramSocket socket, byte[] buffor) throws Exception {
+        byte[] partOfmessage = new byte[505];
+        System.out.println(buffor.length);
+        byte[] imageArray = new byte[buffor.length +500];
 
 
         ByteBuffer buffer = ByteBuffer.wrap(imageArray);
-        DatagramPacket datagramPacket = new DatagramPacket(partOfmessage, 64005);
-        socket.receive(datagramPacket);
-        partOfmessage = datagramPacket.getData();
-        while (true)
-        {
-            System.out.println(Arrays.copyOfRange(partOfmessage, 0, 4).toString());
-            if (Arrays.copyOfRange(partOfmessage, 0, 4).toString().equals(state)) {
+        DatagramPacket datagramPacket = new DatagramPacket(partOfmessage, partOfmessage.length);
+
+
+
+            socket.receive(datagramPacket);
+            partOfmessage =datagramPacket.getData();
+            if(status.equals(Arrays.copyOfRange(partOfmessage,0,5).toString()))
+            {
                 buffer.put(Arrays.copyOfRange(partOfmessage,5,partOfmessage.length));
-
-            } else {
-                state = Arrays.copyOfRange(partOfmessage, 0, 4).toString();
-                break;
+                return buffer.array();
             }
-        }
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.array());
-        BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
-
-
-        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                                Platform.runLater(() -> {
-                                    communicationWindowController.rimg.setImage(image);
-                                });
-                                buffer.clear();
-                                return state;
+            else
+            {
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.array());
+                BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
+                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                Platform.runLater(() -> {
+                    communicationWindowController.rimg.setImage(image);
+                });
+                buffer.clear();
+                status = Arrays.copyOfRange(partOfmessage,0,5).toString();
+                return new byte[0];
+            }
     }
 
     public static boolean configureWebcam() {

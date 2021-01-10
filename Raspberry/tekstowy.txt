@@ -1,0 +1,1 @@
+--module-path "C:\Users\Dominik\Desktop\JAVC\javafx-sdk-15\lib" -add-modules=javafx.controls,javafx.base,javafx.graphics,javafx.fxml

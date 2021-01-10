@@ -179,14 +179,15 @@ public class TransmissionManager {
     }
     public static void getData(DatagramSocket socket,int port) throws LineUnavailableException {
        Runnable runnableVideo = () -> {
-           String status = "ANNA0";
+           Video.getWebcam().open();
+           byte[] buffor = new byte[0];
+
             while(true) {
                 try {
 
                     if(Video.isTransmission())
                     {
-                        Video.getWebcam().open();
-                        status = Video.receiveAndShowImageFromWebcam(socket, status);
+                        buffor = Video.receiveAndShowImageFromWebcam(socket, buffor );
                     }
                     else
                     {
