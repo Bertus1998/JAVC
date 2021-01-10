@@ -33,7 +33,7 @@ public class TransmissionManager {
 
     static {
         try {
-            setSeverAddress(InetAddress.getByName("192.168.1.1"));
+            setSeverAddress(InetAddress.getByName("10.9.131.250"));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

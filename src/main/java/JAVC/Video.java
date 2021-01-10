@@ -94,6 +94,8 @@ public class Video {
         setWebcam(Webcam.getDefault());
         if (getWebcam() != null) {
             System.out.println("Webcam: " + getWebcam().getName());
+            getWebcam().open();
+            setTransmission(true);
             return true;
         } else {
             System.out.println("No webcam detected");
