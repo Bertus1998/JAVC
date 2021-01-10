@@ -132,6 +132,7 @@ public class Video {
         System.out.println(Arrays.copyOfRange(partOfmessage,0,5).toString());
             if(status.equals(Arrays.copyOfRange(partOfmessage,0,5).toString()))
             {
+                buffer.put(buffor);
                 buffer.put(Arrays.copyOfRange(partOfmessage,5,partOfmessage.length));
                 return buffer.array();
             }
