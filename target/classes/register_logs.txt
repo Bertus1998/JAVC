@@ -1,6 +1,6 @@
 Passwords aren't same.
 In database this login has already existed.
 In database this email has already existed.
-Message with activation link was sent to your email.
+JAVC.Message with activation link was sent to your email.
 Can't connect to database.
 Email is incorrect.

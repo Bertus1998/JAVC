@@ -7,64 +7,81 @@
     <groupId>org.example</groupId>
     <artifactId>Joke</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <dependencies>
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.5.0-b01</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/clojure-interop/javax.imageio -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
-        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.19</version>
-        </dependency>
+        <dependencies>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.3.11.Final</version>
-        </dependency>
+            <dependency>
+                <groupId>com.github.sarxos</groupId>
+                <artifactId>webcam-capture-driver-v4l4j</artifactId>
+                <version>0.3.12</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>1.5.0-b01</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.30</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx</artifactId>
-            <version>14</version>
-            <type>pom</type>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.github.sarxos/webcam-capture -->
-        <dependency>
-            <groupId>com.github.sarxos</groupId>
-            <artifactId>webcam-capture</artifactId>
-            <version>0.3.12</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.zenjava/javafx-maven-plugin -->
-        <dependency>
-            <groupId>com.zenjava</groupId>
-            <artifactId>javafx-maven-plugin</artifactId>
-            <version>8.8.3</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/fr.bmartel/jspeedtest -->
-        <dependency>
-            <groupId>fr.bmartel</groupId>
-            <artifactId>jspeedtest</artifactId>
-            <version>1.32.1</version>
-        </dependency>
+            <!-- https://mvnrepository.com/artifact/clojure-interop/javax.imageio -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.6</version>
+            </dependency>
 
-    </dependencies>
+            <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.19</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.sarxos</groupId>
+                <artifactId>webcam-capture-driver-ipcam</artifactId>
+                <version>0.3.12</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>4.3.11.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.sarxos</groupId>
+                <artifactId>v4l4j</artifactId>
+                <version>0.9.1-r507</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>1.7.30</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.github.sarxos/webcam-capture-driver-v4l4j -->
+            <!-- https://mvnrepository.com/artifact/com.github.sarxos/webcam-capture-drivers -->
+            <dependency>
+                <groupId>com.github.sarxos</groupId>
+                <artifactId>webcam-capture-drivers</artifactId>
+                <version>0.3.12</version>
+                <type>pom</type>
+            </dependency>
+
+
+            <!-- https://mvnrepository.com/artifact/com.github.sarxos/webcam-capture -->
+            <dependency>
+                <groupId>com.github.sarxos</groupId>
+                <artifactId>webcam-capture</artifactId>
+                <version>0.3.12</version>
+            </dependency>
+           <dependency>
+                <groupId>fr.bmartel</groupId>
+                <artifactId>jspeedtest</artifactId>
+                <version>1.32.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-cli</groupId>
+                <artifactId>commons-cli</artifactId>
+                <version>1.2</version>
+            </dependency>
+
+        </dependencies>
 
 
 

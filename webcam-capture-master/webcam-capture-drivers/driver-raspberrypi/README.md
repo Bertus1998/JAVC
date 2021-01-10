@@ -50,7 +50,6 @@ import com.github.sarxos.webcam.WebcamPanel.DrawMode;
 import com.github.sarxos.webcam.WebcamResolution;
 import com.github.sarxos.webcam.ds.raspberrypi.*;
 
-
 public class WebcamPanelExample {
 
 	static {

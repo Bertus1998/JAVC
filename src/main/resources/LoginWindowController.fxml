@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JAVC.LoginWindowController">
    <children>
       <Button fx:id="rButton" layoutX="383.0" layoutY="208.0" mnemonicParsing="false" onAction="#pushRegisterButton" prefHeight="79.0" prefWidth="189.0" text="Register" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="383.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="208.0">
          <font>
