@@ -1,7 +1,6 @@
 package JAVC;
 
 import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.ds.raspberrypi.RaspistillDriver;
 import com.github.sarxos.webcam.ds.raspberrypi.RaspividDriver;
 import com.github.sarxos.webcam.ds.v4l4j.V4l4jDriver;
 import com.sun.mail.iap.ByteArray;
@@ -25,13 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 //--module-path "MIEJSCELIBU" -add-modules=javafx.controls,javafx.base,javafx.graphics,javafx.fxml
-public class Video {
-    /*  static {                                     //
-    //    Webcam.setDriver(new RaspistillDriver());    //
-    //    Webcam.setDriver(new RaspiYUVDriver());      //
-      Webcam.setDriver(new RaspividDriver());      //
-    //    Webcam.setDriver(new RaspividYUVDriver());   //
-          }      */                                     //
+public class Video {     //
     private static Webcam webcam;
     private static String status = "ANNA0";
     private static int counter = 0;
@@ -181,6 +174,7 @@ public class Video {
     public static boolean configureWebcam() {
 
         setWebcam(Webcam.getDefault());
+
         if (getWebcam() != null) {
             System.out.println("Webcam: " + getWebcam().getName());
             getWebcam().open();

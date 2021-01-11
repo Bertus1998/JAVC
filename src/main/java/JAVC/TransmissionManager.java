@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class TransmissionManager {
+
     static CommunicationWindowController communicationWindowController;
 
     public static CommunicationWindowController getCommunicationWindowController() {
@@ -33,7 +34,7 @@ public class TransmissionManager {
 
     static {
         try {
-            setSeverAddress(InetAddress.getByName("10.9.131.250"));
+            setSeverAddress(InetAddress.getByName("192.168.43.97"));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
