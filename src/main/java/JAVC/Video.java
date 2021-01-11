@@ -138,7 +138,7 @@ public class Video {
                 System.out.println("XD" + buffer.array().length);
                 return buffer.array();
             }
-            else if(partOfmessage.length!=0)
+            else
             {
                 System.out.println("TUDUDUDU" + partOfmessage.length);
                 System.out.println("TUDUDUDU" + buffor.length);
@@ -152,7 +152,6 @@ public class Video {
                 status = new String(Arrays.copyOfRange(partOfmessage,0,4),  StandardCharsets.UTF_8);
                 return Arrays.copyOfRange(partOfmessage,4,partOfmessage.length);
             }
-            return null;
 
     }
 
