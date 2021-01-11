@@ -7,6 +7,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 public class Main extends Application {
 
     private static Stage stage;
@@ -32,7 +37,29 @@ public class Main extends Application {
 
     public static void main(String[] args) throws Exception {
        launch(args);
-     /*  byte [] test = new byte[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+     /*   String elo = "elo";
+
+        byte[] b = new byte[1000];
+        byte[] a = elo.getBytes();
+        System.out.println(a.toString());
+        ByteBuffer byteBuffer = ByteBuffer.wrap(b);
+        byteBuffer.put(a);
+        System.out.println(byteBuffer.array().length);
+        for(int i =0;i<byteBuffer.array().length; i ++)
+        {
+            System.out.println(i+". "+byteBuffer.array()[i]);
+        }
+       // byteBuffer.put(dupa.getBytes());
+        System.out.println(byteBuffer.array().toString());
+        byte [] napis =Arrays.copyOfRange(byteBuffer.array(),0,3);
+        for(int i =0;i<napis.length; i ++)
+        {
+            System.out.println(i+". "+napis[i]);
+            System.out.println(i+". "+a[i]);
+        }
+        System.out.println(new String(napis, StandardCharsets.UTF_8));
+        System.out.println(new String(a, StandardCharsets.UTF_8));
+       byte [] test = new byte[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
                1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
                1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
                1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,

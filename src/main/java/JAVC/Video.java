@@ -17,6 +17,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,7 +76,7 @@ public class Video {
                             if(amountOfMessage==0) {
                                 buff.put(key.getBytes());
                                 buff.put(message);
-                                //wysyłanie
+
                                 System.out.println(buff.array().length);
                                 DatagramPacket datagramPacket = new DatagramPacket(buff.array(), 0, sendIt.length, address,port);
                                 socket.send(datagramPacket);
@@ -128,16 +129,19 @@ public class Video {
 
             socket.receive(datagramPacket);
             partOfmessage =datagramPacket.getData();
-        System.out.println(" OLA BOGA" +  Arrays.copyOfRange(partOfmessage,0,5).toString());
-            if(status.equals(Arrays.copyOfRange(partOfmessage,0,5).toString()))
+        System.out.println(" OLA BOGA" + new String(Arrays.copyOfRange(partOfmessage,0,4), StandardCharsets.UTF_8));
+            if(status.equals(new String(Arrays.copyOfRange(partOfmessage,0,4), StandardCharsets.UTF_8)))
             {
+
                 buffer.put(buffor);
                 buffer.put(Arrays.copyOfRange(partOfmessage,5,partOfmessage.length));
+                System.out.println("XD" + buffer.array().length);
                 return buffer.array();
             }
             else if(partOfmessage.length!=0)
             {
                 System.out.println("TUDUDUDU" + partOfmessage.length);
+                System.out.println("TUDUDUDU" + buffor.length);
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(EncryptionManager.decrypt(buffor));
 
                 BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
@@ -145,8 +149,8 @@ public class Video {
                 Platform.runLater(() -> {
                     communicationWindowController.rimg.setImage(image);
                 });
-                status = Arrays.copyOfRange(partOfmessage,0,5).toString();
-                return Arrays.copyOfRange(partOfmessage,5,partOfmessage.length);
+                status = new String(Arrays.copyOfRange(partOfmessage,0,4),  StandardCharsets.UTF_8);
+                return Arrays.copyOfRange(partOfmessage,4,partOfmessage.length);
             }
             return null;
 
