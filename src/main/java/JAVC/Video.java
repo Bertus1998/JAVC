@@ -155,6 +155,7 @@ public class Video {
                     }
                 }
                 try {
+                    status = new String(Arrays.copyOfRange(partOfmessage, 0, 5), StandardCharsets.UTF_8);
                     buffor = Arrays.copyOfRange(buffor, 0, buffor.length - x);
                     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(EncryptionManager.decrypt(buffor));
 
@@ -163,12 +164,13 @@ public class Video {
                     Platform.runLater(() -> {
                         communicationWindowController.rimg.setImage(image);
                     });
-                    status = new String(Arrays.copyOfRange(partOfmessage, 0, 5), StandardCharsets.UTF_8);
+                    //status = new String(Arrays.copyOfRange(partOfmessage, 0, 5), StandardCharsets.UTF_8);
                     System.out.println("ZMIANA STATUSU" + new String(Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length), StandardCharsets.UTF_8));
                     return Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length);
                 }
                 catch (Exception e)
                 {
+
                     e.printStackTrace();
                     return Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length);
 
