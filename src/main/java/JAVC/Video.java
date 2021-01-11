@@ -142,6 +142,19 @@ public class Video {
             {
                 System.out.println("TUDUDUDU" + partOfmessage.length);
                 System.out.println("TUDUDUDU" + buffor.length);
+                int x=0;
+                for(int i =buffor.length-1;i>0 ;i++)
+                {
+                    if(buffor[i]==0)
+                    {
+                        x++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                buffor = Arrays.copyOfRange(buffor,0,buffor.length-x);
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(EncryptionManager.decrypt(buffor));
 
                 BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
@@ -152,7 +165,6 @@ public class Video {
                 status = new String(Arrays.copyOfRange(partOfmessage,0,4),  StandardCharsets.UTF_8);
                 return Arrays.copyOfRange(partOfmessage,4,partOfmessage.length);
             }
-
     }
 
     public static boolean configureWebcam() {
