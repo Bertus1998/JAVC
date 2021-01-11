@@ -65,7 +65,6 @@ public class Audio {
                         if (bytesRead > getTargetDataLine().getBufferSize() / 5) {
                             dataToSend = EncryptionManager.encrypt(dataBeforeEncryption);
                             datagramPacketToSend.setData(dataToSend,0,dataToSend.length);
-                            System.out.println("Wysłano: " + dataToSend.length);
                             datagramSocket.send(datagramPacketToSend);
                            // Thread.sleep(1000);
                         }

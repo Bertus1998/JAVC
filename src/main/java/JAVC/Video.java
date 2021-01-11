@@ -77,7 +77,6 @@ public class Video {
                                 buff.put(key.getBytes());
                                 buff.put(message);
 
-                                System.out.println(buff.array().length);
                                 DatagramPacket datagramPacket = new DatagramPacket(buff.array(), 0, sendIt.length, address,port);
                                 socket.send(datagramPacket);
                                 buff.clear();
@@ -90,7 +89,6 @@ public class Video {
 
                                 buff.put(key.getBytes());
                                 buff.put(Arrays.copyOfRange(message,(i+1)*500,(i+2)*500));
-                                System.out.println(buff.array());
                                 DatagramPacket datagramPacket = new DatagramPacket(buff.array(), 0 , sendIt.length, address,port);
                                 socket.send(datagramPacket);
                                 buff.clear();
