@@ -124,7 +124,7 @@ public class TransmissionManager {
     public static void startTransmission(String []message,boolean caller) throws Exception {
       // 1 videoreceive/ 2 audiooreceive /3 audiotransmit /4 video transmit // 5 socket
 
-        ServerSocket serwerSocketVideoReceive;
+
         DatagramSocket socketReceive;
         DatagramSocket socketTransmit;
         int portReceiveAudio,portTransmitAudio;
@@ -134,19 +134,19 @@ public class TransmissionManager {
         {
             portReceiveAudio = Integer.parseInt(message[1]);
             portTransmitAudio = Integer.parseInt(message[2]);
-         //   ServerSocket serwerSocketReceive = new ServerSocket(Integer.parseInt(message[0]));
             socketReceive = new DatagramSocket(Integer.parseInt(message[0]));
+            //hole punching
+            socketReceive.send(new DatagramPacket(new byte[10],10,inetAddress,Integer.parseInt(message[0])));
             socketTransmit = new DatagramSocket();
-           // socketTransmit = DatagramSocket(inetAddress,Integer.parseInt(message[3]));
             portTransmitVideo = Integer.parseInt(message[3]);
         }
         else
         {
             portReceiveAudio = Integer.parseInt(message[2]);
             portTransmitAudio = Integer.parseInt(message[1]);
-          //  socketTransmit = new Socket(inetAddress,Integer.parseInt(message[0]));
-         //   serwerSocketVideoReceive = new ServerSocket(Integer.parseInt(message[3]));
             socketReceive = new DatagramSocket(Integer.parseInt(message[3]));
+            //hole punching
+            socketReceive.send(new DatagramPacket(new byte[10],10,inetAddress,Integer.parseInt(message[3])));
             socketTransmit = new DatagramSocket();
             portTransmitVideo = Integer.parseInt(message[0]);
         }
@@ -202,7 +202,11 @@ public class TransmissionManager {
             }
         };
         Runnable runnableAudio = () -> {
-                    Audio.receiveAndStreamToLouder(port);
+            try {
+                Audio.receiveAndStreamToLouder(port);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         };
         Thread threadGetAudio = new Thread(runnableAudio);
         Thread threadGetVideo = new Thread(runnableVideo);

@@ -82,15 +82,17 @@ public class Audio {
 
     }
 
-    public static void receiveAndStreamToLouder(int port) {
+    public static void receiveAndStreamToLouder(int port) throws IOException {
 
         DatagramSocket datagramSocket = null;
-
+        datagramSocket = new DatagramSocket(port);
+        //hole punching
+        datagramSocket.send(new DatagramPacket(new byte[10],10,inetAddressTemp,port));
         while(true)
         {
             try {
                 if (datagramSocket == null) {
-                    datagramSocket = new DatagramSocket(port);
+
                     //datagramSocket.setSoTimeout(1000);
                 }
                 if (transmission) {
