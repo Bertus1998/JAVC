@@ -143,7 +143,7 @@ public class Video {
                 System.out.println("TUDUDUDU" + partOfmessage.length);
                 System.out.println("TUDUDUDU" + buffor.length);
                 int x=0;
-                for(int i =buffor.length-1;i>0 ;i++)
+                for(int i =buffor.length-1;i>0 ;i--)
                 {
                     if(buffor[i]==0)
                     {
@@ -162,8 +162,9 @@ public class Video {
                 Platform.runLater(() -> {
                     communicationWindowController.rimg.setImage(image);
                 });
-                status = new String(Arrays.copyOfRange(partOfmessage,0,4),  StandardCharsets.UTF_8);
-                return Arrays.copyOfRange(partOfmessage,4,partOfmessage.length);
+                status = new String(Arrays.copyOfRange(partOfmessage,0,5),  StandardCharsets.UTF_8);
+                System.out.println("ZMIANA STATUSU" + new String(Arrays.copyOfRange(partOfmessage,5,partOfmessage.length),StandardCharsets.UTF_8));
+                return Arrays.copyOfRange(partOfmessage,5,partOfmessage.length);
             }
     }
 
