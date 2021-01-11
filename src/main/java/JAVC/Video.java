@@ -8,6 +8,8 @@ import com.sun.mail.iap.ByteArray;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+
+import javax.crypto.IllegalBlockSizeException;
 import javax.imageio.ImageIO;
 import javax.xml.crypto.Data;
 import java.awt.image.BufferedImage;
@@ -152,17 +154,25 @@ public class Video {
                         break;
                     }
                 }
-                buffor = Arrays.copyOfRange(buffor,0,buffor.length-x);
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(EncryptionManager.decrypt(buffor));
+                try {
+                    buffor = Arrays.copyOfRange(buffor, 0, buffor.length - x);
+                    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(EncryptionManager.decrypt(buffor));
 
-                BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
-                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                Platform.runLater(() -> {
-                    communicationWindowController.rimg.setImage(image);
-                });
-                status = new String(Arrays.copyOfRange(partOfmessage,0,5),  StandardCharsets.UTF_8);
-                System.out.println("ZMIANA STATUSU" + new String(Arrays.copyOfRange(partOfmessage,5,partOfmessage.length),StandardCharsets.UTF_8));
-                return Arrays.copyOfRange(partOfmessage,5,partOfmessage.length);
+                    BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
+                    Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                    Platform.runLater(() -> {
+                        communicationWindowController.rimg.setImage(image);
+                    });
+                    status = new String(Arrays.copyOfRange(partOfmessage, 0, 5), StandardCharsets.UTF_8);
+                    System.out.println("ZMIANA STATUSU" + new String(Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length), StandardCharsets.UTF_8));
+                    return Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length);
+                }
+                catch (IllegalBlockSizeException e)
+                {
+                    e.printStackTrace();
+                    return Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length);
+
+                }
             }
     }
 
