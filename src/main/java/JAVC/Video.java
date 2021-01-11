@@ -167,7 +167,7 @@ public class Video {
                     System.out.println("ZMIANA STATUSU" + new String(Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length), StandardCharsets.UTF_8));
                     return Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length);
                 }
-                catch (IllegalBlockSizeException e)
+                catch (Exception e)
                 {
                     e.printStackTrace();
                     return Arrays.copyOfRange(partOfmessage, 5, partOfmessage.length);
