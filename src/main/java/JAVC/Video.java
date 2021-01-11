@@ -129,8 +129,8 @@ public class Video {
 
             socket.receive(datagramPacket);
             partOfmessage =datagramPacket.getData();
-        System.out.println(" OLA BOGA" + new String(Arrays.copyOfRange(partOfmessage,0,4), StandardCharsets.UTF_8));
-            if(status.equals(new String(Arrays.copyOfRange(partOfmessage,0,4), StandardCharsets.UTF_8)))
+        System.out.println(" OLA BOGA" + new String(Arrays.copyOfRange(partOfmessage,0,5), StandardCharsets.UTF_8));
+            if(status.equals(new String(Arrays.copyOfRange(partOfmessage,0,5), StandardCharsets.UTF_8)))
             {
 
                 buffer.put(buffor);
