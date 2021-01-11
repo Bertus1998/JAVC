@@ -140,17 +140,17 @@ public class Video {
             }
             else
             {
-                System.out.println("TUDUDUDU" + partOfmessage.length);
-                System.out.println("TUDUDUDU" + buffor.length);
                 int x=0;
                 for(int i =buffor.length-1;i>0 ;i--)
                 {
                     if(buffor[i]==0)
                     {
                         x++;
+                        System.out.println("X:" + x);
                     }
                     else
                     {
+                        System.out.println("Długośc bufforu" + (buffor.length-x));
                         break;
                     }
                 }
