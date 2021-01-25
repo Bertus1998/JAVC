@@ -35,7 +35,7 @@ public class TransmissionManager {
 
     static {
         try {
-            setSeverAddress(InetAddress.getByName("13.59.88.142"));
+            setSeverAddress(InetAddress.getByName("10.9.131.250"));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -108,7 +108,7 @@ public class TransmissionManager {
         DatagramSocket datagramSocket = new DatagramSocket();
         byte[] holePunchingMessage= new byte[50];
         DatagramPacket datagramPacket = null;
-        for(int i =5330; i<5400;i++)
+        for(int i =5000; i<5100;i++)
         {
             if(isPortAvailable(i)) {
                 datagramPacket = new DatagramPacket(holePunchingMessage, 0, 50, TransmissionManager.getClient().getInetAddress(), i);
