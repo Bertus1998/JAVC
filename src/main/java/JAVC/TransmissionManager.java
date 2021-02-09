@@ -34,7 +34,7 @@ public class TransmissionManager {
 
     static {
         try {
-            setSeverAddress(InetAddress.getByName("192.168.43.97"));
+            setSeverAddress(InetAddress.getByName("10.9.131.250"));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
