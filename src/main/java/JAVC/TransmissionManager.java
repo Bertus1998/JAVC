@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class TransmissionManager {
-
     static CommunicationWindowController communicationWindowController;
 
     public static CommunicationWindowController getCommunicationWindowController() {
@@ -94,7 +93,7 @@ public class TransmissionManager {
     }
     public static String getMessageFromServer(Socket client) throws IOException {
 
-        
+
            InputStream inputStream = client.getInputStream();
             DataInputStream dataInputStream = new DataInputStream(inputStream);
             String message = dataInputStream.readUTF();

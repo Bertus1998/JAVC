@@ -64,14 +64,6 @@ public class Message {
     {
         String messageToServer = "CALL " +name  + " " + me;
 
-        for(int i =5100; i<=5200;i++)
-        {
-            if(TransmissionManager.isPortAvailable(i))
-            {
-                messageToServer = messageToServer + " " +i;
-            }
-        }
-        //////JESZCZE PO STRONIE SERWERA CHLOPIE
         return messageToServer;
     }
     String listFriendMessage(String name)
