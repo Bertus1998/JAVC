@@ -12,7 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import javax.sound.sampled.LineUnavailableException;
-import javax.xml.crypto.Data;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class TransmissionManager {
-
     static CommunicationWindowController communicationWindowController;
 
     public static CommunicationWindowController getCommunicationWindowController() {
@@ -95,7 +93,7 @@ public class TransmissionManager {
     }
     public static String getMessageFromServer(Socket client) throws IOException {
 
-        
+
            InputStream inputStream = client.getInputStream();
             DataInputStream dataInputStream = new DataInputStream(inputStream);
             String message = dataInputStream.readUTF();
@@ -105,19 +103,7 @@ public class TransmissionManager {
     public  static void callToFriend(String friend, String me) throws IOException, LineUnavailableException {
         Message message = new Message();
         TransmissionManager.sendMessageToServer(TransmissionManager.getClient(), message.callMessage(friend, me));
-        DatagramSocket datagramSocket = new DatagramSocket();
-        byte[] holePunchingMessage= new byte[50];
-        DatagramPacket datagramPacket = null;
-        for(int i =5000; i<5100;i++)
-        {
-            if(isPortAvailable(i)) {
-                datagramPacket = new DatagramPacket(holePunchingMessage, 0, 50, TransmissionManager.getClient().getInetAddress(), i);
-                for (int j = 0; j < 100; j++) {
-                    System.out.println("Packet was send");
-                    datagramSocket.send(datagramPacket);
-                }
-            }
-        }
+
 
     }
     public static void stopTransmission()
@@ -365,18 +351,6 @@ public class TransmissionManager {
                     }
                     messegaeToStartTransmission[4] = finalArrayOfmessage[finalArrayOfmessage.length-1];
                     TransmissionManager.sendMessageToServer(TransmissionManager.getClient(),messageAccept.callAcceptMessage(finalArrayOfmessage[2],CommunicationWindowController.getMe(),ports));
-                    DatagramSocket datagramSocket = new DatagramSocket();
-                    byte[] holePunchingMessage = new byte[50];
-                    DatagramPacket datagramPacket = null;
-                    for(int i =4;i<8;i++)
-                    {
-                    datagramPacket = new DatagramPacket(holePunchingMessage,0,50, getClient().getInetAddress(),i);
-                    for(int j=0; j<20;j++)
-                    {
-                        System.out.println("Wysłano Pakiet na hole punching!");
-                        datagramSocket.send(datagramPacket);
-                    }
-                    }
                     TransmissionManager.startTransmission(messegaeToStartTransmission,false);
                 } catch (Exception ioException) {
                     ioException.printStackTrace();
